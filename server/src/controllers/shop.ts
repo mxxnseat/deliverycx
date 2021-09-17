@@ -6,8 +6,7 @@ import { User, Cart, Product } from "../db/models";
 class Shop {
     public async addToCart(req: Request, res: Response) {
         const body = req.body;
-        const username = jwt.decode(req.headers.authorization as string, {complete: true})?.payload?.username;
-        
+        console.log(body);
         try {
             const product = await Product.findOne({ _id: body.productId });
             console.log(product);
@@ -17,7 +16,7 @@ class Shop {
 
             const cartId = new mongoose.Types.ObjectId();
             const user = await User.findOneAndUpdate(
-                { username },
+                { username: body.username },
                 {
                     $addToSet: {
                         cart: cartId
