@@ -1,0 +1,26 @@
+//grid
+.container{
+    padding: 0 20px;
+}
+.row{
+    display: flex;
+}
+.justify-between{
+    justify-content: space-between;
+}
+.justify-center{
+    justify-content: center;
+}
+.justify-around{
+    justify-content: space-around;
+}
+
+.align-center{
+    align-items: center;
+}
+.align-start{
+    align-items: flex-start;
+}
+.align-end{
+    align-items: flex-end;
+}

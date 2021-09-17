@@ -1,0 +1,145 @@
+.header{
+    &__menu{
+        position: absolute;
+        background: $white;
+        height: 100%;
+        width: 100%;
+        z-index: 9999;
+        left: -100%;
+        overflow: hidden;
+        transition: left 0.8s cubic-bezier(0, 0.21, 0.47, 1.1);
+        padding: 46px;
+        top: 0;
+        background-image: url("../assets/img/menu-background_tile.png");
+        background-position: bottom;
+        background-repeat: repeat no-repeat;
+
+        &.active{
+            left: 0;
+        }
+        &__link{
+            font-size: $fstitle;
+            text-decoration: none;
+            color: $gray3;
+            display: flex;
+            align-items: flex-end;
+            align-self: flex-start;
+
+
+            &__list{
+                display: flex;
+                flex-direction: column;
+            }
+            &:not(:last-child){
+                margin-bottom: 25px;
+            }
+            &:before{
+                content: '';
+                background-repeat: no-repeat;
+                background-size: contain;
+                width: 16px;
+                height: 16px;
+                margin-right: 12px;
+            }
+            &.profile{
+                &:before{
+                    background-image: url("../assets/i/profile.svg");
+                }
+            }
+            &.qrcode{
+                &:before{
+                    background-image: url("../assets/i/qrcode.svg");
+                }
+            }
+            &.mark{
+                &:before{
+                    background-image: url("../assets/i/mark.svg");
+                }
+            }
+            &.order-history{
+                &:before{
+                    background-image: url("../assets/i/checkue.svg");
+                }
+            }
+            &.messanger{
+                &:before{
+                    background-image: url("../assets/i/messages.svg");
+                }
+            }
+            &.faq{
+                &:before{
+                    background-image: url("../assets/i/faq.svg");
+                }
+            }
+            &.franchise{
+                color: $red;
+                &:before{
+                    background-image: url("../assets/i/franchise.svg");
+                }
+            }
+        }
+
+        &__table-number{
+            color: $gray6;
+            margin-top: 15px;
+            padding: 9px 0;
+            text-align: center;
+            background-color: $grayEF;
+            width: 103px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        &__close{
+            margin-right: auto;
+            position: absolute;
+            left: 0;
+            cursor: pointer;
+            background-image: url("../assets/i/close.svg");
+            background-repeat: no-repeat;
+            width: 21px;
+            height: 21px;
+            background-size: cover;
+        }
+        &__header{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .header__logo{
+            margin: 0 auto;
+        }
+
+        &__table{
+            font-size: $fsprice;
+            font-family: $bold;
+            margin-bottom: 8px;
+        }
+        &__list{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+        }
+        &__qrcode{
+            text-align: center;
+            background-image: url("../assets/i/qrcode_border.svg");
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+            width: 103px;
+            height: 103px;
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+
+            &__memo{
+                font-size: $fstext;
+                color: $grayAB;
+            }
+        }
+    }
+}

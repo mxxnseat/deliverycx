@@ -1,0 +1,27 @@
+import { createStore, applyMiddleware } from "redux";
+import { routerMiddleware } from 'react-router-redux';
+import { createBrowserHistory } from "history";
+import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from "redux-thunk";
+
+import reducer from "./reducers";
+
+
+const history = createBrowserHistory();
+const routerMiddlewareInst = routerMiddleware(history);
+
+const store = createStore(reducer, 
+    composeWithDevTools({})
+    (applyMiddleware(
+        routerMiddlewareInst,
+        thunk
+    ))
+)
+
+export default store;
+export type RootState = ReturnType<typeof reducer>;
+export type AppDispatch = typeof store.dispatch;
+
+if(window.location.pathname !== "/" && !Object.keys(store.getState().address.address).length){
+    history.push("/")
+}

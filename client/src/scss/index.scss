@@ -1,0 +1,98 @@
+@import "./fonts";
+@import "./vars";
+@import "./grid";
+@import "./sm_components";
+
+//components style
+@import "./stocks";
+@import "./product";
+@import "./menu";
+@import "./cart";
+@import "./welcome";
+
+
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body{
+    background-color: $grayEF;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: $light;
+    color: $gray3;
+    font-size: $fstext;
+    overflow: hidden;
+}
+#root{
+    height: 812px;
+    width: 100%;
+    max-width: 375px;
+    display: flex;
+    box-sizing: content-box;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    border: 15px solid #000;
+    border-radius: 30px;
+    position: relative;
+}
+.app{
+    height: auto;
+
+}
+.viewport{
+    display: flex;
+    align-items: center;
+    max-width: 375px;
+    overflow: hidden;
+}
+.lenta{
+    display: flex;
+    transition: transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1);;
+}
+.select-red{
+    color: $red;
+}
+a{
+    text-decoration: none;
+}
+
+
+::-webkit-scrollbar-button {
+    background-image:url('');
+    background-repeat:no-repeat;
+    width:5px;
+    height:0px
+    }
+    
+    ::-webkit-scrollbar-track {
+        background-color:transparent
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        -webkit-border-radius: 1.5em;
+        border-radius: 1.5em;
+        background-color: $gray6;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover{
+        background-color:$gray3;
+    }
+    
+    ::-webkit-resizer{
+        background-image:url('');
+        background-repeat:no-repeat;
+        width:4px;
+        height:0px
+    }
+    
+    ::-webkit-scrollbar{
+        width: 0;
+    }

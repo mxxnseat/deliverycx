@@ -1,0 +1,248 @@
+.product{
+    &__item{
+        padding: 17px;
+        border-radius: 15px;
+        background-color: $white;
+        display: flex;
+        justify-content: space-between;
+        box-shadow: 0px 16px 29px rgba(0, 0, 0, 0.1), 0px 6.16296px 9.23704px rgba(0, 0, 0, 0.0607407), 0px 1.3037px 2.36296px rgba(0, 0, 0, 0.0392593);
+        margin-bottom: 21px;
+    
+        &__content{
+            min-width: 145px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        &__cooking-time{
+            color: $gray6;
+        }
+        &__favorite{
+            background-image: url("../assets/i/favorite.svg");
+            width: 20px;
+            height: 16px;
+            cursor: pointer;
+    
+            &.yes{
+                background-image: url("../assets/i/favorite-red.svg");
+            }
+        }
+        &__title{
+            color: $gray3;
+            font-size: $fstitle;
+            font-family: $bold;
+        }
+        &__price{
+            color: $red;
+            font-family: $bold;
+            font-size: $fsprice;
+        }
+        &__measure{
+            color: $gray6;
+        }
+        &__options{
+            display: flex;
+            align-items: center;
+    
+        }
+        &__img-wrap{
+            img{
+                width: 145px;
+            }
+        }
+        button.add-to-cart{
+            border: 1.25px solid $green;
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: transparent;
+            background-image: url("../assets/i/plus.svg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 12px;
+    
+        }
+    }
+    &-card{
+        &__title{
+            color: $gray3;
+            font-size: 21px;
+            font-family: $bold;
+            line-height: 120%;
+            margin-bottom: 12px;
+        }
+        .add-favorite{
+            cursor: pointer;
+            background-color: $grayEF;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url("../assets/i/favorite.svg");
+            background-size: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+        &__add{
+            cursor: pointer;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url("../assets/i/plus-white.svg");
+            background-size: 30px;
+            background-color: $green;
+        }
+        &__measure{
+            color: $grayAB;
+            font-size: 14px;
+            line-height: 100%;
+            margin-bottom: 5px;
+        }
+        button{
+            border: none;
+        }
+        &__price{
+            font-size: 27px;
+            text-align: center;
+        }
+        &__image{
+            width: 100%;
+        }
+        &__category{
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background-color: $red;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+
+            .category-image-wrap{
+                overflow: hidden;
+                width: 30px;
+                
+
+                img{
+                    width: 60px;
+                    margin-left: -100%;
+                }
+            }
+        }
+        &__image-wrap{
+            text-align: center;
+            padding-bottom: 20px;
+            background-color: $white;
+            border-radius: 0 0 24px 24px;
+            box-shadow: 0px 16px 10px 0px rgba(0,0,0, .5),
+            -4px 16px 9px 0px rgba(0,0,0, .3),
+            0px 1.3037px 0px rgba(0,0,0, .2);
+        }
+        &__henkali-info{
+            background-image: url("../assets/img/product_ornament.png");
+            margin-top: -20px;
+            padding-top: 20px;
+            padding-bottom: 15px;
+            z-index: -1;
+            position: relative;
+        }
+        &__order-from{
+            color: $white;
+            font-family: $bold;
+            font-size: $fsprice;
+            margin: 0 auto;
+            text-align: center;
+            max-width: 160px;
+            padding: 14px 0;
+            background: $red;
+            box-shadow: 0px 16px 31px rgba(0, 0, 0, 0.5), 0px 6.16296px 9.87407px rgba(0, 0, 0, 0.303704), 0px 1.3037px 2.52593px rgba(0, 0, 0, 0.196296);
+            border-radius: 15px;
+        }
+        &__bonus{
+            max-width: 335px;
+            margin: 0 auto;
+            margin-top: 15px;
+            border: 2px solid $red;
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            background-color: rgba(19, 42, 62, 0.75);
+            color: $white;
+            font-size: $fsprice;
+            font-family: $bold;
+            text-align: center;
+            padding: 15px 0;
+        }
+        &__description{
+            font-size: $fsprice;
+            color: $gray3;
+            margin: 30px 0;
+        }
+        &__ingredients{
+            font-size: $fsprice;
+            color: $gray6;
+            line-height: 100%;
+            margin-bottom: 30px;
+
+            &__heading{
+                font-family: $bold;
+                margin-bottom: 15px;
+            }
+        }
+        &__sauces{
+            padding-bottom: 30px;
+
+            &__heading{
+                font-family: $bold;
+                font-size: $fsprice;
+                text-align: center;
+                display: flex;
+                align-items: center;
+
+                .border_dotted-circle{
+                    flex: 1;
+
+                    &:nth-of-type(1){
+                        margin-right: 20px;
+                    }
+                    &:nth-of-type(2){
+                        margin-left: 20px;
+                    }
+                }
+            }
+            
+        }
+        .sauce{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            &__name{
+                color: $gray3;
+                font-family: $bold;
+                font-size: $fsprice;
+                width: 150px;
+            }
+            &__weight{
+                font-size: 14px;
+                color: $gray6;
+            }
+            &__price{
+                font-family: $bold;
+                font-size: $fsprice;
+            }
+            &__add-btn{
+                background-image: url("../assets/i/plus.svg");
+                background-repeat: no-repeat;
+                background-position: center;
+                border: 1px solid $green;
+                border-radius: 50%;
+                width: 36px;
+                height: 36px;
+                cursor: pointer;
+            }
+        }
+    }
+}

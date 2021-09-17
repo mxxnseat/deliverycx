@@ -1,0 +1,43 @@
+.stocks{
+    margin-top: 17px;
+    margin-bottom: 23px;
+
+    &__item{
+        background-color: $white;
+        border-radius: 15px;
+        user-select: none;
+        margin: 0 7.5px;
+        min-width: 291px;
+        padding: 15px;
+    }
+    &__type{
+        margin-bottom: 10px;
+    }
+    &__title{
+        font-size: $fsstocktitle;
+        color: $red;
+        margin-bottom: 16px;
+        font-family: $black;
+    }
+    &__text{
+        font-family: $semibold;
+        line-height: 13.2px;
+    }
+    &__points{
+        display: flex;
+        margin-top: 15px;
+        justify-content: center;
+    }
+    &__point{
+        height: 2px;
+        cursor: pointer;
+        width: 24px;
+        margin: 0 12px;
+        background-color: $grayAB;
+        border-radius: 1.5em;
+        
+        &.active{
+            background-color: $red;
+        }
+    }
+}
