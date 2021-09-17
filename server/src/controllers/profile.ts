@@ -3,10 +3,15 @@ import jwt, { VerifyErrors } from "jsonwebtoken";
 import { User } from "../db/models";
 import { IUserSchema } from "../db/models/profile/User";
 
-function generateUserTokens() {
-    const username = `u_${Math.random().toString(36).substr(2, 9)}`;
+function generateUserTokens(user: string | null = null) {
+    let username: string;
+    if(!user){
+        username = `u_${Math.random().toString(36).substr(2, 9)}`;
+    }else{
+        username = user;
+    }
 
-    const access = jwt.sign({ username }, process.env.JWT_SECRET as string, { expiresIn: 60 });
+    const access = jwt.sign({ username }, process.env.JWT_SECRET as string, { expiresIn: "7d" });
     const refresh = jwt.sign({ username }, process.env.JWT_SECRET as string, { expiresIn: "30d" });
 
     return {
@@ -28,42 +33,45 @@ class Profile {
                     const decode = jwt.decode(token, { complete: true })?.payload;
                     const username = decode?.username;
 
-                    const user = await User.findOne({ username });
+                    const user = await User.findOne({ username, 'token.access': token });
 
-
-                    if (err || !user) {
+                    if (!user) {
+                        res.status(401).json("Not authorized");
+                        return;
+                    }
+                    if (err) {
                         if (err?.name === "TokenExpiredError") {
-                            return jwt.verify(user.token.refresh, process.env.JWT_SECRET as string, async (err: any, _:any) => {
+                            return jwt.verify(user.token.refresh, process.env.JWT_SECRET as string, async (err: any, _: any) => {
 
                                 if (err) {
-                                    res.status(401).json("Not authorized, "+err.name);
+                                    res.status(401).json("Not authorized, " + err.name);
                                     return;
                                 }
 
-                                const { access, refresh } = generateUserTokens();
+                                const { access, refresh } = generateUserTokens(user.username);
                                 user.token = {
                                     access, refresh
                                 }
                                 await user.save();
 
-                                res.status(200).json("ok");
+                                res.status(200).json(access);
                             });
                         }
                         else {
-                            return res.status(401).json("Not authorized, "+err?.name);
+                            return res.status(401).json("Not authorized, " + err?.name);
                         }
                     }
-                    const { access, refresh } = generateUserTokens();
+                    const { access, refresh } = generateUserTokens(user.username);
                     user.token = {
                         access, refresh
                     }
                     await user.save();
-                    res.status(200).json("ok");
+                    res.status(200).json(access);
 
                 });
             } else {
-                await this.register();
-                res.status(200).json("ok");
+                const access = await this.register();
+                res.status(200).json(access);
             }
         } catch (e: any) {
             console.log(e);
@@ -71,7 +79,7 @@ class Profile {
         }
     }
 
-    async register(req?: Request, res?: Response): Promise<void> {
+    async register(req?: Request, res?: Response): Promise<string | void> {
         if (req && res) {
             try {
 
@@ -90,6 +98,8 @@ class Profile {
                     },
                     username
                 });
+
+                return access;
             } catch (e) {
                 console.log(e);
             }

@@ -4,7 +4,7 @@ import { User } from "../db/models";
 
 
 class ProfileMiddleware{
-    
+
 }
 
 export default ProfileMiddleware;

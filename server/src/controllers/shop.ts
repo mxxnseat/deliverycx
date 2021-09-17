@@ -1,11 +1,13 @@
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import { User, Cart, Product } from "../db/models";
 
 class Shop {
     public async addToCart(req: Request, res: Response) {
         const body = req.body;
-
+        const username = jwt.decode(req.headers.authorization as string, {complete: true})?.payload?.username;
+        
         try {
             const product = await Product.findOne({ _id: body.productId });
             console.log(product);
@@ -15,7 +17,7 @@ class Shop {
 
             const cartId = new mongoose.Types.ObjectId();
             const user = await User.findOneAndUpdate(
-                { _id: body.userId },
+                { username },
                 {
                     $addToSet: {
                         cart: cartId
@@ -35,12 +37,13 @@ class Shop {
         }
     }
     public async removeOne(req: Request, res: Response) {
-        try{
-            const cartId = req.params.cartId as string;
+        const username = jwt.decode(req.headers.authorization as string, {complete: true})?.payload?.username;
+        const cartId = req.params.cartId as string;
 
+        try{
             const cart = await Cart.findOneAndDelete({_id: cartId});
             if(cart){
-                const user = await User.findOneAndUpdate({_id: cart.userId}, {
+                const user = await User.findOneAndUpdate({username}, {
                     $pull: {cart:  cart._id}
                 });
 
@@ -52,15 +55,17 @@ class Shop {
         }
     }
     public async clear(req: Request, res: Response){
+        const username = jwt.decode(req.headers.authorization as string, {complete: true})?.payload?.username;
+        const userId = req.body.userId;
+
         try{
-            const userId = req.body.userId;
 
             if(!userId){
                 throw Error("Bad request");
             }
 
             await Cart.deleteMany({userId});
-            await User.updateOne({_id: userId}, {
+            await User.updateOne({username}, {
                 $set:{cart: []} 
             });
 
@@ -89,7 +94,7 @@ class Shop {
             }
 
             const cart = await Cart.findOneAndUpdate({_id: cartId}, update);// here save instance and use in switch
-            
+
         }catch(e: unknown){
             console.log(e);
             res.status(400).json("Bad request");
