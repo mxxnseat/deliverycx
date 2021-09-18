@@ -9,6 +9,7 @@ import generateUserTokens from "../helpers/generateTokens";
 class Profile {
     public async login(req: Request, res: Response) {
         const authToken = req.headers.authorization as string;
+        const organizationId = req.body.organizationId as string;
         try {
             if (authToken !== undefined) {
                 const token = authToken.split(" ")[1];
@@ -17,7 +18,7 @@ class Profile {
                     const decode = jwt.decode(token, { complete: true })?.payload;
                     const username = decode?.username;
 
-                    const user = await User.findOne({ username, 'token.access': token });
+                    const user = await User.findOne({ username });
 
                     if (!user) {
                         res.status(401).json("Not authorized");
@@ -54,7 +55,11 @@ class Profile {
 
                 });
             } else {
-                const access = await this.register();
+                const access = await this.register(organizationId);
+                if(!access)
+                {
+                    throw Error();
+                }
                 res.status(200).json(access);
             }
         } catch (e: any) {
@@ -63,15 +68,8 @@ class Profile {
         }
     }
 
-    async register(req?: Request, res?: Response): Promise<string | void> {
-        if (req && res) {
-            try {
-
-            } catch (e: unknown) {
-                console.log(e);
-                res.status(500).json("Server error");
-            }
-        } else {
+    async register(organizationId: string): Promise<string | null> {
+        if (organizationId) {
             try {
                 const { access, refresh, username } = generateUserTokens();
 
@@ -80,6 +78,7 @@ class Profile {
                         access,
                         refresh
                     },
+                    organizationId,
                     username
                 });
 
@@ -88,11 +87,8 @@ class Profile {
                 console.log(e);
             }
         }
-    }
-    async getUser(username: string) {
-        const user: IUserSchema = await User.findOne({ username }, { token: false, _id: false });
-
-        return user;
+        
+        return null;
     }
     private async update() {
 

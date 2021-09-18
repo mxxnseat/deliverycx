@@ -1,11 +1,10 @@
 import express from "express";
 import Profile from "../controllers/profile";
+import authCheck from "../middlewares/authCheck";
 import ProfileMiddleware from "../middlewares/profile";
 
 const route = express.Router();
 const profile = new Profile();
-
-const middleware = new ProfileMiddleware();
 
 route.post("/login", profile.login.bind(profile));
 

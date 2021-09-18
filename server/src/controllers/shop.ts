@@ -23,7 +23,7 @@ class Shop {
                     }
                 });
             if (user) {
-                await Cart.create({ _id: cartId, userId: user._id, productId: product._id });
+                await Cart.create({ _id: cartId, userId: user._id, product: product._id });
             } else {
                 throw Error("Bad request");
             }
@@ -36,7 +36,7 @@ class Shop {
         }
     }
     public async removeOne(req: Request, res: Response) {
-        const username = jwt.decode(req.headers.authorization as string, {complete: true})?.payload?.username;
+        const username = req.body.username;
         const cartId = req.params.cartId as string;
 
         try{
@@ -54,19 +54,19 @@ class Shop {
         }
     }
     public async clear(req: Request, res: Response){
-        const username = jwt.decode(req.headers.authorization as string, {complete: true})?.payload?.username;
-        const userId = req.body.userId;
+        const username = req.body.username;
 
         try{
-
-            if(!userId){
-                throw Error("Bad request");
-            }
-
-            await Cart.deleteMany({userId});
-            await User.updateOne({username}, {
+            const user = await User.findOneAndUpdate({username}, {
                 $set:{cart: []} 
             });
+
+            if(!user){
+                throw Error();
+            }
+
+            await Cart.deleteMany({userId: user._id as object});
+            
 
             res.status(200).json("OK");
         }catch(e: unknown){
@@ -92,9 +92,27 @@ class Shop {
                 default: throw Error("Bad request");
             }
 
-            const cart = await Cart.findOneAndUpdate({_id: cartId}, update);// here save instance and use in switch
-
+            const cart = await Cart.findOneAndUpdate({_id: cartId}, update);
+            res.status(200).json("ok");
         }catch(e: unknown){
+            console.log(e);
+            res.status(400).json("Bad request");
+        }
+    }
+    public async getCart(req: Request, res: Response){
+        const username = req.body.username;
+
+        try{
+            const user = await User.findOne({username})
+                                    .populate({
+                                        path: "cart",
+                                        populate: {
+                                            path: "product"
+                                        }
+                                    })
+
+            res.status(200).json(user.cart);
+        }catch(e){
             console.log(e);
             res.status(400).json("Bad request");
         }
