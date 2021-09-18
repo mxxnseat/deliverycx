@@ -4,7 +4,7 @@ interface ICartSchema{
     userId: {
         type: mongoose.Types.ObjectId,
     },
-    productId: {
+    product: {
         type: string
     },
     amount: number
@@ -16,7 +16,7 @@ const CartSchema = new Schema<ICartSchema>({
         ref: "User",
         type: mongoose.Types.ObjectId,
     },
-    productId: {
+    product: {
         required: true,
         ref: "Product",
         type: String
@@ -25,6 +25,6 @@ const CartSchema = new Schema<ICartSchema>({
         type: Number,
         default: 1
     }
-})
+}, {versionKey: false})
 
 export default model("Cart", CartSchema);

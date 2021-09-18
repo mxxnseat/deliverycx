@@ -17,7 +17,7 @@ async function authCheck(req: Request, res: Response, next: NextFunction) {
             const username = jwt.decode(token, { complete: true})?.payload?.username;
             const user = await User.findOne({username});
             if(!user){
-                reject();
+                return reject();
             }
 
             if(err){
