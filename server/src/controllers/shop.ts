@@ -36,8 +36,7 @@ class Shop {
         }
     }
     public async removeOne(req: Request, res: Response) {
-        const username = req.body.username;
-        const cartId = req.params.cartId as string;
+        const {username, cartId} = req.body;
 
         try{
             const cart = await Cart.findOneAndDelete({_id: cartId});

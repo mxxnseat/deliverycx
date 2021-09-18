@@ -2,17 +2,31 @@ import { FC, memo } from "react";
 import { useHistory } from "react-router";
 import { useDispatch } from "react-redux";
 import { IAddress } from "../../types/responses";
-import {setAddressAction} from "../../store/actions/adress";
-
+import { setAddressAction } from "../../store/actions/adress";
+import { setProfileAction } from "../../store/actions/profile";
+import profile from "../../api/Profile";
 
 const SelectAddressPopup: FC<IAddress> = memo(({ ...address }) => {
     const history = useHistory();
-    const selectAdressHandler = () => {
-        dispatch(setAddressAction(address));
-
-        history.push("/shop");
-    }
     const dispatch = useDispatch();
+
+    const selectAdressHandler = async () => {
+        try{
+            dispatch(setAddressAction(address));
+
+            const {data} = await profile.update({ organization: address._id });
+            console.log(data);
+            dispatch(setProfileAction({
+                isAuth: true,
+                ...data.user
+            }));
+            history.push("/shop");
+
+        }catch(e){
+            history.push("/");
+        }
+        
+    }
 
     return (
         <div className="welcome__select-adress opened">

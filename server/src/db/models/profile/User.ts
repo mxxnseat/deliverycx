@@ -14,7 +14,7 @@ export interface IUserSchema{
     name?: string | null,
     phone?: string,
     isVerify: boolean,
-    organizationId: {
+    organization: {
         type: String
     }
 }
@@ -43,7 +43,7 @@ const UserSchema = new Schema<IUserSchema>({
         type: Boolean,
         default: false
     },
-    organizationId: {
+    organization: {
         type: String,
         ref: "Organization"
     }

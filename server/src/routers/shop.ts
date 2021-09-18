@@ -1,7 +1,6 @@
 import express from "express";
 const route = express.Router();
 
-import Middleware from "../middlewares/shop";
 import Shop from "../controllers/shop";
 import authCheck from "../middlewares/authCheck";
 
@@ -14,7 +13,7 @@ route.get("/getCart", shop.getCart);
 
 route.patch("/changeAmount", shop.changeAmount)
 
-route.delete("/remove/:cartId", shop.removeOne);
+route.delete("/remove", shop.removeOne);
 route.delete("/clear", shop.clear)
 
 
