@@ -13,14 +13,12 @@ import LinkToCart from "./LinkToCart";
 import ShopSearch from "./search";
 
 const Shop: FC<{}> = () => {
-    const isSearch: boolean = useSelector((state: RootState) => state.shop.isSearch);
-
-
+    const isSearch = useSelector((state: RootState) => state.shop.isSearch);
     const transitions = useTransition(isSearch, {
         from: { opacity: 0 },
         enter: { opacity: 1 },
         leave: { opacity: 0 },
-    })
+    });
 
     return transitions((style, item) => (
         <>

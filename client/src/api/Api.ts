@@ -1,65 +1,45 @@
-import Axios, { AxiosInstance, AxiosPromise } from "axios";
-import {config} from "../config";
+import { AxiosInstance, AxiosPromise } from "axios"
+import Api from ".";
 
-class Api{
-  static _instanse:null | object = null
-  private URL:string = config.REACT_APP_API_URL + '/api'
-  api:AxiosInstance
-
-   constructor(){
-    this.api = Axios.create({
-      baseURL: this.URL,
-      })
-   }
-   static get getInstance(){
-      if(!Api._instanse){
-        Api._instanse = new Api()
-      }
-      return Api._instanse
-    }
-}
-
-
-
-const getApi = ({api}: any) => {
-  const request:AxiosInstance = api
+const getApi = ({ api }: Api) => {
+  const request: AxiosInstance = api
   return {
-    getProducts<R>(categoryId:string, organizationId: string):AxiosPromise<R> {
+    getProducts<R>(categoryId: string, organizationId: string): AxiosPromise<R> {
       return request({
         method: 'get',
-        url: `getProducts?categoryId=${categoryId}&organizationId=${organizationId}`,
-        
+        url: `api/getProducts?categoryId=${categoryId}&organizationId=${organizationId}`,
+
       })
     },
 
-    getCategories<R>():AxiosPromise<R>{
+    getCategories<R>(): AxiosPromise<R> {
       return request({
         method: "get",
-        url: "getCategories"
+        url: "api/getCategories"
       })
     },
 
-    getCities<R>():AxiosPromise<R>{
+    getCities<R>(): AxiosPromise<R> {
       return request({
         method: "get",
-        url: "getCities"
+        url: "api/getCities"
       })
     },
 
-    getAddrresses<R>(cityId: string):AxiosPromise<R>{
+    getAddrresses<R>(cityId: string): AxiosPromise<R> {
       return request({
         method: "get",
-        url: `getAddresses?cityId=${cityId}`
+        url: `api/getAddresses?cityId=${cityId}`
       })
     },
-    
-    getProduct<R>(productId: string):AxiosPromise<R>{
+
+    getProduct<R>(productId: string): AxiosPromise<R> {
       return request({
         method: "get",
-        url: `getProduct/${productId}`
+        url: `api/getProduct/${productId}`
       })
     }
   }
 }
- 
+
 export default getApi(Api.getInstance)

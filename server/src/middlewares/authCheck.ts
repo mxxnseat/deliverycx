@@ -54,12 +54,16 @@ async function authCheck(req: Request, res: Response, next: NextFunction) {
         })
         .catch(e=>{
             console.log(e);
-            res.status(401).json("Not authorized");
+            res.status(401).json({
+                isAuth: false
+            });
         })
     })
     .catch(e=>{
         console.log(e);
-        res.status(401).json("Not authorized");
+        res.status(401).json({
+            isAuth: false
+        });
     })
 }
 

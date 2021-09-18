@@ -9,7 +9,6 @@ import generateUserTokens from "../helpers/generateTokens";
 class Profile {
     public async login(req: Request, res: Response) {
         const authToken = req.headers.authorization as string;
-        const organizationId = req.body.organizationId as string;
         try {
             if (authToken !== undefined) {
                 const token = authToken.split(" ")[1];
@@ -55,7 +54,7 @@ class Profile {
 
                 });
             } else {
-                const access = await this.register(organizationId);
+                const access = await this.register();
                 if(!access)
                 {
                     throw Error();
@@ -68,8 +67,7 @@ class Profile {
         }
     }
 
-    async register(organizationId: string): Promise<string | null> {
-        if (organizationId) {
+    async register(): Promise<string | void> {
             try {
                 const { access, refresh, username } = generateUserTokens();
 
@@ -78,7 +76,6 @@ class Profile {
                         access,
                         refresh
                     },
-                    organizationId,
                     username
                 });
 
@@ -86,12 +83,57 @@ class Profile {
             } catch (e) {
                 console.log(e);
             }
-        }
-        
-        return null;
     }
-    private async update() {
+    public async updateProfile(req: Request, res: Response) {
+        const {username, phone, email, organization, name} = req.body;
 
+        try{
+            const user = await User.findOneAndUpdate({username}, {
+                name,
+                phone,
+                email,
+                organization
+            }, {fields: {
+                token: 0,
+                cart: 0,
+                organization: 0
+            }});
+
+            console.log(user);
+
+            res.status(200).json({
+                message: "ok",
+                user
+            })
+        }catch(e: unknown){
+            console.log(e);
+            res.status(500).json("Server error");
+        }
+    }
+    public async checkSelectedAddress(req: Request, res: Response){
+        const username = req.body.username;
+
+        try{
+            const user = await User.findOne({username}, {token: 0, cart: 0}).populate({
+                path: "organization",
+                populate: {
+                    path: "cityId"
+                }
+            });
+
+            if(!user.organization){
+                return res.status(200).json({
+                    isAuth: false
+                })
+            }
+            res.status(200).json({
+                isAuth: true,
+                user
+            })
+        }catch(e: unknown){
+            console.log(e);
+            res.status(500).json("Server error");
+        }
     }
 }
 

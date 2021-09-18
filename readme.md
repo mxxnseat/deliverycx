@@ -6,6 +6,7 @@
     + [Category](#categoryInterface)
     + [Product](#productInterface)
     + [ICart](#cartInterface)
+    + [IUser](#userInterface)
 
 # Endpoints<a name="endpoints"></a>
 
@@ -46,6 +47,7 @@ DELETE /shop/clear - return 200 if ok, 400 in other case
 @body
 /*
  * type: "inc" | "dec"
+ * cartId: string
 */
 PATCH /shop/changeAmount - return 200 if ok, 400 in other case
 ```
@@ -54,11 +56,20 @@ PATCH /shop/changeAmount - return 200 if ok, 400 in other case
 all request to /profile need header authorization token
 
 ```
+POST /profile/login - return access token if ok, 401 in other case
+---------------------------------------------------------------
+
 @body
 /*
- * organizationId: string
+ * phone?: string
+ * email?: string
+ * organization?: string
+ * name?: string
 */
-POST /profile/login - return access token if ok, 401 in other case
+POST /profile/updateProfile - return updated user, 500 if error
+---------------------------------------------------------------
+
+POST /profile/checkSelectedAddress - return isAuth: boolean, and --isAuth:boolean & IUser & IAddress-- if user selected address, 500 if error
 ```
 
 # Interfaces<a name="interfaces"></a>
@@ -133,5 +144,17 @@ POST /profile/login - return access token if ok, 401 in other case
         userId: string,
         product: IProduct,
         amount: number
+    }
+```
+
+<a name="userInterface"></a>
+
+```ts
+    interface IUser{
+        _id: string,
+        username: string,
+        isVerify: boolean,
+        phone?: string,
+        name?: string
     }
 ```
