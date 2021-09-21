@@ -3,6 +3,7 @@ import { parseOrganization, Organization } from "../helpers/iiko";
 import * as model from "../db/models";
 import { ICity } from "../db/models/api/City";
 import { geoCode, IPosition } from "../helpers/geoCoder";
+import {IOrganization as IApiOrganization} from "../db/models/api/Organization";
 import { ICategory, IGroup, INomenclature, IOrganization, IProduct } from "../types/axiosResponses";
 
 
@@ -60,7 +61,7 @@ class Iiko {
             */
             const cityResponseMongoose: ICity = await model.City.findOneAndUpdate(
                 { name: organization.address.city as string },
-                { $setOnInsert: { name: organization.address.city } },
+                { $setOnInsert: { name: organization.address.city as string } },
                 { upsert: true, new: true }
             );
             const cityId = cityResponseMongoose._id;
@@ -143,7 +144,7 @@ class Iiko {
                 const organizationResponseMongoose = await model.Organization.findOneAndUpdate(
                     { _id: organization.id },
                     {
-                        $setOnInsert: {
+                        $setOnInsert: ({
                             cityId,
                             latitude,
                             longitude,
@@ -153,7 +154,7 @@ class Iiko {
                             },
                             _id: organization.id,
                             street: organization.address.address,
-                        }
+                        } as IApiOrganization)
                     },
                     { upsert: true, new: true }
                 );
