@@ -1,10 +1,8 @@
 import mongoose, {Schema, model, RefType} from "mongoose";
 
-interface ICartSchema{
+export interface ICartSchema{
     user: RefType,
-    product: {
-        type: string
-    },
+    product: RefType,
     amount: number
 }
 

@@ -1,45 +1,60 @@
-import mongoose from "mongoose";
+import mongoose, {Document} from "mongoose";
 import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import { User, Cart, Product } from "../db/models";
+import { IProduct } from "../db/models/api/Product";
+import { IUserSchema } from "../db/models/profile/User";
+import { FindOneAndUpdateReturnType } from "../types/mongoose";
+
+import {ICartSchema} from "../db/models/shop/Cart";
+
+type Body = {
+    username: string,
+    productId: string
+}
 
 class Shop {
-    public async addToCart(req: Request, res: Response) {
+    public async addToCart(req: Request<{}, {}, Body>, res: Response) {
         const body = req.body;
-        console.log(body);
         try {
-            const product = await Product.findOne({ _id: body.productId });
+            const product: IProduct = await Product.findOne({ _id: body.productId });
             if (!product) {
                 throw Error("Bad request");
             }
 
-            const user = await User.findOne({ username: body.username });
+            const user: IUserSchema & Document = await User.findOne({ username: body.username });
 
             /*
             * Обновляем количество если товар уже в корзине, иначе создаем
             */
-            const productInCart = await Cart.findOneAndUpdate({ user: user._id, product: body.productId }, {
+            const productInCart: FindOneAndUpdateReturnType<ICartSchema & Document> = await Cart.findOneAndUpdate({ 
+                user: user._id,
+                product: body.productId as string
+            },
+            {
                 $setOnInsert: {
                     userId: user._id,
                     product: product._id
                 },
                 $inc: { amount: 1 },
-            }, {
+            },
+            {
                 new: true,
                 upsert: true,
                 rawResult: true
             });
+
             const productPopulate = await productInCart.value.populate({
                 path: "product",
                 select: {
                     organizations: 0
                 }
             });
-
+            
             if(!productInCart.lastErrorObject.updatedExisting){
-                await user.update({
+                await user.updateOne({
                     $addToSet: {
-                        cart: productInCart._id
+                        cart: productInCart.value._id
                     }
                 })
                 await user.save();
@@ -47,29 +62,9 @@ class Shop {
 
             res.status(200).json({
                 _id: productInCart.value._id,
-                product: productPopulate,
-            })
-
-            // if (productInCart) {
-            //     return res.status(200).json({
-            //         product: productInCart.product,
-            //         amount: productInCart.amount
-            //     });
-            // }
-
-
-
-            // if (user) {
-            //     await Cart.create({ _id: cartId, userId: user._id, product: product._id });
-            // } else {
-            //     throw Error("Bad request");
-            // }
-
-
-            // res.status(200).json({
-            //     product: productInCart.product,
-            //     amount: productInCart.amount
-            // });
+                product: productPopulate.product,
+                amount: productPopulate.amount
+            });
         } catch (e: unknown) {
             console.log(e);
             res.status(400).json("Bad request");

@@ -28,7 +28,7 @@ all request to /shop need header authorization token
 /*
  * productId: string
 */
-POST /shop/addToCart - return 200 if ok, 400 in other case
+POST /shop/addToCart - return 200 if ok and --AddToCartReturnType--, 400 in other case
 ---------------------------------------------------------------
 
 GET /shop/getCart - return user cart list
@@ -157,4 +157,10 @@ POST /profile/checkSelectedAddress - return isAuth: boolean, and --isAuth:boolea
         phone?: string,
         name?: string
     }
+```
+
+<a name="AddToCartReturnType"></a>
+
+```ts
+    type AddToCartReturnType = IProduct & {_id: string} & {amount: number}
 ```
