@@ -29,7 +29,8 @@ body{
     overflow: hidden;
 }
 #root{
-    height: 812px;
+    max-height: 812px;
+    height: 80vh;
     width: 100%;
     max-width: 375px;
     display: flex;
@@ -95,4 +96,16 @@ a{
     
     ::-webkit-scrollbar{
         width: 0;
+    }
+
+    @media screen and (max-width: 375px){
+        #root{
+            border: none;
+            height: 100vh;
+            border-radius: 0;
+        }
+        .link-to-cart{
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
     }
