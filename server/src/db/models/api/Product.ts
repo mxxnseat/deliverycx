@@ -1,9 +1,6 @@
 import mongoose, {Schema, model} from "mongoose";
 import { IImage } from "./Group";
 
-export interface IRef{
-    type: mongoose.Types.ObjectId,
-}
 export interface IProduct{
     _id: string,
     name: string,

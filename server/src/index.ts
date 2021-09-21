@@ -14,11 +14,11 @@ import shop from "./routers/shop";
 import profile from "./routers/profile";
 
 
-const INDEXHTML = path.resolve("../client/build/index.html");
+const INDEXHTML = path.resolve("../../client/build/index.html");
 const App = express();
 const PORT = process.env.PORT || 5001;
 
-App.use(express.static(path.resolve("../client/build")))
+App.use(express.static(path.resolve("../../client/build")))
 App.use(cors())
 App.use(bodyParser())
 
