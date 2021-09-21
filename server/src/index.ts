@@ -1,7 +1,7 @@
 import util from "util";
 import dotenv from "dotenv";
 dotenv.config();
-util.TextEncoder;
+new util.TextEncoder();
 
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
