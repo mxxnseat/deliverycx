@@ -9,109 +9,149 @@ class Shop {
         console.log(body);
         try {
             const product = await Product.findOne({ _id: body.productId });
-            console.log(product);
             if (!product) {
                 throw Error("Bad request");
             }
 
-            const cartId = new mongoose.Types.ObjectId();
-            const user = await User.findOneAndUpdate(
-                { username: body.username },
-                {
+            const user = await User.findOne({ username: body.username });
+
+            /*
+            * Обновляем количество если товар уже в корзине, иначе создаем
+            */
+            const productInCart = await Cart.findOneAndUpdate({ user: user._id, product: body.productId }, {
+                $setOnInsert: {
+                    userId: user._id,
+                    product: product._id
+                },
+                $inc: { amount: 1 },
+            }, {
+                new: true,
+                upsert: true,
+                rawResult: true
+            });
+            const productPopulate = await productInCart.value.populate({
+                path: "product",
+                select: {
+                    organizations: 0
+                }
+            });
+
+            if(!productInCart.lastErrorObject.updatedExisting){
+                await user.update({
                     $addToSet: {
-                        cart: cartId
+                        cart: productInCart._id
                     }
-                });
-            if (user) {
-                await Cart.create({ _id: cartId, userId: user._id, product: product._id });
-            } else {
-                throw Error("Bad request");
+                })
+                await user.save();
             }
 
+            res.status(200).json({
+                _id: productInCart.value._id,
+                product: productPopulate,
+            })
 
-            res.status(200).json("Product in cart");
+            // if (productInCart) {
+            //     return res.status(200).json({
+            //         product: productInCart.product,
+            //         amount: productInCart.amount
+            //     });
+            // }
+
+
+
+            // if (user) {
+            //     await Cart.create({ _id: cartId, userId: user._id, product: product._id });
+            // } else {
+            //     throw Error("Bad request");
+            // }
+
+
+            // res.status(200).json({
+            //     product: productInCart.product,
+            //     amount: productInCart.amount
+            // });
         } catch (e: unknown) {
             console.log(e);
             res.status(400).json("Bad request");
         }
     }
     public async removeOne(req: Request, res: Response) {
-        const {username, cartId} = req.body;
+        const { username, cartId } = req.body;
 
-        try{
-            const cart = await Cart.findOneAndDelete({_id: cartId});
-            if(cart){
-                const user = await User.findOneAndUpdate({username}, {
-                    $pull: {cart:  cart._id}
+        try {
+            const cart = await Cart.findOneAndDelete({ _id: cartId });
+            if (cart) {
+                const user = await User.findOneAndUpdate({ username }, {
+                    $pull: { cart: cart._id }
                 });
 
                 res.status(200).json("OK");
             }
-        }catch(e: unknown){
+        } catch (e: unknown) {
             console.log(e);
             res.status(400).json("Bad request");
         }
     }
-    public async clear(req: Request, res: Response){
+    public async clear(req: Request, res: Response) {
         const username = req.body.username;
 
-        try{
-            const user = await User.findOneAndUpdate({username}, {
-                $set:{cart: []} 
+        try {
+            const user = await User.findOneAndUpdate({ username }, {
+                $set: { cart: [] }
             });
 
-            if(!user){
+            if (!user) {
                 throw Error();
             }
 
-            await Cart.deleteMany({userId: user._id as object});
-            
+            await Cart.deleteMany({ userId: user._id as object });
+
 
             res.status(200).json("OK");
-        }catch(e: unknown){
+        } catch (e: unknown) {
             console.log(e);
             res.status(400).json("Bad request");
         }
     }
-    public async changeAmount(req: Request, res: Response){
-        try{
+    public async changeAmount(req: Request, res: Response) {
+        try {
             const type: "inc" | "dec" = req.body.type;
             const cartId = req.body.cartId;
             let update = {};
 
-            switch(type){
+            switch (type) {
                 case "inc": {
-                    update = {$inc: {amount: 1}}
+                    update = { $inc: { amount: 1 } }
                     break;
                 }
                 case "dec": {
-                    update = {$inc: {amount: -1}}
+                    update = { $inc: { amount: -1 } }
                     break;
                 }
                 default: throw Error("Bad request");
             }
 
-            const cart = await Cart.findOneAndUpdate({_id: cartId}, update);
+            const cart = await Cart.findOneAndUpdate({ _id: cartId }, update);
             res.status(200).json("ok");
-        }catch(e: unknown){
+        } catch (e: unknown) {
             console.log(e);
             res.status(400).json("Bad request");
         }
     }
-    public async getCart(req: Request, res: Response){
+    public async getCart(req: Request, res: Response) {
         const username = req.body.username;
 
-        try{
-            const user = await User.findOne({username})
-                                    .populate({
-                                        path: "cart",
-                                        populate: {
-                                            path: "product"
-                                        }
-                                    })
+        try {
+            const user = await User.findOne({ username })
+                .populate({
+                    path: "cart",
+                    populate: {
+                        path: "product"
+                    }
+                })
 
             res.status(200).json(user.cart);
-        }catch(e){
+        } catch (e) {
             console.log(e);
             res.status(400).json("Bad request");
         }

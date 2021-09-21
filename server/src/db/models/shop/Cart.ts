@@ -1,9 +1,7 @@
-import mongoose, {Schema, model} from "mongoose";
+import mongoose, {Schema, model, RefType} from "mongoose";
 
 interface ICartSchema{
-    userId: {
-        type: mongoose.Types.ObjectId,
-    },
+    user: RefType,
     product: {
         type: string
     },
@@ -11,7 +9,7 @@ interface ICartSchema{
 }
 
 const CartSchema = new Schema<ICartSchema>({
-    userId: {
+    user: {
         required: true,
         ref: "User",
         type: mongoose.Types.ObjectId,

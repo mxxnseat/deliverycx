@@ -7,7 +7,7 @@ const Cart = ({ api }: Api)=>{
     const authToken = localStorage.getItem("authToken");
 
     return {
-        addToCart(productId: string): AxiosPromise<string>{
+        addToCart<R>(productId: string): AxiosPromise<R>{
             return request({
                 method: "POST",
                 url: `shop/addToCart`,
