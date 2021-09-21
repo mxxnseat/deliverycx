@@ -48,18 +48,18 @@ async function authCheck(req: Request, res: Response, next: NextFunction) {
                 }
             }
         })
-        .then((doc)=>{
+        .then(()=>{
             req.body.username = username
             next();
         })
-        .catch(e=>{
+        .catch((e:unknown)=>{
             console.log(e);
             res.status(401).json({
                 isAuth: false
             });
         })
     })
-    .catch(e=>{
+    .catch((e:unknown)=>{
         console.log(e);
         res.status(401).json({
             isAuth: false
