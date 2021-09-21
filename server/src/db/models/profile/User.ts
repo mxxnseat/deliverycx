@@ -1,15 +1,13 @@
-import mongoose, {model, Schema} from "mongoose";
+import mongoose, {model, Schema, RefType} from "mongoose";
 
-interface IRef{
-    type: mongoose.Types.ObjectId,
-}
+
 export interface IUserSchema{
     _id: mongoose.Types.ObjectId,
     token: {
         access: string,
         refresh: string
     },
-    cart: IRef[]
+    cart: RefType[],
     username: string,
     name?: string | null,
     phone?: string,

@@ -1,11 +1,9 @@
-import mongoose, {Schema, model, mongo} from "mongoose";
+import mongoose, {Schema, model, mongo, RefType} from "mongoose";
 
-export interface IRef{
-    type: mongoose.Types.ObjectId,
-}
+
 export interface IOrganization{
     _id: string,
-    cityId: IRef,
+    cityId: RefType,
     longitude: number,
     latitude: number,
     street: string,

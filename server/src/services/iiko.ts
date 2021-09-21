@@ -144,7 +144,7 @@ class Iiko {
                 const organizationResponseMongoose = await model.Organization.findOneAndUpdate(
                     { _id: organization.id },
                     {
-                        $setOnInsert: ({
+                        $setOnInsert: {
                             cityId,
                             latitude,
                             longitude,
@@ -153,8 +153,8 @@ class Iiko {
                                 email: organization.contacts.email
                             },
                             _id: organization.id,
-                            street: organization.address.address,
-                        } as IApiOrganization)
+                            street: organization.address.address as string,
+                        }
                     },
                     { upsert: true, new: true }
                 );
