@@ -2,15 +2,22 @@ import { FC, MouseEvent, useRef } from "react";
 import {useHistory} from "react-router";
 import convertWeight from "../../../helpers/convertWeight";
 import { IProduct } from "../../../types/responses";
+import cart from "../../../api/Cart";
+import { AddToCartResponse } from "../../../types/actions/cart";
 
 const Product_item: FC<IProduct> = ({_id, name, price, measureUnit, weight, description, images}) => {
     const history = useHistory();
     const cardRef = useRef<HTMLDivElement>(null);
 
-    const clickHandler = (e: MouseEvent<HTMLDivElement | HTMLButtonElement>)=>{
+    const clickHandler = async (e: MouseEvent<HTMLDivElement | HTMLButtonElement>, id?: string)=>{
         e.stopPropagation();
-        if(e.currentTarget !== cardRef.current){
-            return alert("Add to cart");
+        if(e.currentTarget !== cardRef.current && id){
+            //TODO перенести в санки
+            const {status, data} = await cart.addToCart<AddToCartResponse>(id);
+
+            if(status !== 200) return null;
+
+            console.log(data);
         }else{
             history.push(`/shop/product/${_id}`)
         }
@@ -39,7 +46,7 @@ const Product_item: FC<IProduct> = ({_id, name, price, measureUnit, weight, desc
                         <div className="product__item__measure">{measureUnit === "порц" ? "1 шт" : `${convertWeight(weight)} г`}</div>
                         <div className="product__item__price">{price} ₽</div>
                     </div>
-                    <button className="add-to-cart" onClick={clickHandler}></button>
+                    <button className="add-to-cart" onClick={(e)=>clickHandler(e, _id)}></button>
                 </div>
             </div>
         </div>

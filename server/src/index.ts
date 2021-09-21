@@ -32,10 +32,6 @@ App.get("/*", (req: Request, res: Response) => {
 App.use("/profile", profile);
 App.use("/shop", shop);
 
-
-
-
-
 App.listen(PORT, () => {
     try {
         console.log(`starting on ${PORT}`);

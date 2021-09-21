@@ -9,12 +9,10 @@ export interface IUserSchema{
     },
     cart: RefType[],
     username: string,
-    name?: string | null,
+    name?: string,
     phone?: string,
     isVerify: boolean,
-    organization: {
-        type: String
-    }
+    organization: RefType
 }
 const UserSchema = new Schema<IUserSchema>({
     token: {
@@ -34,8 +32,14 @@ const UserSchema = new Schema<IUserSchema>({
         }
     ],
     username: String,
-    name: String,
-    phone: String,
+    name: {
+        required: false,
+        type: String
+    },
+    phone: {
+        required: false,
+        type: String
+    },
     isVerify: {
         required: true,
         type: Boolean,

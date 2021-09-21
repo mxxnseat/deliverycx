@@ -1,6 +1,6 @@
 import {Schema, model} from "mongoose";
 
-export interface IImage{
+export type Image = {
     imageUrl: string
 }
 
@@ -9,7 +9,7 @@ export interface IGroup{
     name: string,
     code: string,
     order: number,
-    images: IImage,
+    images: Image,
     isIncludedInMenu: boolean
 }
 

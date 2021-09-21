@@ -1,12 +1,12 @@
 import mongoose, {Schema, model} from "mongoose";
-import { IImage } from "./Group";
+import { Image } from "./Group";
 
 export interface IProduct{
     _id: string,
     name: string,
     code: string,
     order: number,
-    images: IImage,
+    images: Image,
     isIncludedInMenu: boolean,
     price: number,
     group: string,

@@ -4,7 +4,9 @@ import { ACTIONS, IInitialState, CART_CHOICE, CartActionsType} from "../../types
 
 const initialState: IInitialState = {
     promocode: '',
-    cart_choice: CART_CHOICE.DELIVERY
+    cart_choice: CART_CHOICE.DELIVERY,
+    list: [],
+    isLoading: false
 };
 
 export default (state = initialState, action:CartActionsType):IInitialState => {
@@ -19,6 +21,18 @@ export default (state = initialState, action:CartActionsType):IInitialState => {
             return {
                 ...state,
                 cart_choice: action.payload
+            }
+        }
+        case ACTIONS.SET_IS_LOADING: {
+            return {
+                ...state,
+                isLoading: action.payload
+            }
+        }
+        case ACTIONS.ADD_TO_CART: {
+            return {
+                ...state,
+                list: [...action.payload]
             }
         }
         default: {
