@@ -29,10 +29,32 @@ export default (state = initialState, action:CartActionsType):IInitialState => {
                 isLoading: action.payload
             }
         }
-        case ACTIONS.ADD_TO_CART: {
+        case ACTIONS.LOAD_CART: {
             return {
                 ...state,
-                list: [...action.payload]
+                list: action.payload
+            }
+        }
+        case ACTIONS.ADD_TO_CART: {
+
+            const saveList = [...state.list];
+            const isFind = saveList.find(el=>el._id === action.payload._id);
+
+            if(isFind){
+                isFind.amount+=1;
+            }else{
+                saveList.push(action.payload);
+            }
+
+            return {
+                ...state,
+                list: saveList
+            }
+        }
+        case ACTIONS.REMOVE_ITEM: {
+            return {
+                ...state,
+                list: state.list.filter(el=>el._id !== action.payload)
             }
         }
         default: {

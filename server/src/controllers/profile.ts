@@ -110,21 +110,26 @@ class Profile {
             res.status(500).json("Server error");
         }
     }
-    public async checkSelectedAddress(req: Request, res: Response){
+    public async getProfile(req: Request, res: Response){
         const username = req.body.username;
 
         try{
-            const user = await User.findOne({username}, {token: 0, cart: 0}).populate({
+            const user = await User.findOne({username}, {token: 0}).populate({
                 path: "organization",
                 populate: {
                     path: "cityId"
+                }
+            }).populate({
+                path: "cart",
+                populate: {
+                    path: "product"
                 }
             });
 
             if(!user.organization){
                 return res.status(200).json({
                     isAuth: false
-                })
+                });
             }
             res.status(200).json({
                 isAuth: true,

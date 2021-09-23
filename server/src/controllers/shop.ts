@@ -75,13 +75,25 @@ class Shop {
 
         try {
             const cart = await Cart.findOneAndDelete({ _id: cartId });
-            if (cart) {
-                const user = await User.findOneAndUpdate({ username }, {
-                    $pull: { cart: cart._id }
+
+            if(cart){
+                await User.findOneAndUpdate({username}, {
+                    $pull: {
+                        cart: cartId
+                    }
                 });
 
-                res.status(200).json("OK");
+                res.status(200).json({
+                    cartId
+                });
+
+
+            }else{
+                throw Error();
             }
+        
+
+
         } catch (e: unknown) {
             console.log(e);
             res.status(400).json("Bad request");

@@ -1,6 +1,6 @@
 import {AxiosInstance, AxiosPromise } from "axios";
 import Api from ".";
-import { ICart } from "../types/responses";
+import { ICart, IRemoveCartItemResponse } from "../types/responses";
 
 const Cart = ({ api }: Api)=>{
     const request: AxiosInstance = api;
@@ -8,54 +8,53 @@ const Cart = ({ api }: Api)=>{
 
     return {
         addToCart<R>(productId: string): AxiosPromise<R>{
+            const headers = authToken ? {
+                authorization: `Bearer ${authToken}`
+            } : {}
+
             return request({
                 method: "POST",
                 url: `shop/addToCart`,
-                headers: {
-                    authorization: authToken ? `Bearer ${authToken}` : null
-                },
+                headers,
                 data: {
                     productId
                 }
             });
         },
-        getCart(): AxiosPromise<ICart>{
-            return request({
-                method: "GET",
-                url: `shop/addToCart`,
-                headers: {
-                    authorization: authToken ? `Bearer ${authToken}` : null
-                }
-            });
-        },
-        removeOne(cartId: string): AxiosPromise<string>{
+        removeOne<R>(cartId: string): AxiosPromise<R>{
+            const headers = authToken ? {
+                authorization: `Bearer ${authToken}`
+            } : {}
+
             return request({
                 method: "DELETE",
                 url: `shop/remove`,
-                headers: {
-                    authorization: authToken ? `Bearer ${authToken}` : null
-                },
+                headers,
                 data: {
                     cartId
                 }
             }) 
         },
         clear(): AxiosPromise<string>{
+            const headers = authToken ? {
+                authorization: `Bearer ${authToken}`
+            } : {}
+
             return request({
                 method: "DELETE",
                 url: `shop/clear`,
-                headers: {
-                    authorization: authToken ? `Bearer ${authToken}` : null
-                }
+                headers
             })
         },
         changeAmount(cartId: string, type: "inc" | "dec"): AxiosPromise<string>{
+            const headers = authToken ? {
+                authorization: `Bearer ${authToken}`
+            } : {}
+
             return request({
                 method: "PATCH",
                 url: `shop/changeAmount`,
-                headers: {
-                    authorization: authToken ? `Bearer ${authToken}` : null
-                },
+                headers,
                 data: {
                     cartId,
                     type

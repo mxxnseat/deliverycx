@@ -2,22 +2,19 @@ import { FC, MouseEvent, useRef } from "react";
 import {useHistory} from "react-router";
 import convertWeight from "../../../helpers/convertWeight";
 import { IProduct } from "../../../types/responses";
-import cart from "../../../api/Cart";
-import { AddToCartResponse } from "../../../types/actions/cart";
+
+import {addToCartAction} from "../../../store/actions/cart"
+import { useDispatch } from "react-redux";
 
 const Product_item: FC<IProduct> = ({_id, name, price, measureUnit, weight, description, images}) => {
     const history = useHistory();
     const cardRef = useRef<HTMLDivElement>(null);
+    const dispatch = useDispatch();
 
     const clickHandler = async (e: MouseEvent<HTMLDivElement | HTMLButtonElement>, id?: string)=>{
         e.stopPropagation();
         if(e.currentTarget !== cardRef.current && id){
-            //TODO перенести в санки
-            const {status, data} = await cart.addToCart<AddToCartResponse>(id);
-
-            if(status !== 200) return null;
-
-            console.log(data);
+            dispatch(addToCartAction(id));
         }else{
             history.push(`/shop/product/${_id}`)
         }

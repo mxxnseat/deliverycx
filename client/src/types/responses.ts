@@ -54,10 +54,14 @@ export interface IUser{
     username: string,
     _id: string,
     isVerify: boolean,
+    cart: ICart[]
     organization: IAddress
 }
 
 export interface IUpdateUserResponse{
     message: string,
     user: Omit<IUser, "organization">
+}
+export interface IRemoveCartItemResponse{
+    cartId: string
 }

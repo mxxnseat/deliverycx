@@ -1,6 +1,6 @@
 import { AppDispatch, RootState } from "..";
-import { ICartChoiceAction, CART_CHOICE, ACTIONS, IChangePromocodeAction, IAddToCartAction, AddToCartResponse } from "../../types/actions/cart";
-import { IProduct } from "../../types/responses";
+import { ICartChoiceAction, CART_CHOICE, ACTIONS, IChangePromocodeAction, ILoadCartAction, AddToCartResponse } from "../../types/actions/cart";
+import { ICart, IProduct, IRemoveCartItemResponse } from "../../types/responses";
 import cart from "../../api/Cart";
 
 function changePromoCode(payload: string): IChangePromocodeAction {
@@ -17,29 +17,51 @@ function cartChoiceAction(payload: CART_CHOICE): ICartChoiceAction {
 }
 
 
+function loadCart(payload: ICart[]): ILoadCartAction{
+    return {
+        type: ACTIONS.LOAD_CART,
+        payload
+    }
+}
 function addToCartAction(productId: string) {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch({
             type: ACTIONS.SET_IS_LOADING,
             payload: true
         });
-        const {status, data} = await cart.addToCart<AddToCartResponse[]>(productId);
-
+        const { status, data } = await cart.addToCart<AddToCartResponse>(productId);
         dispatch({
             type: ACTIONS.SET_IS_LOADING,
             payload: false
         });
 
-        if(status === 200){
+        if (status === 200) {
             dispatch({
                 type: ACTIONS.ADD_TO_CART,
                 payload: data
             })
+
         }
+    }
+}
+function removeOne(cartId: string){
+    return async (dispatch: AppDispatch)=>{
+        const {data, status} = await cart.removeOne<IRemoveCartItemResponse>(cartId)
+
+        if(status === 200){
+            dispatch({
+                type: ACTIONS.REMOVE_ITEM,
+                payload: cartId
+            })
+        }
+        
     }
 }
 
 export {
     cartChoiceAction,
-    changePromoCode
+    changePromoCode,
+    addToCartAction,
+    loadCart,
+    removeOne
 }
