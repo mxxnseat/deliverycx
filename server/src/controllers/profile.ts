@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import jwt, { VerifyErrors } from "jsonwebtoken";
+import calcTotalPrice from "../utils/calcTotalPrice";
 import { User } from "../db/models";
 import { IUserSchema } from "../db/models/profile/User";
 import generateUserTokens from "../helpers/generateTokens";
@@ -121,6 +122,9 @@ class Profile {
                 }
             }).populate({
                 path: "cart",
+                select: {
+                    user: 0
+                },
                 populate: {
                     path: "product"
                 }
@@ -131,9 +135,12 @@ class Profile {
                     isAuth: false
                 });
             }
+
+            const totalPrice = calcTotalPrice(user.cart);
+
             res.status(200).json({
                 isAuth: true,
-                user
+                user,
             })
         }catch(e: unknown){
             console.log(e);

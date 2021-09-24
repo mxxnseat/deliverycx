@@ -1,20 +1,30 @@
-import { FC, MouseEvent, useRef } from "react";
+import { FC, memo, MouseEvent, useCallback, useRef, useState } from "react";
 import {useHistory} from "react-router";
 import convertWeight from "../../../helpers/convertWeight";
 import { IProduct } from "../../../types/responses";
 
 import {addToCartAction} from "../../../store/actions/cart"
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../store";
 
-const Product_item: FC<IProduct> = ({_id, name, price, measureUnit, weight, description, images}) => {
+
+
+const Product: FC<IProduct> = ({_id, name, price, measureUnit, weight, description, images}) => {
     const history = useHistory();
     const cardRef = useRef<HTMLDivElement>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
 
-    const clickHandler = async (e: MouseEvent<HTMLDivElement | HTMLButtonElement>, id?: string)=>{
+    const clickHandler = (e: MouseEvent<HTMLDivElement | HTMLButtonElement>, id?: string)=>{
         e.stopPropagation();
         if(e.currentTarget !== cardRef.current && id){
-            dispatch(addToCartAction(id));
+            if(!isLoading){
+                dispatch(addToCartAction(id));
+                setIsLoading(true);
+                setTimeout(()=>{
+                    setIsLoading(false);
+                }, 2000);
+            }
         }else{
             history.push(`/shop/product/${_id}`)
         }
@@ -50,4 +60,4 @@ const Product_item: FC<IProduct> = ({_id, name, price, measureUnit, weight, desc
     )
 };
 
-export default Product_item;
+export default Product;

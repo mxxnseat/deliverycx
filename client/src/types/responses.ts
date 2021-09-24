@@ -45,7 +45,6 @@ export interface IProduct{
 
 export interface ICart{
     _id: string,
-    userId: string,
     product: IProduct,
     amount: number
 }
@@ -54,7 +53,7 @@ export interface IUser{
     username: string,
     _id: string,
     isVerify: boolean,
-    cart: ICart[]
+    cart: ICart[],
     organization: IAddress
 }
 

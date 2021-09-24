@@ -1,9 +1,9 @@
 import mongoose, { Schema, model, RefType } from "mongoose";
 
-export interface ICartSchema {
+export interface ICartSchema<U = RefType, P = RefType>{
     _id: mongoose.Types.ObjectId,
-    user: RefType,
-    product: RefType,
+    user: U,
+    product: P,
     amount: number
 }
 

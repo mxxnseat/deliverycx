@@ -1,5 +1,5 @@
 import { AppDispatch, RootState } from "..";
-import { ICartChoiceAction, CART_CHOICE, ACTIONS, IChangePromocodeAction, ILoadCartAction, AddToCartResponse } from "../../types/actions/cart";
+import { ICartChoiceAction, CART_CHOICE, ACTIONS, IChangePromocodeAction, ILoadCartAction, AddToCartResponse, ITotalPriceAction, ChangeAmountType } from "../../types/actions/cart";
 import { ICart, IProduct, IRemoveCartItemResponse } from "../../types/responses";
 import cart from "../../api/Cart";
 
@@ -17,7 +17,7 @@ function cartChoiceAction(payload: CART_CHOICE): ICartChoiceAction {
 }
 
 
-function loadCart(payload: ICart[]): ILoadCartAction{
+function loadCart(payload: ICart[]): ILoadCartAction {
     return {
         type: ACTIONS.LOAD_CART,
         payload
@@ -44,17 +44,42 @@ function addToCartAction(productId: string) {
         }
     }
 }
-function removeOne(cartId: string){
-    return async (dispatch: AppDispatch)=>{
-        const {data, status} = await cart.removeOne<IRemoveCartItemResponse>(cartId)
+function removeOne(cartId: string) {
+    return async (dispatch: AppDispatch) => {
+        const { data, status } = await cart.removeOne<IRemoveCartItemResponse>(cartId)
 
-        if(status === 200){
+        if (status === 200) {
             dispatch({
                 type: ACTIONS.REMOVE_ITEM,
                 payload: cartId
             })
         }
-        
+
+    }
+}
+function setTotalPrice() {
+
+    return async (dispatch: AppDispatch) => {
+        const { status, data } = await cart.getCart();
+        if (status === 200) {
+            dispatch({
+                type: ACTIONS.TOTAL_PRICE,
+                payload: data.totalPrice
+            })
+        }
+    }
+}
+
+function changeAmount({id, type}: ChangeAmountType){
+    return async(dispatch: AppDispatch)=>{
+        const {status, data} = await cart.changeAmount<AddToCartResponse>(id, type);
+    
+        if(status === 200){
+            dispatch({
+                type: ACTIONS.CHANGE_AMOUNT,
+                payload: data
+            })
+        }
     }
 }
 
@@ -63,5 +88,7 @@ export {
     changePromoCode,
     addToCartAction,
     loadCart,
-    removeOne
+    removeOne,
+    setTotalPrice,
+    changeAmount
 }

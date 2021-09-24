@@ -5,7 +5,7 @@ import { User, Cart, Product } from "../db/models";
 import { IProduct } from "../db/models/api/Product";
 import { IUserSchema } from "../db/models/profile/User";
 import { FindOneAndUpdateReturnType } from "../types/mongoose";
-
+import calcTotalPrice from "../utils/calcTotalPrice";
 import {ICartSchema} from "../db/models/shop/Cart";
 
 type Body = {
@@ -22,7 +22,14 @@ class Shop {
                 throw Error("Bad request");
             }
 
-            const user: IUserSchema & Document = await User.findOne({ username: body.username });
+            const user: IUserSchema<ICartSchema<unknown, IProduct>, unknown> & Document 
+                    = await User.findOne({ username: body.username })
+                        .populate({
+                            path: "cart",
+                            populate: {
+                                path: "product"
+                            }
+                        });
 
             /*
             * Обновляем количество если товар уже в корзине, иначе создаем
@@ -60,10 +67,12 @@ class Shop {
                 await user.save();
             }
 
+            const totalPrice = calcTotalPrice(user.cart);
             res.status(200).json({
                 _id: productInCart.value._id,
                 product: productPopulate.product,
-                amount: productPopulate.amount
+                amount: productPopulate.amount,
+                totalPrice
             });
         } catch (e: unknown) {
             console.log(e);
@@ -77,14 +86,21 @@ class Shop {
             const cart = await Cart.findOneAndDelete({ _id: cartId });
 
             if(cart){
-                await User.findOneAndUpdate({username}, {
+                const user = await User.findOneAndUpdate({username}, {
                     $pull: {
                         cart: cartId
                     }
+                }).populate({
+                    path: "cart",
+                    populate: {
+                        path: "product"
+                    }
                 });
 
+                const totalPrice = calcTotalPrice(user.cart);
                 res.status(200).json({
-                    cartId
+                    cartId,
+                    totalPrice
                 });
 
 
@@ -139,7 +155,7 @@ class Shop {
             }
 
             const cart = await Cart.findOneAndUpdate({ _id: cartId }, update);
-            res.status(200).json("ok");
+            res.status(200).json(cart);
         } catch (e: unknown) {
             console.log(e);
             res.status(400).json("Bad request");
@@ -154,10 +170,17 @@ class Shop {
                     path: "cart",
                     populate: {
                         path: "product"
+                    },
+                    select: {
+                        user: 0
                     }
                 })
-
-            res.status(200).json(user.cart);
+            
+            const totalPrice = calcTotalPrice(user.cart);
+            res.status(200).json({
+                cart: user.cart,
+                totalPrice
+            });
         } catch (e) {
             console.log(e);
             res.status(400).json("Bad request");

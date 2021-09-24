@@ -1,18 +1,18 @@
 import mongoose, {model, Schema, RefType} from "mongoose";
 
 
-export interface IUserSchema{
+export interface IUserSchema<C=RefType, O = RefType>{
     _id: mongoose.Types.ObjectId,
     token: {
         access: string,
         refresh: string
     },
-    cart: RefType[],
+    cart: C[],
     username: string,
     name?: string,
     phone?: string,
     isVerify: boolean,
-    organization: RefType
+    organization: O
 }
 const UserSchema = new Schema<IUserSchema>({
     token: {

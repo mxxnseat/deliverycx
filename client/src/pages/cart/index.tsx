@@ -1,5 +1,5 @@
-import { FC, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { FC, useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import HeaderBack from "../../components/HOC/HeaderBack";
 import CartChoise from "./CartChoice";
@@ -13,8 +13,12 @@ import { RootState } from "../../store";
 import { CART_CHOICE } from "../../types/actions/cart";
 import { useHistory } from "react-router";
 
+import cart from "../../api/Cart";
+import { setTotalPrice } from "../../store/actions/cart";
+
 
 const Cart: FC = () => {
+    const dispatch = useDispatch();
     const history = useHistory();
     const activeChoice: CART_CHOICE = useSelector((state: RootState) => state.cart.cart_choice);
     const [CartWrapperProps, setCartWrapperProps] = useState({

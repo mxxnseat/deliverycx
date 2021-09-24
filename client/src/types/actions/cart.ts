@@ -12,6 +12,10 @@ export interface ISetIsLoadingAction{
     type: ACTIONS.SET_IS_LOADING,
     payload: boolean
 }
+export interface ITotalPriceAction{
+    type: ACTIONS.TOTAL_PRICE,
+    payload: number
+}
 
 export type AddToCartResponse = {
     _id: string,
@@ -31,6 +35,14 @@ export interface IRemoveItemAction{
     type: ACTIONS.REMOVE_ITEM,
     payload: string
 }
+export type ChangeAmountType = {
+    id: string,
+    type: "inc" | "dec"
+}
+export interface IChangeAmountAction{
+    type: ACTIONS.CHANGE_AMOUNT,
+    payload: AddToCartResponse
+}
 
 export enum CART_CHOICE{
     PICKUP = "PICKUP",
@@ -43,7 +55,9 @@ export enum ACTIONS{
     SET_IS_LOADING = "SET_IS_LOADING",
     ADD_TO_CART = "ADD_TO_CART",
     LOAD_CART = "LOAD_CART",
-    REMOVE_ITEM = "REMOVE_ITEM"
+    REMOVE_ITEM = "REMOVE_ITEM",
+    TOTAL_PRICE = "TOTAL_PRICE",
+    CHANGE_AMOUNT = "CHANGE_AMOUNT"
 }
 
 
@@ -52,10 +66,13 @@ export interface IInitialState {
     cart_choice: CART_CHOICE,
     list: AddToCartResponse[],
     isLoading: boolean
+    totalPrice: number
 }
 export type CartActionsType =   ICartChoiceAction |
                                 IChangePromocodeAction |
                                 ISetIsLoadingAction |
                                 IAddToCartAction |
                                 ILoadCartAction |
-                                IRemoveItemAction;
+                                IRemoveItemAction |
+                                ITotalPriceAction |
+                                IChangeAmountAction;

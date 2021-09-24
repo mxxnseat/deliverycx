@@ -1,13 +1,14 @@
 import {AxiosInstance, AxiosPromise } from "axios";
 import Api from ".";
-import { ICart, IRemoveCartItemResponse } from "../types/responses";
+import { ICart } from "../types/responses";
 
 const Cart = ({ api }: Api)=>{
     const request: AxiosInstance = api;
-    const authToken = localStorage.getItem("authToken");
 
     return {
         addToCart<R>(productId: string): AxiosPromise<R>{
+            const authToken = localStorage.getItem("authToken");
+
             const headers = authToken ? {
                 authorization: `Bearer ${authToken}`
             } : {}
@@ -22,6 +23,8 @@ const Cart = ({ api }: Api)=>{
             });
         },
         removeOne<R>(cartId: string): AxiosPromise<R>{
+            const authToken = localStorage.getItem("authToken");
+
             const headers = authToken ? {
                 authorization: `Bearer ${authToken}`
             } : {}
@@ -36,6 +39,8 @@ const Cart = ({ api }: Api)=>{
             }) 
         },
         clear(): AxiosPromise<string>{
+            const authToken = localStorage.getItem("authToken");
+
             const headers = authToken ? {
                 authorization: `Bearer ${authToken}`
             } : {}
@@ -46,7 +51,9 @@ const Cart = ({ api }: Api)=>{
                 headers
             })
         },
-        changeAmount(cartId: string, type: "inc" | "dec"): AxiosPromise<string>{
+        changeAmount<R>(cartId: string, type: "inc" | "dec"): AxiosPromise<R>{
+            const authToken = localStorage.getItem("authToken");
+
             const headers = authToken ? {
                 authorization: `Bearer ${authToken}`
             } : {}
@@ -60,6 +67,19 @@ const Cart = ({ api }: Api)=>{
                     type
                 }
             });
+        },
+        getCart(): AxiosPromise<ICart & {totalPrice: number}>{
+            const authToken = localStorage.getItem("authToken");
+
+            const headers = authToken ? {
+                authorization: `Bearer ${authToken}`
+            } : {};
+
+            return request({
+                method: "GET",
+                url: `shop/getCart`,
+                headers
+            })
         }
     }
 }

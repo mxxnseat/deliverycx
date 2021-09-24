@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, memo, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { RootState } from "../../store";
@@ -25,4 +25,4 @@ const CartList: FC = () => {
     )
 }
 
-export default CartList;
+export default memo(CartList);

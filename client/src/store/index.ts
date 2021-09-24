@@ -6,6 +6,8 @@ import thunk from "redux-thunk";
 
 import reducer from "./reducers";
 
+import isEqual from "lodash/isEqual";
+
 
 const history = createBrowserHistory();
 const routerMiddlewareInst = routerMiddleware(history);
