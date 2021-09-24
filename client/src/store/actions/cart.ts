@@ -72,8 +72,9 @@ function setTotalPrice() {
 
 function changeAmount({id, type}: ChangeAmountType){
     return async(dispatch: AppDispatch)=>{
+        console.log(type);
         const {status, data} = await cart.changeAmount<AddToCartResponse>(id, type);
-    
+        console.log(data);
         if(status === 200){
             dispatch({
                 type: ACTIONS.CHANGE_AMOUNT,

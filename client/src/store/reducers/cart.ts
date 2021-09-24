@@ -50,7 +50,7 @@ export default (state = initialState, action: CartActionsType): IInitialState =>
 
             return {
                 ...state,
-                list: saveList
+                list: [...saveList]
             }
         }
         case ACTIONS.REMOVE_ITEM: {
@@ -67,19 +67,12 @@ export default (state = initialState, action: CartActionsType): IInitialState =>
         }
         case ACTIONS.CHANGE_AMOUNT: {
             const saveList = [...state.list];
-
-            const isFind = saveList.find(el => el._id === action.payload._id);
-            console.log(isFind, action.payload);
-            
-            if (isFind !== undefined) {
-                isFind.amount = action.payload.amount;
-
                 return {
                     ...state,
-                    list: saveList
-                }
+                    list: saveList.map(el=>{
+                        return el._id === action.payload._id ? action.payload : el;
+                    })
             }
-            return state;
         }
         default: {
             return state;
