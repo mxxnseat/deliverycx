@@ -154,7 +154,12 @@ class Shop {
                 default: throw Error("Bad request");
             }
 
-            const cart = await Cart.findOneAndUpdate({ _id: cartId }, update);
+            const cart = await Cart.findOneAndUpdate({ _id: cartId }, update, {new: true}).populate({
+                path: "product",
+                select: {
+                    user: 0
+                }
+            });
             res.status(200).json(cart);
         } catch (e: unknown) {
             console.log(e);
