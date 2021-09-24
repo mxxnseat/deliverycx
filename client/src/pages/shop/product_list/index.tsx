@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
-import ProductItem from "./item"
+import Product from "./item"
 
 const ProductList: FC = () => {
     const products = useSelector((state: RootState)=>state.shop.productsList);
@@ -11,7 +11,7 @@ const ProductList: FC = () => {
 
             {
                 products.map(item=>{
-                    return <ProductItem key={item._id} {...item}/>
+                    return <Product key={item._id} {...item}/>
                 })
             }
         </div>

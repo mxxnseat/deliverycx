@@ -31,7 +31,7 @@ const profile = ({ api }: Api) => {
                 headers
             })
         },
-        checkSelectedAddress(): AxiosPromise<ICheckData> {
+        getProfile(): AxiosPromise<ICheckData> {
             const authToken = localStorage.getItem("authToken");
             console.log(authToken);
             const headers = authToken ? {
@@ -40,7 +40,7 @@ const profile = ({ api }: Api) => {
 
             return request({
                 method: "POST",
-                url: `profile/checkSelectedAddress`,
+                url: `profile/getProfile`,
                 headers
             })
         },

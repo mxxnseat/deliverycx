@@ -1,12 +1,13 @@
-import mongoose, {Schema, model, RefType} from "mongoose";
+import mongoose, { Schema, model, RefType } from "mongoose";
 
-export interface ICartSchema{
-    user: RefType,
-    product: RefType,
+export interface ICartSchema<U = RefType, P = RefType>{
+    _id: mongoose.Types.ObjectId,
+    user: U,
+    product: P,
     amount: number
 }
 
-const CartSchema = new Schema<ICartSchema>({
+export const CartSchema = new Schema<ICartSchema>({
     user: {
         required: true,
         ref: "User",
@@ -21,6 +22,7 @@ const CartSchema = new Schema<ICartSchema>({
         type: Number,
         default: 1
     }
-}, {versionKey: false})
+}, { versionKey: false });
+
 
 export default model("Cart", CartSchema);

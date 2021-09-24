@@ -6,9 +6,12 @@ import thunk from "redux-thunk";
 
 import reducer from "./reducers";
 
+import isEqual from "lodash/isEqual";
+
 
 const history = createBrowserHistory();
 const routerMiddlewareInst = routerMiddleware(history);
+
 
 const store = createStore(reducer, 
     composeWithDevTools({})
@@ -21,7 +24,3 @@ const store = createStore(reducer,
 export default store;
 export type RootState = ReturnType<typeof reducer>;
 export type AppDispatch = typeof store.dispatch;
-
-// if(!store.getState().profile.isAuth){
-//     history.push("/");
-// }

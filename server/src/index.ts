@@ -12,6 +12,7 @@ import iiko from "./services/iiko";
 import api from "./routers/api";
 import shop from "./routers/shop";
 import profile from "./routers/profile";
+import authCheck from "./middlewares/authCheck";
 
 
 const INDEXHTML = path.resolve(__dirname, "../../client/build/index.html");
@@ -25,12 +26,13 @@ App.use(bodyParser())
 
 App.use("/api", api);
 
+
+App.use("/profile", profile);
+App.use("/shop", authCheck ,shop);
+
 App.get("/*", (req: Request, res: Response) => {
     res.sendFile(INDEXHTML);
 });
-
-App.use("/profile", profile);
-App.use("/shop", shop);
 
 App.listen(PORT, () => {
     try {
