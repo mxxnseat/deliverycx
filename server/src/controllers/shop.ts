@@ -159,12 +159,8 @@ class Shop {
             cart.amount += update;
 
             let resultCart = await cart.save()
-            resultCart = await resultCart.populate({
-                path: "product",
-                select: {
-                    user: 0
-                }
-            });
+
+            resultCart = await Cart.populate(resultCart, {path: "product", select:{user: 0}});
 
             console.log(resultCart);
             res.status(200).json(resultCart);
