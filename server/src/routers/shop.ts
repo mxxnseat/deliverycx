@@ -6,8 +6,6 @@ import authCheck from "../middlewares/authCheck";
 
 const shop = new Shop();
 
-route.use(authCheck);
-
 route.post("/addToCart", shop.addToCart);
 route.get("/getCart", shop.getCart);
 

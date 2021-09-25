@@ -50,7 +50,6 @@ class Api {
                                 { group: categoryId as object, "organizations": organizationId as string },
                                 { organizations: false }
                             );
-            console.log(products);
             res.json(products);
         } catch (e: unknown) {
             console.log(e);

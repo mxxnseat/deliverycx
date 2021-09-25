@@ -1,6 +1,6 @@
 import mongoose, { Schema, model, RefType } from "mongoose";
 
-export interface ICartSchema<U = RefType, P = RefType>{
+export interface ICartSchema<U = RefType, P = RefType> {
     _id: mongoose.Types.ObjectId,
     user: U,
     product: P,
@@ -20,9 +20,9 @@ export const CartSchema = new Schema<ICartSchema>({
     },
     amount: {
         type: Number,
-        default: 1
+        default: 1,
+        min: 1
     }
 }, { versionKey: false });
-
 
 export default model("Cart", CartSchema);
