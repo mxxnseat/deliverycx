@@ -100,7 +100,6 @@ class Profile {
                 organization: 0
             }});
 
-            console.log(user);
 
             res.status(200).json({
                 message: "ok",

@@ -1,12 +1,12 @@
-import mongoose, {Document} from "mongoose";
+import mongoose, { Document } from "mongoose";
 import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import { User, Cart, Product } from "../db/models";
 import { IProduct } from "../db/models/api/Product";
 import { IUserSchema } from "../db/models/profile/User";
-import { FindOneAndUpdateReturnType } from "../types/mongoose";
+import { FindOneAndUpdateReturnType, ILastErrorObject } from "../types/mongoose";
 import calcTotalPrice from "../utils/calcTotalPrice";
-import {ICartSchema} from "../db/models/shop/Cart";
+import { ICartSchema } from "../db/models/shop/Cart";
 
 type Body = {
     username: string,
@@ -22,34 +22,34 @@ class Shop {
                 throw Error("Bad request");
             }
 
-            const user: IUserSchema<ICartSchema<unknown, IProduct>, unknown> & Document 
-                    = await User.findOne({ username: body.username })
-                        .populate({
-                            path: "cart",
-                            populate: {
-                                path: "product"
-                            }
-                        });
+            const user: IUserSchema<ICartSchema<unknown, IProduct>, unknown> & Document
+                = await User.findOne({ username: body.username })
+                    .populate({
+                        path: "cart",
+                        populate: {
+                            path: "product"
+                        }
+                    });
 
             /*
             * Обновляем количество если товар уже в корзине, иначе создаем
             */
-            const productInCart: FindOneAndUpdateReturnType<ICartSchema & Document> = await Cart.findOneAndUpdate({ 
+            const productInCart: FindOneAndUpdateReturnType<ICartSchema & Document, ILastErrorObject> = await Cart.findOneAndUpdate({
                 user: user._id,
                 product: body.productId as string
             },
-            {
-                $setOnInsert: {
-                    userId: user._id,
-                    product: product._id
+                {
+                    $setOnInsert: {
+                        userId: user._id,
+                        product: product._id
+                    },
+                    $inc: { amount: 1 },
                 },
-                $inc: { amount: 1 },
-            },
-            {
-                new: true,
-                upsert: true,
-                rawResult: true
-            });
+                {
+                    new: true,
+                    upsert: true,
+                    rawResult: true
+                });
 
             const productPopulate = await productInCart.value.populate({
                 path: "product",
@@ -57,8 +57,8 @@ class Shop {
                     organizations: 0
                 }
             });
-            
-            if(!productInCart.lastErrorObject.updatedExisting){
+
+            if (!productInCart.lastErrorObject.updatedExisting) {
                 await user.updateOne({
                     $addToSet: {
                         cart: productInCart.value._id
@@ -85,8 +85,8 @@ class Shop {
         try {
             const cart = await Cart.findOneAndDelete({ _id: cartId });
 
-            if(cart){
-                const user = await User.findOneAndUpdate({username}, {
+            if (cart) {
+                const user = await User.findOneAndUpdate({ username }, {
                     $pull: {
                         cart: cartId
                     }
@@ -104,10 +104,10 @@ class Shop {
                 });
 
 
-            }else{
+            } else {
                 throw Error();
             }
-        
+
 
 
         } catch (e: unknown) {
@@ -144,23 +144,30 @@ class Shop {
 
             switch (type) {
                 case "inc": {
-                    update = { $inc: { amount: 1 } }
+                    update = 1
                     break;
                 }
                 case "dec": {
-                    update = { $inc: { amount: -1 } }
+                    update = -1
                     break;
                 }
                 default: throw Error("Bad request");
             }
 
-            const cart = await Cart.findOneAndUpdate({ _id: cartId }, update, {new: true}).populate({
+            const cart = await Cart.findOne({_id: cartId});
+
+            cart.amount += update;
+
+            let resultCart = await cart.save()
+            resultCart = await resultCart.populate({
                 path: "product",
                 select: {
                     user: 0
                 }
             });
-            res.status(200).json(cart);
+
+            console.log(resultCart);
+            res.status(200).json(resultCart);
         } catch (e: unknown) {
             console.log(e);
             res.status(400).json("Bad request");
@@ -180,7 +187,7 @@ class Shop {
                         user: 0
                     }
                 })
-            
+
             const totalPrice = calcTotalPrice(user.cart);
             res.status(200).json({
                 cart: user.cart,
