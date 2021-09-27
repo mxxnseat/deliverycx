@@ -14,6 +14,7 @@ const CartList: FC = () => {
             history.push("/shop");
         }
     }, [cartList]);
+
     return (
         <div className="cart__goods-list">
             {

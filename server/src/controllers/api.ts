@@ -43,16 +43,34 @@ class Api {
         try {
             const categoryId = req.query.categoryId;
             const organizationId = req.query.organizationId;
-            if (!categoryId || !organizationId) {
-                res.status(400).json("Bad request");
+            const queryString = req.query.searchQuery;
+            if (!organizationId) {
+                throw Error();
             }
-            const products = await model.Product.find(
-                                { group: categoryId as object, "organizations": organizationId as string },
-                                { organizations: false }
-                            );
-            res.json(products);
+            let products = [];
+
+            if(!categoryId){
+                products = await model.Product.find(
+                    {
+                        organizations: organizationId as string,
+                        name: {
+                            $regex: queryString as string,
+                            $options: "i"
+                        }
+                    },
+                    {organizations: false}
+                )
+            }else{
+                products = await model.Product.find(
+                    { group: categoryId as object, "organizations": organizationId as string },
+                    { organizations: false }
+                );
+            }
+            
+            res.status(200).json(products);
         } catch (e: unknown) {
             console.log(e);
+            res.status(400).json("Bad request");
         }
     }
 

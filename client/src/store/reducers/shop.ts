@@ -3,7 +3,6 @@ import { ICategory } from "../../types/responses";
 
 const initialState: IInitialState = {
     isSearch: false,
-    productsList: [],
     category: {} as ICategory
 }
 
@@ -15,10 +14,10 @@ export default (state = initialState, action: ActionsTypes):IInitialState=>{
                 category: action.payload
             }
         }
-        case ACTIONS.SET_PRODUCTS: {
+        case ACTIONS.SET_IS_SEARCH: {
             return {
                 ...state,
-                productsList: [...action.payload]
+                isSearch: action.payload
             }
         }
         default: return state;
