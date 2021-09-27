@@ -13,21 +13,17 @@ import { RootState } from "../../store";
 import { CART_CHOICE } from "../../types/actions/cart";
 import { useHistory } from "react-router";
 
-import cart from "../../api/Cart";
-import { setTotalPrice } from "../../store/actions/cart";
-
 
 const Cart: FC = () => {
-    const dispatch = useDispatch();
     const history = useHistory();
-    const activeChoice: CART_CHOICE = useSelector((state: RootState) => state.cart.cart_choice);
+    const {cart_choice, list} = useSelector((state: RootState) => state.cart);
     const [CartWrapperProps, setCartWrapperProps] = useState({
         Memo: DeliveryMemo,
         Form: DeliveryForm
     });
 
     useEffect(() => {
-        switch (activeChoice) {
+        switch (cart_choice) {
             case CART_CHOICE.DELIVERY: {
                 setCartWrapperProps({
                     ...{
@@ -56,13 +52,13 @@ const Cart: FC = () => {
                 break;
             }
         }
-    }, [activeChoice]);
+    }, [cart_choice]);
 
     return (
         <div className="app" style={{ backgroundColor: "#fff" }}>
             <div className="cart">
                 <HeaderBack onClickCb={()=>history.push("/shop")}>
-                        Ваш заказ <span className="select-red">7</span> блюд
+                        Ваш заказ <span className="select-red">{list.length}</span> блюд
                 </HeaderBack>
                 <div className="container">
                     <CartChoise />

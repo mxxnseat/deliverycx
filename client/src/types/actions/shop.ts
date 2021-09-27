@@ -14,16 +14,10 @@ export interface ISetCategory{
     type: ACTIONS.SET_CATEGORY,
     payload: ICategory
 }
-export interface ISetProductsList{
-    type: ACTIONS.SET_PRODUCTS,
-    payload: IProduct[]
-}
-
 export interface IInitialState{
     isSearch: boolean,
-    productsList: IProduct[],
     category: ICategory
 }
 
 
-export type ActionsTypes = ISetIsSearchAction | ISetCategory | ISetProductsList;
+export type ActionsTypes = ISetIsSearchAction | ISetCategory;

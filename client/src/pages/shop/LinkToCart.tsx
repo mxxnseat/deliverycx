@@ -6,15 +6,15 @@ import cn from "classnames";
 import { useOutside } from "../../customHooks/useOutside";
 
 const LinkToCart: FC = () => {
-    const list = useSelector((state: RootState) => state.shop.productsList);
-    const productsInCart = useSelector((state: RootState)=>state.cart.list.length);
-    const [isPopupEmpty, setIsPopupEmpty] = useState(false);
     const history = useHistory();
-    const emptyCN = cn("link-to-cart__empty", {open: isPopupEmpty});
+    const productsInCart = useSelector((state: RootState)=>state.cart.list);
+    const [isPopupEmpty, setIsPopupEmpty] = useState(false);
     const ref = useRef<HTMLDivElement | null>(null);
 
+    const emptyCN = cn("link-to-cart__empty", {open: isPopupEmpty});
+
     const linkHandler = () => {
-        list.length ? history.push("/cart") : setIsPopupEmpty(true);
+        productsInCart && productsInCart.length ? history.push("/cart") : setIsPopupEmpty(true);
     }
     useOutside(ref, ()=>setIsPopupEmpty(false), isPopupEmpty);
 
@@ -22,7 +22,7 @@ const LinkToCart: FC = () => {
         <div onClick={linkHandler} className="link-to-cart">
             <div className="container row justify-between align-center">
                 <div className="link-to-cart__count">
-                    {productsInCart}
+                    {productsInCart.length}
                 </div>
 
                 <div className="link-to-cart__text">

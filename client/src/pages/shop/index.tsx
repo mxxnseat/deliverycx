@@ -13,7 +13,7 @@ import LinkToCart from "./LinkToCart";
 import ShopSearch from "./search";
 
 const Shop: FC<{}> = () => {
-    const isSearch = useSelector((state: RootState) => state.shop.isSearch);
+    const {category, isSearch} = useSelector((state: RootState) => state.shop);
     const transitions = useTransition(isSearch, {
         from: { opacity: 0 },
         enter: { opacity: 1 },
@@ -31,14 +31,15 @@ const Shop: FC<{}> = () => {
                     <Categories />
                     <Stocks />
                     <div className="container">
-                        <ProductList />
+                        {category && <ProductList category={category._id} />}
                     </div>
                     <LinkToCart />
                 </animated.div>
                 :
                 <animated.div style={style}>
                     <ShopSearch />
-                </animated.div>}
+                </animated.div>
+            }
         </>
 
     ));
