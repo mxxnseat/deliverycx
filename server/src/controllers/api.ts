@@ -41,9 +41,9 @@ class Api {
 
     public async getProducts(req: Request, res: Response) {
         try {
-            const categoryId = req.query.categoryId;
-            const organizationId = req.query.organizationId;
-            const queryString = req.query.searchQuery;
+            const categoryId = req.query.categoryId as string;
+            const organizationId = req.query.organizationId as string;
+            const queryString = req.query.searchQuery as string;
             if (!organizationId) {
                 throw Error();
             }
@@ -52,9 +52,9 @@ class Api {
             if(!categoryId){
                 products = await model.Product.find(
                     {
-                        organizations: organizationId as string,
+                        organizations: organizationId,
                         name: {
-                            $regex: queryString as string,
+                            $regex: queryString ? queryString : '',
                             $options: "i"
                         }
                     },
@@ -62,7 +62,7 @@ class Api {
                 )
             }else{
                 products = await model.Product.find(
-                    { group: categoryId as object, "organizations": organizationId as string },
+                    { group: categoryId, "organizations": organizationId },
                     { organizations: false }
                 );
             }
@@ -78,7 +78,9 @@ class Api {
         try {
             const { id } = req.params;
 
-            const product = await model.Product.findOne({ _id: id as string }, { organizations: false });
+            const product = await model.Product.findOne({ _id: id as string }, { organizations: false }).populate({
+                path: "group",
+            });
             if(!product){
                 return res.status(404).json("Not found");
             }

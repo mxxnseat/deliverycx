@@ -1,4 +1,4 @@
-import { FC, memo, useCallback, useEffect, useState } from "react";
+import { FC, memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { IProduct } from "../../../types/responses";
@@ -6,12 +6,13 @@ import Product from "./item"
 import api from "../../../api/Api";
 
 
-interface IProps {
+interface IProps  {
     category?: string,
     searchQuery?: string
 }
 
 const ProductList: FC<IProps> = ({category, searchQuery}) => {
+    console.log(category);
     const [products, setProducts] = useState<IProduct[]>([]);
     const organization = useSelector((state: RootState)=>state.address.address._id);
 

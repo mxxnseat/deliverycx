@@ -31,7 +31,7 @@ const Shop: FC<{}> = () => {
                     <Categories />
                     <Stocks />
                     <div className="container">
-                        {category && <ProductList category={category._id} />}
+                        {category && category._id ? <ProductList category={category._id} /> : "loading..."}
                     </div>
                     <LinkToCart />
                 </animated.div>

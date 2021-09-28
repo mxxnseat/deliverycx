@@ -22,9 +22,8 @@ interface IResponse{
 
 const ProductCard: FC<RouteProps> = ({ match }) => {
     const history = useHistory();
-    const category = useSelector((state: RootState) =>state.shop.category);
     const [sauces, setSauces] = useState<IProduct[]>([]);
-    const [product, setProduct] = useState<IProduct>({} as IProduct);
+    const [product, setProduct] = useState<IProduct | null>(null);
 
     useEffect(() => {
         const productId = match.params.id;
@@ -37,16 +36,12 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
         })();
     }, []);
 
-    if(!Object.keys(product).length){
-        return <div>loading....</div>
-    }
-
     return (
-        <div className="product-card">
+        product ? <div className="product-card">
             <HeaderBack backgroundColor="#fff" onClickCb={() => history.goBack()}>
                 <div className="product-card__category">
                     <div className="category-image-wrap">
-                        <img src={category.images.imageUrl} />
+                        <img src={product.group.images.imageUrl} />
                     </div>
                 </div>
             </HeaderBack>
@@ -118,7 +113,7 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
             </div>
 
             <LinkToCart />
-        </div>
+        </div> : <>loading...</>
     )
 }
 
