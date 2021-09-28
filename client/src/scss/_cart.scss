@@ -105,6 +105,12 @@
             flex-direction: column;
             justify-content: space-between;
         }
+        &__disable{
+            cursor: no-drop;
+            img{
+                opacity: 0.3;
+            }
+        }
     }
     &__order{
         &-btn{

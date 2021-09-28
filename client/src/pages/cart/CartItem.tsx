@@ -1,7 +1,8 @@
-import { FC } from "react";
+import { FC, useCallback, useMemo } from "react";
 import { AddToCartResponse, ChangeAmountType } from "../../types/actions/cart";
 import { useDispatch } from "react-redux";
-import {removeOne, changeAmount} from "../../store/actions/cart";
+import { removeOne, changeAmount } from "../../store/actions/cart";
+import debounce from 'lodash.debounce';
 
 
 const CartItem: FC<AddToCartResponse> = ({amount, _id, product})=>{
@@ -10,9 +11,16 @@ const CartItem: FC<AddToCartResponse> = ({amount, _id, product})=>{
         dispatch(removeOne(_id));
     }
 
-    const changeAmountHandler = (e: any, {id, type}: ChangeAmountType)=>{
-        dispatch(changeAmount({id, type}));
-    }
+    const changeAmountHandler = (e: any, { id, type }: ChangeAmountType) =>
+        !(amount <= 1 && type == 'dec') && dispatch(changeAmount({ id, type}))
+    
+    const debouncedChangeHandler = useMemo(() => debounce(changeAmountHandler, 100),[amount])  
+
+    
+
+    
+
+    //changeAmountHandler(e, {id: _id, type:"dec"})
 
     return (
         <div className="cart__item">
@@ -22,11 +30,11 @@ const CartItem: FC<AddToCartResponse> = ({amount, _id, product})=>{
             <div className="cart__item__middle">
                 <div className="cart__item__title">{product.name}</div>
                 <div className="cart__item__count-option">
-                    <div className="cart__item__decriment" onClick={(e)=>changeAmountHandler(e, {id: _id, type:"dec"})}>
+                    <div className={amount <= 1 ? "cart__item__disable" : "cart__item__decriment"} onClick={e => debouncedChangeHandler(e, {id: _id, type:"dec"})}>
                         <img src={require("../../assets/i/minus.svg").default} alt="минус"/>
                     </div>
                     <div className="cart__item__count">{amount}</div>
-                    <div className="cart__item__increment" onClick={(e)=>changeAmountHandler(e, {id: _id, type:"inc"})}>
+                    <div className="cart__item__increment" onClick={(e)=> debouncedChangeHandler(e, {id: _id, type:"inc"})}>
                         <img src={require("../../assets/i/gray_plus.svg").default} alt="плюс" />
                     </div>
                 </div>
