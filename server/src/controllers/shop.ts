@@ -157,13 +157,18 @@ class Shop {
             const cart = await Cart.findOne({_id: cartId});
 
             cart.amount += update;
+            
+            
+            if (cart.amount >= 1) {
 
-            let resultCart = await cart.save()
+               let resultCart = await cart.save()
 
-            resultCart = await Cart.populate(resultCart, {path: "product", select:{user: 0}});
+                resultCart = await Cart.populate(resultCart, {path: "product", select:{user: 0}});
 
-            console.log(resultCart);
-            res.status(200).json(resultCart);
+                //console.log(resultCart);
+                res.status(200).json(resultCart); 
+            }
+            
         } catch (e: unknown) {
             console.log(e);
             res.status(400).json("Bad request");
