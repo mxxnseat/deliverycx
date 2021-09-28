@@ -32,7 +32,7 @@ export interface IProduct{
     _id: string,
     category: string,
     code: string,
-    group: string,
+    group: ICategory,
     isIncludedInMenu: boolean,
     name: string,
     order: number,

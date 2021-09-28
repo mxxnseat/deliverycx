@@ -34,6 +34,8 @@ function loadData() {
                 }));
 
                 dispatch(loadCart(data.user?.cart as ICart[]));
+
+                history.push("/shop");
             } else {
                 throw Error();
             }

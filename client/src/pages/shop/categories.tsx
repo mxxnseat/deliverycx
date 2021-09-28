@@ -1,19 +1,18 @@
 import { FC, useEffect, useState, useRef } from "react";
 import cn from "classnames";
-import axios from "axios";
 import Slider from "infinite-react-carousel";
 import { useDispatch, useSelector } from "react-redux";
 
-
 import { setCategoryAction } from "../../store/actions/shop";
-import { RootState } from "../../store";
 import { ICategory } from "../../types/responses";
 import Api from "../../api/Api";
+import { RootState } from "../../store";
 
 
 const Categories: FC = () => {
     const dispatch = useDispatch();
     const slider = useRef<typeof Slider>(null);
+    const category = useSelector((state: RootState)=>state.shop.category);
     const [categories, setCategories] = useState<ICategory[]>([]);
     const [currentSlide, setCurrentSlide] = useState<number>(0);
 
@@ -24,10 +23,17 @@ const Categories: FC = () => {
 
     useEffect(() => {
         (async ()=>{
+            let setCategory = null;
             const {data} = await Api.getCategories<ICategory[]>();
-            console.log(data);
-            dispatch(setCategoryAction(data[0]));
+            console.log(category);
+            if(!category){
+                setCategory = data[0];
+            }else{
+                setCategory = category;
+            }
+            dispatch(setCategoryAction(setCategory));
             setCategories(data);
+            setCurrentSlide(setCategory.order);
         })();
     }, []);
     useEffect(()=>{

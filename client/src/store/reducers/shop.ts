@@ -3,7 +3,7 @@ import { ICategory } from "../../types/responses";
 
 const initialState: IInitialState = {
     isSearch: false,
-    category: {} as ICategory
+    category: null
 }
 
 export default (state = initialState, action: ActionsTypes):IInitialState=>{

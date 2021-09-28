@@ -16,7 +16,7 @@ export interface ISetCategory{
 }
 export interface IInitialState{
     isSearch: boolean,
-    category: ICategory
+    category: ICategory | null
 }
 
 
