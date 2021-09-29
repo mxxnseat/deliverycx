@@ -70,13 +70,11 @@ function setTotalPrice() {
     }
 }
 
-function changeAmount({id, type,amount}: ChangeAmountType){
+function changeAmount({id, type}: ChangeAmountType){
     return async(dispatch: AppDispatch)=>{
         
         try {
-            if (!(typeof amount === 'number' && amount <= 1 && type == 'dec') ) {
-                console.log(amount)
-                const { status, data } = await cart.changeAmount<AddToCartResponse>(id, type);
+            const { status, data } = await cart.changeAmount<AddToCartResponse>(id, type);
                 
                 if (status === 200) {
                     
@@ -86,7 +84,6 @@ function changeAmount({id, type,amount}: ChangeAmountType){
                     })
                     
                 }
-            }
         } catch (error) {
             console.log(error)
         }
