@@ -1,8 +1,8 @@
-import { ICart, IProduct } from "../responses";
+import { ICart, ICartProducts, IProduct } from "../responses";
 
 export interface ICartChoiceAction{
     type: ACTIONS.CHANGE_CHOICE,
-    payload: CART_CHOICE
+    payload: keyof typeof CART_CHOICE
 }
 export interface IChangePromocodeAction{
     type: ACTIONS.CHANGE_PROMO_CODE,
@@ -17,32 +17,17 @@ export interface ITotalPriceAction{
     payload: number
 }
 
-export type AddToCartResponse = {
-    _id: string,
-    product: IProduct,
-    amount: number
-};
-export interface IAddToCartAction{
-    type: ACTIONS.ADD_TO_CART,
-    payload: AddToCartResponse
+export interface IСhangeCart{
+    type: "LOAD_CART" | "REMOVE_ITEM" | "CHANGE_AMOUNT" | "ADD_TO_CART",
+    payload: ICart
 }
 
-export interface ILoadCartAction{
-    type: ACTIONS.LOAD_CART,
-    payload: ICart[]
-}
-export interface IRemoveItemAction{
-    type: ACTIONS.REMOVE_ITEM,
-    payload: string
-}
 export type ChangeAmountType = {
     id: string,
     type: "inc" | "dec"
 }
-export interface IChangeAmountAction{
-    type: ACTIONS.CHANGE_AMOUNT,
-    payload: AddToCartResponse
-}
+
+
 
 export enum CART_CHOICE{
     PICKUP = "PICKUP",
@@ -63,16 +48,12 @@ export enum ACTIONS{
 
 export interface IInitialState {
     promocode: string,
-    cart_choice: CART_CHOICE,
-    list: AddToCartResponse[],
-    isLoading: boolean
+    cart_choice: keyof typeof CART_CHOICE,
+    list: ICartProducts[],
     totalPrice: number
 }
 export type CartActionsType =   ICartChoiceAction |
                                 IChangePromocodeAction |
                                 ISetIsLoadingAction |
-                                IAddToCartAction |
-                                ILoadCartAction |
-                                IRemoveItemAction |
-                                ITotalPriceAction |
-                                IChangeAmountAction;
+                                IСhangeCart |
+                                ITotalPriceAction

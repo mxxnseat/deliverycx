@@ -8,6 +8,7 @@ import { useOutside } from "../../customHooks/useOutside";
 const LinkToCart: FC = () => {
     const history = useHistory();
     const productsInCart = useSelector((state: RootState)=>state.cart.list);
+    console.log(productsInCart);
     const [isPopupEmpty, setIsPopupEmpty] = useState(false);
     const ref = useRef<HTMLDivElement | null>(null);
 

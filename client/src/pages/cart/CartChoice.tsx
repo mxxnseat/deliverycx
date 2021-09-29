@@ -8,7 +8,7 @@ import { cartChoiceAction} from "../../store/actions/cart";
 
 const CartChoise: FC = () => { 
     const dispatch = useDispatch();
-    const activeChoice: CART_CHOICE = useSelector((state: RootState) => state.cart.cart_choice);
+    const activeChoice: keyof typeof CART_CHOICE = useSelector((state: RootState) => state.cart.cart_choice);
 
     const deliveryCN = cn("cart__choice__item", { active: activeChoice === CART_CHOICE.DELIVERY });
     const pickupCN = cn("cart__choice__item", { active: activeChoice === CART_CHOICE.PICKUP });

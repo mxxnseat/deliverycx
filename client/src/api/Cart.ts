@@ -6,7 +6,7 @@ const Cart = ({ api }: Api)=>{
     const request: AxiosInstance = api;
 
     return {
-        addToCart<R>(productId: string): AxiosPromise<R>{
+        addToCart<R extends ICart>(productId: string): AxiosPromise<R>{
             const authToken = localStorage.getItem("authToken");
 
             const headers = authToken ? {
@@ -22,7 +22,7 @@ const Cart = ({ api }: Api)=>{
                 }
             });
         },
-        removeOne<R>(cartId: string): AxiosPromise<R>{
+        removeOne<R extends ICart>(cartId: string): AxiosPromise<R>{
             const authToken = localStorage.getItem("authToken");
 
             const headers = authToken ? {
@@ -38,7 +38,7 @@ const Cart = ({ api }: Api)=>{
                 }
             }) 
         },
-        clear(): AxiosPromise<string>{
+        clear(): AxiosPromise<[]>{
             const authToken = localStorage.getItem("authToken");
 
             const headers = authToken ? {
@@ -51,7 +51,7 @@ const Cart = ({ api }: Api)=>{
                 headers
             })
         },
-        changeAmount<R>(cartId: string, type: "inc" | "dec"): AxiosPromise<R>{
+        changeAmount<R extends ICart>(cartId: string, type: "inc" | "dec"): AxiosPromise<R>{
             const authToken = localStorage.getItem("authToken");
 
             const headers = authToken ? {
@@ -68,7 +68,7 @@ const Cart = ({ api }: Api)=>{
                 }
             });
         },
-        getCart(): AxiosPromise<ICart & {totalPrice: number}>{
+        getCart<R extends ICart>(): AxiosPromise<R>{
             const authToken = localStorage.getItem("authToken");
 
             const headers = authToken ? {

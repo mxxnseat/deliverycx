@@ -1,9 +1,9 @@
-export interface ICity{
+export interface ICity {
     _id: string,
     name: string
 }
 
-export interface IAddress{
+export interface IAddress {
     contacts: {
         phone: string,
         email: string
@@ -15,7 +15,7 @@ export interface IAddress{
     street: string
 }
 
-export interface ICategory{
+export interface ICategory {
     images: {
         imageUrl: string
     },
@@ -25,7 +25,7 @@ export interface ICategory{
     name: string,
     order: number
 }
-export interface IProduct{
+export interface IProduct {
     images: {
         imageUrl: string
     },
@@ -40,27 +40,28 @@ export interface IProduct{
     weight: number,
     measureUnit: "порц" | "шт",
     description: string,
-    additionalInfo: string,   
+    additionalInfo: string,
 }
 
-export interface ICart{
-    _id: string,
-    product: IProduct,
-    amount: number
+
+export type ICartProducts  = IProduct & {amount: number, _id: string}
+export interface ICart {
+    products: ICartProducts[],
+    totalPrice: number
 }
 
-export interface IUser{
+export interface IUser {
     username: string,
     _id: string,
     isVerify: boolean,
-    cart: ICart[],
+    cart: ICart,
     organization: IAddress
 }
 
-export interface IUpdateUserResponse{
+export interface IUpdateUserResponse {
     message: string,
     user: Omit<IUser, "organization">
 }
-export interface IRemoveCartItemResponse{
+export interface IRemoveCartItemResponse {
     cartId: string
 }

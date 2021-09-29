@@ -57,8 +57,7 @@ class Profile {
                 });
             } else {
                 const access = await this.register();
-                if(!access)
-                {
+                if (!access) {
                     throw Error();
                 }
                 res.status(200).json(access);
@@ -70,79 +69,90 @@ class Profile {
     }
 
     async register(): Promise<string | void> {
-            try {
-                const { access, refresh, username } = generateUserTokens();
-                const User_id = new mongoose.Types.ObjectId();
-                const Cart_id = new mongoose.Types.ObjectId();
-                const cart = await Cart.create({
-                    _id: Cart_id,
-                    user: User_id,
-                    products: []
-                });
+        try {
+            const { access, refresh, username } = generateUserTokens();
+            const User_id = new mongoose.Types.ObjectId();
+            const Cart_id = new mongoose.Types.ObjectId();
+            const cart = await Cart.create({
+                _id: Cart_id,
+                user: User_id,
+                products: []
+            });
 
-                await User.create({
-                    _id: User_id,
-                    token: {
-                        access,
-                        refresh
-                    },
-                    cart: Cart_id,
-                    username
-                });
+            await User.create({
+                _id: User_id,
+                token: {
+                    access,
+                    refresh
+                },
+                cart: Cart_id,
+                username
+            });
 
-                return access;
-            } catch (e) {
-                console.log(e);
-            }
+            return access;
+        } catch (e) {
+            console.log(e);
+        }
     }
     public async updateProfile(req: Request, res: Response) {
-        const {username, phone, email, organization, name} = req.body;
+        const { username, phone, email, organization, name } = req.body;
 
-        try{
-            const user = await User.findOneAndUpdate({username}, {
+        try {
+            const user = await User.findOneAndUpdate({ username }, {
                 name,
                 phone,
                 email,
                 organization
-            }, {fields: {
-                token: 0,
-                cart: 0,
-                organization: 0
-            }});
+            }, {
+                fields: {
+                    token: 0,
+                    cart: 0,
+                    organization: 0
+                }
+            });
 
 
             res.status(200).json({
                 message: "ok",
                 user
             })
-        }catch(e: unknown){
+        } catch (e: unknown) {
             console.log(e);
             res.status(500).json("Server error");
         }
     }
-    public async getProfile(req: Request, res: Response){
+    public async getProfile(req: Request, res: Response) {
         const username = req.body.username;
 
-        try{
-            const user = await User.findOne({username}, {token: 0})
-            .populate({
-                path: "organization",
-                populate: {
-                    path: "cityId"
-                }
-            })
-            .populate({path: "cart", populate: "products.product"})
+        try {
+            const user = await User.findOne({ username }, { token: 0, _id: 0 })
+                .populate({
+                    path: "organization",
+                    populate: {
+                        path: "cityId"
+                    }
+                })
+                .populate({ 
+                    path: "cart",
+                    populate: {
+                        path: "products.product"
+                    },
+                    select: {
+                        user: 0,
+                        _id: 0
+                    }
+                })
 
             console.log(user);
 
-            if(!user.organization){
+            if (!user.organization) {
                 return res.status(200).json({
                     isAuth: false
                 });
             }
             console.log(user);
 
-            if(!user.cart) user.cart = [];
+            if (!user.cart) user.cart = [];
 
             console.log(user);
 
@@ -150,7 +160,7 @@ class Profile {
                 isAuth: true,
                 user,
             })
-        }catch(e: unknown){
+        } catch (e: unknown) {
             console.log(e);
             res.status(500).json("Server error");
         }
