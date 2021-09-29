@@ -61,9 +61,7 @@ class Shop {
             await cart.populate("products.product");
 
             res.status(200).json({
-                _id: cart._id,
-                products: cart.products,
-                amount: cart.amount
+                products: cart.products
             });
         } catch (e: unknown) {
             console.log(e);
@@ -86,7 +84,7 @@ class Shop {
 
             const totalPrice = calcTotalPrice(cart.products);
             res.status(200).json({
-                cartId
+                products: cart.products
             })
         } catch (e: unknown) {
             console.log(e);
@@ -109,7 +107,7 @@ class Shop {
 
 
             res.status(200).json({
-                cart
+                products: cart.products
             });
         } catch (e: unknown) {
             console.log(e);
@@ -147,8 +145,7 @@ class Shop {
 
             const totalPrice = calcTotalPrice(cart.products);
             res.status(200).json({
-                cart: cart.products,
-                totalPrice
+                products: cart.products
             });
         } catch (e: unknown) {
             console.log(e);
@@ -164,8 +161,7 @@ class Shop {
 
             const totalPrice = calcTotalPrice(cart.products);
             res.status(200).json({
-                cart: cart.products,
-                totalPrice
+                products: cart.products
             });
         } catch (e) {
             console.log(e);

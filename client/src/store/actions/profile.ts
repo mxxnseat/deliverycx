@@ -22,21 +22,16 @@ function loadData() {
             
             localStorage.setItem("authToken", loginResponse.data);
 
-            const { data } = await profile.getProfile();
+            const {data, status} = await profile.getProfile();
 
-            if (data.isAuth) {
-                dispatch(setAddressAction(data.user?.organization as IAddress));
+            if(status === 200){
+                if(data.isAuth){
+                    dispatch(loadCart(data.user?.cart as ICart));
+                    dispatch(setAddressAction(data.user?.organization as IAddress))
 
-                dispatch(setProfileAction({
-                    isAuth: true,
-                    isVerify: data.user?.isVerify as boolean,
-                    username: data.user?.username as string,
-                }));
-
-                dispatch(loadCart(data.user?.cart as ICart[]));
-
-                history.push("/shop");
-            } else {
+                    history.push("/");
+                }
+            }else{
                 throw Error();
             }
         } catch (e: unknown) {

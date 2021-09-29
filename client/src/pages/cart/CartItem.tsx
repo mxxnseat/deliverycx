@@ -1,11 +1,12 @@
 import { FC, useCallback, useMemo } from "react";
-import { AddToCartResponse, ChangeAmountType } from "../../types/actions/cart";
+import { ChangeAmountType } from "../../types/actions/cart";
 import { useDispatch } from "react-redux";
 import { removeOne, changeAmount } from "../../store/actions/cart";
 import debounce from 'lodash.debounce';
+import { ICart } from "../../types/responses";
 
 
-const CartItem: FC<AddToCartResponse> = ({amount, _id, product})=>{
+const CartItem: FC = ({amount, product, _id}: any)=>{
     const dispatch = useDispatch();
     const removeHandler = ()=>{
         dispatch(removeOne(_id));
@@ -14,13 +15,8 @@ const CartItem: FC<AddToCartResponse> = ({amount, _id, product})=>{
     const changeAmountHandler = (e: any, { id, type }: ChangeAmountType) =>
         !(amount <= 1 && type == 'dec') && dispatch(changeAmount({ id, type}))
     
-    const debouncedChangeHandler = useMemo(() => debounce(changeAmountHandler, 100),[amount])  
+    const debouncedChangeHandler = useMemo(() => debounce(changeAmountHandler, 500),[amount])  
 
-    
-
-    
-
-    //changeAmountHandler(e, {id: _id, type:"dec"})
 
     return (
         <div className="cart__item">

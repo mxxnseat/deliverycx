@@ -1,4 +1,3 @@
-import { is } from "@reduxjs/toolkit/node_modules/immer/dist/internal";
 import { ACTIONS, IInitialState, CART_CHOICE, CartActionsType } from "../../types/actions/cart";
 
 
@@ -7,7 +6,6 @@ const initialState: IInitialState = {
     promocode: '',
     cart_choice: CART_CHOICE.DELIVERY,
     list: [],
-    isLoading: false,
     totalPrice: 0
 };
 
@@ -25,53 +23,33 @@ export default (state = initialState, action: CartActionsType): IInitialState =>
                 cart_choice: action.payload
             }
         }
-        case ACTIONS.SET_IS_LOADING: {
-            return {
-                ...state,
-                isLoading: action.payload
-            }
-        }
         case ACTIONS.LOAD_CART: {
             return {
                 ...state,
-                list: action.payload
+                list: action.payload.products,
+                totalPrice: action.payload.totalPrice
             }
         }
         case ACTIONS.ADD_TO_CART: {
-
-            const saveList = [...state.list];
-            const isFind = saveList.find(el => el._id === action.payload._id);
-
-            if (isFind) {
-                isFind.amount += 1;
-            } else {
-                saveList.push(action.payload);
-            }
-
+            console.log('action', action.payload);
             return {
                 ...state,
-                list: [...saveList]
+                list: action.payload.products,
             }
         }
         case ACTIONS.REMOVE_ITEM: {
+
+            
             return {
                 ...state,
-                list: state.list.filter(el => el._id !== action.payload)
-            }
-        }
-        case ACTIONS.TOTAL_PRICE: {
-            return {
-                ...state,
-                totalPrice: action.payload
+                list: action.payload.products,
+                totalPrice: action.payload.totalPrice
             }
         }
         case ACTIONS.CHANGE_AMOUNT: {
-            const saveList = [...state.list];
                 return {
                     ...state,
-                    list: saveList.map(el=>{
-                        return el._id === action.payload._id ? action.payload : el;
-                    })
+                    list: action.payload.products
             }
         }
         default: {

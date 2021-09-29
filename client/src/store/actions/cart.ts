@@ -1,5 +1,5 @@
 import { AppDispatch, RootState } from "..";
-import { ICartChoiceAction, CART_CHOICE, ACTIONS, IChangePromocodeAction, ILoadCartAction, AddToCartResponse, ITotalPriceAction, ChangeAmountType } from "../../types/actions/cart";
+import { IСhangeCart, ICartChoiceAction, CART_CHOICE, ACTIONS, IChangePromocodeAction, ITotalPriceAction, ChangeAmountType } from "../../types/actions/cart";
 import { ICart, IProduct, IRemoveCartItemResponse } from "../../types/responses";
 import cart from "../../api/Cart";
 
@@ -17,7 +17,7 @@ function cartChoiceAction(payload: CART_CHOICE): ICartChoiceAction {
 }
 
 
-function loadCart(payload: ICart[]): ILoadCartAction {
+function loadCart(payload: ICart): IСhangeCart {
     return {
         type: ACTIONS.LOAD_CART,
         payload
@@ -25,15 +25,7 @@ function loadCart(payload: ICart[]): ILoadCartAction {
 }
 function addToCartAction(productId: string) {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
-        dispatch({
-            type: ACTIONS.SET_IS_LOADING,
-            payload: true
-        });
-        const { status, data } = await cart.addToCart<AddToCartResponse>(productId);
-        dispatch({
-            type: ACTIONS.SET_IS_LOADING,
-            payload: false
-        });
+        const { status, data } = await cart.addToCart<ICart>(productId);
 
         if (status === 200) {
             dispatch({
@@ -46,12 +38,12 @@ function addToCartAction(productId: string) {
 }
 function removeOne(cartId: string) {
     return async (dispatch: AppDispatch) => {
-        const { data, status } = await cart.removeOne<IRemoveCartItemResponse>(cartId)
+        const { data, status } = await cart.removeOne<ICart>(cartId)
 
         if (status === 200) {
             dispatch({
                 type: ACTIONS.REMOVE_ITEM,
-                payload: cartId
+                payload: data
             })
         }
 
@@ -60,7 +52,7 @@ function removeOne(cartId: string) {
 function setTotalPrice() {
 
     return async (dispatch: AppDispatch) => {
-        const { status, data } = await cart.getCart();
+        const { status, data } = await cart.getCart<ICart>();
         if (status === 200) {
             dispatch({
                 type: ACTIONS.TOTAL_PRICE,
@@ -74,7 +66,7 @@ function changeAmount({id, type}: ChangeAmountType){
     return async(dispatch: AppDispatch)=>{
         
         try {
-            const { status, data } = await cart.changeAmount<AddToCartResponse>(id, type);
+            const { status, data } = await cart.changeAmount<ICart>(id, type);
                 
                 if (status === 200) {
                     
