@@ -1,6 +1,11 @@
-import { ICartSchema } from "db/models/shop/Cart";
 import {IProduct} from "../db/models/api/Product";
 
-export default function(cart: ICartSchema<unknown, IProduct>[]){
+type ArgType = {
+    product: IProduct,
+    amount: number
+}
+
+export default function(cart: ArgType[]){
+    console.log(cart);
     return cart.reduce((acc, el)=>acc+(el.amount*el.product.price), 0);
 }

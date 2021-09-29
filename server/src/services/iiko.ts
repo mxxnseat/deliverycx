@@ -8,17 +8,31 @@ import { ICategory, IGroup, INomenclature, IOrganization, IProduct } from "../ty
 
 
 class Iiko {
-    private token: string = '';
+    private static token: string = '';
+    private static _instance: Iiko;
+
     private organizations: Organization[] = [];
     private nomenclature: any = {};
     private categories: ICategory[] = [];
     private groups: IGroup[] = [];
 
-    private async getToken() {
+    private constructor(){}
+
+    public static getInstance(){
+        if(!Iiko._instance){
+            Iiko._instance = new Iiko();
+        }
+        return Iiko._instance;
+    }
+
+    public get token(){
+        return Iiko.token;
+    }
+    public async getToken() {
         try {
             const tokenResponse = await axios.get<string>(`https://iiko.biz:9900/api/0/auth/access_token?user_id=${process.env.iiko_user}&user_secret=${process.env.iiko_password}`);
 
-            this.token = tokenResponse.data;
+            Iiko.token = tokenResponse.data;
         } catch (e) {
             console.log(`Error with get token\n${e}`);
         }
@@ -26,7 +40,7 @@ class Iiko {
     private async getOrganizations() {
         try {
             console.log("starting get organizations");
-            const organizationsResponse = await axios.get<IOrganization[]>(`https://iiko.biz:9900/api/0/organization/list?access_token=${this.token}`);
+            const organizationsResponse = await axios.get<IOrganization[]>(`https://iiko.biz:9900/api/0/organization/list?access_token=${Iiko.token}`);
 
             const organizations = organizationsResponse.data.map(organization => {
                 return parseOrganization(organization);
@@ -39,7 +53,7 @@ class Iiko {
     private async getNomenclature() {
         try {
             for (let k in this.organizations) {
-                const productsResponse = await axios.get<INomenclature>(`https://iiko.biz:9900/api/0/nomenclature/${this.organizations[k].id}?access_token=${this.token}`);
+                const productsResponse = await axios.get<INomenclature>(`https://iiko.biz:9900/api/0/nomenclature/${this.organizations[k].id}?access_token=${Iiko.token}`);
                 this.nomenclature = {
                     [this.organizations[k].id]: [
                         ...productsResponse.data.products
@@ -59,7 +73,7 @@ class Iiko {
             /*
                 Сохраняем город если его нет
             */
-            const cityResponseMongoose: ICity = await model.City.findOneAndUpdate(
+            const cityResponseMongoose = await model.City.findOneAndUpdate(
                 { name: organization.address.city as string },
                 { $setOnInsert: { name: organization.address.city as string } },
                 { upsert: true, new: true }
@@ -175,6 +189,4 @@ class Iiko {
     }
 }
 
-const iiko = new Iiko();
-
-export default iiko;
+export default Iiko.getInstance();

@@ -1,10 +1,13 @@
 import mongoose, { Schema, model, RefType } from "mongoose";
 
+type Cart<T> = {
+    product: T,
+    amount: number
+}
 export interface ICartSchema<U = RefType, P = RefType> {
     _id: mongoose.Types.ObjectId,
     user: U,
-    product: P,
-    amount: number
+    products: Cart<P>[],
 }
 
 export const CartSchema = new Schema<ICartSchema>({
@@ -13,16 +16,20 @@ export const CartSchema = new Schema<ICartSchema>({
         ref: "User",
         type: mongoose.Types.ObjectId,
     },
-    product: {
-        required: true,
-        ref: "Product",
-        type: String
-    },
-    amount: {
-        type: Number,
-        default: 1,
-        min: 1
-    }
+    products: [
+        {
+            product: {
+                required: true,
+                ref: "Product",
+                type: String
+            },
+            amount: {
+                type: Number,
+                default: 1,
+                min: 1
+            }
+        }
+    ]
 }, { versionKey: false });
 
 export default model("Cart", CartSchema);

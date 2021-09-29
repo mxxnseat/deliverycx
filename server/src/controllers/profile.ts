@@ -1,7 +1,8 @@
+import mongoose from "mongoose";
 import { Request, Response } from "express";
 import jwt, { VerifyErrors } from "jsonwebtoken";
 import calcTotalPrice from "../utils/calcTotalPrice";
-import { User } from "../db/models";
+import { User, Cart } from "../db/models";
 import { IUserSchema } from "../db/models/profile/User";
 import generateUserTokens from "../helpers/generateTokens";
 
@@ -71,12 +72,21 @@ class Profile {
     async register(): Promise<string | void> {
             try {
                 const { access, refresh, username } = generateUserTokens();
+                const User_id = new mongoose.Types.ObjectId();
+                const Cart_id = new mongoose.Types.ObjectId();
+                const cart = await Cart.create({
+                    _id: Cart_id,
+                    user: User_id,
+                    products: []
+                });
 
                 await User.create({
+                    _id: User_id,
                     token: {
                         access,
                         refresh
                     },
+                    cart: Cart_id,
                     username
                 });
 
@@ -114,28 +124,27 @@ class Profile {
         const username = req.body.username;
 
         try{
-            const user = await User.findOne({username}, {token: 0}).populate({
+            const user = await User.findOne({username}, {token: 0})
+            .populate({
                 path: "organization",
                 populate: {
                     path: "cityId"
                 }
-            }).populate({
-                path: "cart",
-                select: {
-                    user: 0
-                },
-                populate: {
-                    path: "product"
-                }
-            });
+            })
+            .populate({path: "cart", populate: "products.product"})
+
+            console.log(user);
 
             if(!user.organization){
                 return res.status(200).json({
                     isAuth: false
                 });
             }
+            console.log(user);
 
-            const totalPrice = calcTotalPrice(user.cart);
+            if(!user.cart) user.cart = [];
+
+            console.log(user);
 
             res.status(200).json({
                 isAuth: true,

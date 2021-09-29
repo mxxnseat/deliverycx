@@ -1,4 +1,4 @@
-import {Document} from "mongoose";
+import {Types, Document} from "mongoose"
 
 export interface ILastErrorObject{
     n: number,
