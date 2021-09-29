@@ -140,6 +140,7 @@ class Shop {
             console.log(new mongoose.mongo.ObjectId(cartId))
             const isFind = cart.products.find((el: any)=>el._id.toString() === new mongoose.mongo.ObjectId(cartId).toString());
 
+
             isFind.amount+=update;
 
             await cart.save();

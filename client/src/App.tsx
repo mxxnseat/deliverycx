@@ -14,6 +14,8 @@ const App: FC = () => {
   const location = useLocation();
   const isAuth = useSelector((state: RootState) => state.profile.isAuth);
 
+  //test commit 2
+
   const transitions = useTransition(location, {
     key: location.pathname,
     from: { opacity: 0 },

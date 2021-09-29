@@ -70,16 +70,25 @@ function setTotalPrice() {
     }
 }
 
-function changeAmount({id, type}: ChangeAmountType){
+function changeAmount({id, type,amount}: ChangeAmountType){
     return async(dispatch: AppDispatch)=>{
-        console.log(type);
-        const {status, data} = await cart.changeAmount<AddToCartResponse>(id, type);
-        console.log(data);
-        if(status === 200){
-            dispatch({
-                type: ACTIONS.CHANGE_AMOUNT,
-                payload: data
-            })
+        
+        try {
+            if (!(typeof amount === 'number' && amount <= 1 && type == 'dec') ) {
+                console.log(amount)
+                const { status, data } = await cart.changeAmount<AddToCartResponse>(id, type);
+                
+                if (status === 200) {
+                    
+                    dispatch({
+                        type: ACTIONS.CHANGE_AMOUNT,
+                        payload: data
+                    })
+                    
+                }
+            }
+        } catch (error) {
+            console.log(error)
         }
     }
 }
