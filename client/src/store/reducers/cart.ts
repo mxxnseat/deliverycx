@@ -8,7 +8,11 @@ const initialState: IInitialState = {
     cart_choice: CART_CHOICE.DELIVERY,
     list: [],
     isLoading: false,
-    totalPrice: 0
+    totalPrice: 0,
+    checkout: {
+        succsess: false,
+        number_check: 0,
+    }
 };
 
 export default (state = initialState, action: CartActionsType): IInitialState => {
@@ -50,6 +54,7 @@ export default (state = initialState, action: CartActionsType): IInitialState =>
 
             return {
                 ...state,
+                checkout: initialState.checkout,
                 list: [...saveList]
             }
         }
@@ -74,6 +79,12 @@ export default (state = initialState, action: CartActionsType): IInitialState =>
                     })
             }
         }
+        case ACTIONS.CHECKOUT_CART_SUCCESS: {
+            return {
+                ...initialState,
+                checkout: action.payload
+            }
+        }    
         default: {
             return state;
         }

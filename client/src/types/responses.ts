@@ -1,3 +1,5 @@
+import { ISubmitData } from "../pages/cart/delivery/form";
+
 export interface ICity{
     _id: string,
     name: string
@@ -56,6 +58,17 @@ export interface IUser{
     cart: ICart[],
     organization: IAddress
 }
+
+export interface ICheckOUT{
+    promocode: string
+    cart_choice: string
+    totalPrice:number
+}
+export interface ISuccessCheckOut{
+    succsess: boolean,
+    number_check: number
+}
+
 
 export interface IUpdateUserResponse{
     message: string,

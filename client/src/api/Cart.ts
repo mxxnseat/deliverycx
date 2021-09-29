@@ -1,6 +1,6 @@
 import {AxiosInstance, AxiosPromise } from "axios";
 import Api from ".";
-import { ICart } from "../types/responses";
+import { ICart, ICheckOUT } from "../types/responses";
 
 const Cart = ({ api }: Api)=>{
     const request: AxiosInstance = api;
@@ -79,6 +79,19 @@ const Cart = ({ api }: Api)=>{
                 method: "GET",
                 url: `shop/getCart`,
                 headers
+            })
+        },
+        checkOutCart(data:ICheckOUT): AxiosPromise<ICheckOUT> {
+            const authToken = localStorage.getItem("authToken");
+
+            const headers = authToken ? {
+                authorization: `Bearer ${authToken}`
+            } : {};
+            return request({
+                method: "POST",
+                url: `shop/checkout`,
+                headers,
+                data
             })
         }
     }

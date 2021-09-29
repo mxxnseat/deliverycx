@@ -14,7 +14,7 @@ interface IInitialValues{
     phone: string,
     notCall: boolean
 }
-interface ISubmitData extends IInitialValues{
+export interface ISubmitData extends IInitialValues{
     payment: any,
     adress: object,
     times: object,

@@ -1,12 +1,13 @@
 import store from "../store";
-import {changePromoCode} from "../store/actions/cart";
+import {changePromoCode, checkOut} from "../store/actions/cart";
 
 
 const submitHandler = <T>(values: T, meta: any)=>{
-    const {cart: {promocode}} = store.getState();
-
+    const {cart: {promocode,cart_choice,totalPrice}} = store.getState();
     store.dispatch(changePromoCode(''));
-    meta.resetForm();
+    store.dispatch(checkOut({...values,promocode,cart_choice,totalPrice})); //{...values,cart_choice,totalPrice}
+    
+    //meta.resetForm();
 }
 
 export default submitHandler;

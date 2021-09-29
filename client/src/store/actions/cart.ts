@@ -1,7 +1,8 @@
 import { AppDispatch, RootState } from "..";
-import { ICartChoiceAction, CART_CHOICE, ACTIONS, IChangePromocodeAction, ILoadCartAction, AddToCartResponse, ITotalPriceAction, ChangeAmountType } from "../../types/actions/cart";
-import { ICart, IProduct, IRemoveCartItemResponse } from "../../types/responses";
+import { ICartChoiceAction, CART_CHOICE, ACTIONS, IChangePromocodeAction, ILoadCartAction, AddToCartResponse, ITotalPriceAction, ChangeAmountType, ICheckOutCartSuccess } from "../../types/actions/cart";
+import { ICart, ICheckOUT, IProduct, IRemoveCartItemResponse, ISuccessCheckOut } from "../../types/responses";
 import cart from "../../api/Cart";
+import { ISubmitData } from "../../pages/cart/delivery/form";
 
 function changePromoCode(payload: string): IChangePromocodeAction {
     return {
@@ -23,6 +24,14 @@ function loadCart(payload: ICart[]): ILoadCartAction {
         payload
     }
 }
+
+function checkouCartSuccess(payload:ISuccessCheckOut): ICheckOutCartSuccess {
+    return {
+        type: ACTIONS.CHECKOUT_CART_SUCCESS,
+        payload
+    }
+}
+
 function addToCartAction(productId: string) {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch({
@@ -89,6 +98,21 @@ function changeAmount({id, type}: ChangeAmountType){
         }
     }
 }
+function checkOut(data: ICheckOUT) : any { //ICheckOutCartAction
+    return async (dispatch: AppDispatch) => {
+        try {
+            //const { status } = await cart.checkOutCart(data)
+            
+                dispatch(checkouCartSuccess({
+                    succsess: true,
+                    number_check: 213124
+                }))
+                
+        } catch (error) {
+            
+        }
+    }
+}
 
 export {
     cartChoiceAction,
@@ -97,5 +121,7 @@ export {
     loadCart,
     removeOne,
     setTotalPrice,
-    changeAmount
+    changeAmount,
+    checkOut,
+    checkouCartSuccess
 }
