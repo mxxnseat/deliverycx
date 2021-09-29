@@ -2,12 +2,11 @@ import mongoose, {model, Schema, RefType} from "mongoose";
 
 
 export interface IUserSchema<C=RefType, O = RefType>{
-    _id: mongoose.Types.ObjectId,
     token: {
         access: string,
         refresh: string
     },
-    cart: C[],
+    cart: RefType,
     username: string,
     name?: string,
     phone?: string,
@@ -25,12 +24,10 @@ const UserSchema = new Schema<IUserSchema>({
             type: String
         }
     },
-    cart: [
-        {
-            ref: "Cart",
-            type: mongoose.Types.ObjectId,
-        }
-    ],
+    cart: {
+        ref: "Cart",
+        type: mongoose.Types.ObjectId,
+    },
     username: String,
     name: {
         required: false,

@@ -7,7 +7,7 @@ import { ICity } from "../db/models/api/City";
 class Api {
     public async getCities(req: Request, res: Response) {
         try {
-            const cities: ICity = await model.City.find({});
+            const cities = await model.City.find({});
 
             res.json(cities);
         } catch (e: unknown) {
@@ -82,8 +82,9 @@ class Api {
                 path: "group",
             });
             if(!product){
-                return res.status(404).json("Not found");
+                throw Error();
             }
+            
             let sauces = null;
             if(!product.code.match(/^SO-\d+$/)){
                 sauces = await model.Product.find({code: {$regex: /^SO-\d+$/}});
@@ -95,6 +96,8 @@ class Api {
             });
         } catch (e: unknown) {
             console.log(e);
+            return res.status(404).json("Not found");
+
         }
     }
 }

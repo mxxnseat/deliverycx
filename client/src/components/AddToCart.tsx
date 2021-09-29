@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, memo } from "react";
 import { useDispatch } from "react-redux";
 import { addToCartAction } from "../store/actions/cart"
 
@@ -11,7 +11,7 @@ const AddToCart: FC<IProps> = ({ id }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const clickHandler = () => {
-        dispatch(addToCartAction(id));
+        if(!isLoading) dispatch(addToCartAction(id));
         setIsLoading(true);
         setTimeout(() => {
             setIsLoading(false);
@@ -21,4 +21,4 @@ const AddToCart: FC<IProps> = ({ id }) => {
     return <button className="add-to-cart" onClick={clickHandler}></button>
 }
 
-export default AddToCart;
+export default memo(AddToCart);
