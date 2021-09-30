@@ -7,10 +7,11 @@ import CartItem from "./CartItem";
 
 const CartList: FC = () => {
     const history = useHistory();
-    const cartList = useSelector((state: RootState) =>state.cart.list);
+    const cartList = useSelector((state: RootState) => state.cart.list);
+    const checkout = useSelector((state: RootState) =>state.cart.checkout);
 
     useEffect(()=>{
-        if(cartList.length === 0){
+        if(cartList.length === 0 && !checkout.succsess){
             history.push("/shop");
         }
     }, [cartList]);

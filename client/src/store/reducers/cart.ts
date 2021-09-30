@@ -6,7 +6,11 @@ const initialState: IInitialState = {
     promocode: '',
     cart_choice: CART_CHOICE.DELIVERY,
     list: [],
-    totalPrice: 0
+    totalPrice: 0,
+    checkout: {
+        succsess: false,
+        number_check: 0,
+    }
 };
 
 export default (state = initialState, action: CartActionsType): IInitialState => {
@@ -52,6 +56,12 @@ export default (state = initialState, action: CartActionsType): IInitialState =>
                     list: action.payload.products
             }
         }
+        case ACTIONS.CHECKOUT_CART_SUCCESS: {
+            return {
+                ...initialState,
+                checkout: action.payload
+            }
+        }    
         default: {
             return state;
         }
