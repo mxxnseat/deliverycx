@@ -1,4 +1,4 @@
-import { ICart, ICartProducts, IProduct } from "../responses";
+import { ICart, ICartProducts, ICheckOUT, IProduct } from "../responses";
 
 export interface ICartChoiceAction{
     type: ACTIONS.CHANGE_CHOICE,
@@ -26,7 +26,13 @@ export type ChangeAmountType = {
     id: string,
     type: "inc" | "dec"
 }
-
+export interface ICheckOutCartSuccess{
+    type: ACTIONS.CHECKOUT_CART_SUCCESS,
+    payload: {
+        succsess: boolean,
+        number_check: number
+    }
+}
 
 
 export enum CART_CHOICE{
@@ -37,6 +43,8 @@ export enum CART_CHOICE{
 export enum ACTIONS{
     CHANGE_PROMO_CODE = "CHANGE_PROMO_CODE",
     CHANGE_CHOICE = "CHANGE_CHOICE",
+    CHECKOUT_CART = "CHECKOUT_CART",
+    CHECKOUT_CART_SUCCESS = "CHECKOUT_CART_SUCCESS",
     SET_IS_LOADING = "SET_IS_LOADING",
     ADD_TO_CART = "ADD_TO_CART",
     LOAD_CART = "LOAD_CART",
@@ -51,9 +59,14 @@ export interface IInitialState {
     cart_choice: keyof typeof CART_CHOICE,
     list: ICartProducts[],
     totalPrice: number
+    checkout: {
+        succsess: boolean,
+        number_check: number,
+    }
 }
 export type CartActionsType =   ICartChoiceAction |
                                 IChangePromocodeAction |
                                 ISetIsLoadingAction |
                                 IСhangeCart |
-                                ITotalPriceAction
+                                ITotalPriceAction |
+                                ICheckOutCartSuccess;
