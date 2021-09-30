@@ -17,7 +17,6 @@ const CartItem: FC = ({amount, product, _id}: any)=>{
     
     const debouncedChangeHandler = useMemo(() => debounce(changeAmountHandler, 500),[amount])  
 
-
     return (
         <div className="cart__item">
             <div className="cart__item__img-wrap">

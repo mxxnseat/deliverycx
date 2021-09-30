@@ -16,6 +16,10 @@ const Product: FC<IProduct> = ({ _id, name, price, measureUnit, weight, descript
 
     }
 
+    if(!images){
+        return <>loading</>
+    }
+
     return (
         <div ref={cardRef} className="product__item" onClick={clickHandler}>
             <div className="product__item__img-wrap">
