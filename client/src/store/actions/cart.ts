@@ -60,18 +60,6 @@ function removeOne(cartId: string) {
 
     }
 }
-function setTotalPrice() {
-
-    return async (dispatch: AppDispatch) => {
-        const { status, data } = await cart.getCart<ICart>();
-        if (status === 200) {
-            dispatch({
-                type: ACTIONS.TOTAL_PRICE,
-                payload: data.totalPrice
-            })
-        }
-    }
-}
 
 function changeAmount({id, type}: ChangeAmountType){
     return async(dispatch: AppDispatch)=>{
@@ -114,7 +102,6 @@ export {
     addToCartAction,
     loadCart,
     removeOne,
-    setTotalPrice,
     changeAmount,
     checkOut,
     checkouCartSuccess

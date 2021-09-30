@@ -43,7 +43,7 @@ export default (state = initialState, action: CartActionsType): IInitialState =>
         }
         case ACTIONS.REMOVE_ITEM: {
 
-            
+
             return {
                 ...state,
                 list: action.payload.products,
@@ -51,9 +51,10 @@ export default (state = initialState, action: CartActionsType): IInitialState =>
             }
         }
         case ACTIONS.CHANGE_AMOUNT: {
-                return {
-                    ...state,
-                    list: action.payload.products
+            return {
+                ...state,
+                list: action.payload.products,
+                totalPrice: action.payload.totalPrice
             }
         }
         case ACTIONS.CHECKOUT_CART_SUCCESS: {
@@ -61,7 +62,7 @@ export default (state = initialState, action: CartActionsType): IInitialState =>
                 ...initialState,
                 checkout: action.payload
             }
-        }    
+        }
         default: {
             return state;
         }
