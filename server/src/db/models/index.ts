@@ -5,6 +5,9 @@ import Organization from "./api/Organization";
 import Product from "./api/Product";
 
 import Cart from "./shop/Cart";
+import Order from "./shop/Order";
+
+
 import User from "./profile/User";
 
 
@@ -15,5 +18,6 @@ export {
     Organization,
     Product,
     User,
-    Cart
+    Cart,
+    Order
 }

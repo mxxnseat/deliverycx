@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { Request, Response } from "express";
 import jwt, { VerifyErrors } from "jsonwebtoken";
 import calcTotalPrice from "../utils/calcTotalPrice";
-import { User, Cart } from "../db/models";
+import { User, Cart, Order } from "../db/models";
 import { IUserSchema } from "../db/models/profile/User";
 import generateUserTokens from "../helpers/generateTokens";
 
@@ -77,6 +77,10 @@ class Profile {
                 _id: Cart_id,
                 user: User_id,
                 products: []
+            });
+            const order = await Order.create({
+                user: User_id,
+                orders: []
             });
 
             await User.create({

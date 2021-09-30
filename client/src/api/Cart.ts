@@ -81,7 +81,7 @@ const Cart = ({ api }: Api)=>{
                 headers
             })
         },
-        checkOutCart(data:ICheckOUT): AxiosPromise<ICheckOUT> {
+        checkOutCart<R>(data:ICheckOUT): AxiosPromise<R> {
             const authToken = localStorage.getItem("authToken");
 
             const headers = authToken ? {
@@ -89,7 +89,7 @@ const Cart = ({ api }: Api)=>{
             } : {};
             return request({
                 method: "POST",
-                url: `shop/checkout`,
+                url: `shop/createOrder`,
                 headers,
                 data
             })

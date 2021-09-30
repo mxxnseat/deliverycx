@@ -1,7 +1,7 @@
 import mongoose, {model, Schema, RefType} from "mongoose";
 
 
-export interface IUserSchema<C=RefType, O = RefType>{
+export interface IUserSchema{
     token: {
         access: string,
         refresh: string
@@ -11,7 +11,8 @@ export interface IUserSchema<C=RefType, O = RefType>{
     name?: string,
     phone?: string,
     isVerify: boolean,
-    organization: O
+    organization: RefType,
+    orderHistory: RefType
 }
 const UserSchema = new Schema<IUserSchema>({
     token: {
@@ -45,6 +46,10 @@ const UserSchema = new Schema<IUserSchema>({
     organization: {
         type: String,
         ref: "Organization"
+    },
+    orderHistory: {
+        type: mongoose.Types.ObjectId,
+        ref: "Order"
     }
 }, {versionKey: false});
 

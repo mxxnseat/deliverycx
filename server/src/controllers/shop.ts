@@ -1,6 +1,6 @@
 import mongoose, { Document } from "mongoose";
 import { Request, Response } from "express";
-import { User, Cart, Product } from "../db/models";
+import { User, Cart, Product, Order } from "../db/models";
 import { IProduct } from "../db/models/api/Product";
 import { IUserSchema } from "../db/models/profile/User";
 import { FindOneAndUpdateReturnType, ILastErrorObject } from "../types/mongoose";
@@ -20,7 +20,10 @@ type CreateOrderBody = {
     phone: string,
     comment: string,
     date: string,
-    paymentMethod: string
+    paymentMethod: string,
+    promocode: string,
+    cart_choice: string,
+
 }
 
 class Shop {
@@ -74,15 +77,15 @@ class Shop {
         const { username, cartId } = req.body;
 
         try {
-            const user = await User.findOne({username});
+            const user = await User.findOne({ username });
 
-            const cart = await Cart.findOneAndUpdate({_id: user.cart, "products._id": cartId},{
+            const cart = await Cart.findOneAndUpdate({ _id: user.cart, "products._id": cartId }, {
                 $pull: {
                     "products": {
                         _id: cartId
                     }
                 }
-            },{new: true}).populate("products.product");
+            }, { new: true }).populate("products.product");
 
             const totalPrice = calcTotalPrice(cart.products);
             res.status(200).json({
@@ -99,11 +102,11 @@ class Shop {
 
         try {
             const user = await User.findOne({ username });
-            const cart = await Cart.findOneAndUpdate({_id: user.cart}, {
+            const cart = await Cart.findOneAndUpdate({ _id: user.cart }, {
                 $set: {
                     products: []
                 }
-            }, {new: true})
+            }, { new: true })
             if (!user) {
                 throw Error();
             }
@@ -121,7 +124,7 @@ class Shop {
     public async changeAmount(req: Request, res: Response) {
         try {
             const type: "inc" | "dec" = req.body.type;
-            const {cartId, username} = req.body;
+            const { cartId, username } = req.body;
             let update = {};
 
             const user = await User.findOne({ username });
@@ -138,18 +141,18 @@ class Shop {
                 default: throw Error("Bad request");
             }
 
-            let cart = await Cart.findOne({_id: user.cart, "products._id": cartId}).populate("products.product");
+            let cart = await Cart.findOne({ _id: user.cart, "products._id": cartId }).populate("products.product");
             console.log(new mongoose.mongo.ObjectId(cartId))
-            const isFind = cart.products.find((el: any)=>el._id.toString() === new mongoose.mongo.ObjectId(cartId).toString());
+            const isFind = cart.products.find((el: any) => el._id.toString() === new mongoose.mongo.ObjectId(cartId).toString());
 
 
             const updateAmount = isFind.amount + update;
 
-            cart = await Cart.findOneAndUpdate({_id: user.cart, "products._id": cartId},{
+            cart = await Cart.findOneAndUpdate({ _id: user.cart, "products._id": cartId }, {
                 $set: {
                     "products.$.amount": updateAmount
                 }
-            }, {new: true}).populate("products.product");
+            }, { new: true }).populate("products.product");
 
 
             const totalPrice = calcTotalPrice(cart.products);
@@ -167,7 +170,7 @@ class Shop {
 
         try {
             const user = await User.findOne({ username });
-            const cart = await Cart.findOne({_id: user.cart}).populate("products.product");
+            const cart = await Cart.findOne({ _id: user.cart }).populate("products.product");
 
             const totalPrice = calcTotalPrice(cart.products);
             res.status(200).json({
@@ -180,19 +183,52 @@ class Shop {
         }
     }
     public async createOrder(req: Request<{}, {}, CreateOrderBody>, res: Response) {
-        await iiko.getToken();
-        const token = iiko.token;
-        const body = req.body;
-        const createOrderBody: createOrderType = await createOrder({
-            address: body.address,
-            name: body.name,
-            phone: body.phone,
-            username: body.username,
-            comment: body.comment,
-            date: body.date
-        });
+        const username = req.body.username;
 
-        res.json(createOrderBody);
+        try {
+            const user = await User.findOne({ username: username });
+
+            if (!user) {
+                throw Error();
+            }
+
+
+            const cart = await Cart.findOneAndUpdate({ _id: user.cart }, {
+                $set: {
+                    products: []
+                }
+            }, { new: false })
+
+            const orderNum = await Order.aggregate([
+                { $project: { orders: 1 }},
+                { $unwind: "$orders" },
+                { $group: {_id: "Order", count: { $sum: 1 }}}
+            ]);
+
+            console.log(orderNum);
+
+
+            const order = await Order.findOneAndUpdate(
+                { user: user._id },
+                {$push: {
+                    orders: {
+                        products: cart.products,
+                        totalPrice: cart.totalPrice,
+                        orderNum: 2
+                    }
+                }
+            });
+
+            res.status(200).json({
+                success: true,
+                orderNumber: orderNum[0].count
+            });
+        } catch (e: unknown) {
+            console.log(e);
+            res.status(404).json({
+                success: false
+            })
+        }
     }
 }
 
