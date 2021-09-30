@@ -16,6 +16,10 @@ const CartList: FC = () => {
         }
     }, [cartList]);
 
+    if(!cartList){
+        return <>loading</>
+    }
+
     return (
         <div className="cart__goods-list">
             {
