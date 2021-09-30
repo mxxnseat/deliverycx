@@ -11,7 +11,7 @@ const CartList: FC = () => {
     const checkout = useSelector((state: RootState) =>state.cart.checkout);
 
     useEffect(()=>{
-        if(cartList.length === 0 && !checkout.succsess){
+        if(cartList.length === 0 && !checkout.success){
             history.push("/shop");
         }
     }, [cartList]);

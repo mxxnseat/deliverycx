@@ -1,4 +1,4 @@
-import { ICart, ICartProducts, ICheckOUT, IProduct } from "../responses";
+import { ICart, ICartProducts, ICheckOUT, ICheckoutResponse, IProduct } from "../responses";
 
 export interface ICartChoiceAction{
     type: ACTIONS.CHANGE_CHOICE,
@@ -28,10 +28,7 @@ export type ChangeAmountType = {
 }
 export interface ICheckOutCartSuccess{
     type: ACTIONS.CHECKOUT_CART_SUCCESS,
-    payload: {
-        succsess: boolean,
-        number_check: number
-    }
+    payload: ICheckoutResponse
 }
 
 
@@ -59,10 +56,7 @@ export interface IInitialState {
     cart_choice: keyof typeof CART_CHOICE,
     list: ICartProducts[],
     totalPrice: number
-    checkout: {
-        succsess: boolean,
-        number_check: number,
-    }
+    checkout: ICheckoutResponse
 }
 export type CartActionsType =   ICartChoiceAction |
                                 IChangePromocodeAction |

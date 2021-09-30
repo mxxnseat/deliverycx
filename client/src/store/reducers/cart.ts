@@ -8,8 +8,8 @@ const initialState: IInitialState = {
     list: [],
     totalPrice: 0,
     checkout: {
-        succsess: false,
-        number_check: 0,
+        success: false,
+        orderNumber: 0,
     }
 };
 

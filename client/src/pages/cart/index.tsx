@@ -13,7 +13,7 @@ import { RootState } from "../../store";
 import { CART_CHOICE } from "../../types/actions/cart";
 import { useHistory } from "react-router";
 import CheckOut from "./CheckOut";
-import { checkouCartSuccess } from "../../store/actions/cart";
+import { checkoutCartSuccess } from "../../store/actions/cart";
 
 
 const Cart: FC = () => {
@@ -60,17 +60,18 @@ const Cart: FC = () => {
     }, [cart_choice]);
 
     useEffect(() => {
-        (list.length === 0 && checkout.succsess) &&
+        (list.length === 0 && checkout.success) &&
             setPopCheckout(true)
-    }, [checkout.succsess])
+    }, [checkout.success])
     
-    const handlBacktShop = () => {
-        dispatch(checkouCartSuccess({
-            succsess: false,
-            number_check: 0
+    const handleBacktoShop = () => {
+        dispatch(checkoutCartSuccess({
+            success: false,
+            orderNumber: 0
         }))
         history.push("/shop")
     }
+
 
     return (
         <div className="cat_app" style={{ backgroundColor: "#fff" }}>
@@ -79,7 +80,7 @@ const Cart: FC = () => {
                     popCheckout
                     ?
                     <>   
-                        <HeaderBack onClickCb={handlBacktShop}>
+                        <HeaderBack onClickCb={handleBacktoShop}>
                             Вернутся в магазин
                         </HeaderBack>
                         <CheckOut />  
@@ -105,7 +106,3 @@ const Cart: FC = () => {
 }
 
 export default Cart;
-
-function checkoutSuccess(arg0: { succsess: boolean; number_check: number; }): any {
-    throw new Error("Function not implemented.");
-}

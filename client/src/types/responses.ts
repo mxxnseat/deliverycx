@@ -61,16 +61,14 @@ export interface IUser {
 }
 
 export interface ICheckOUT{
-    promocode: string
-    cart_choice: string
+    promocode: string,
+    cart_choice: string,
     totalPrice:number
 }
-export interface ISuccessCheckOut{
-    succsess: boolean,
-    number_check: number
+export interface ICheckoutResponse{
+    success: boolean,
+    orderNumber?: number
 }
-
-
 export interface IUpdateUserResponse{
     message: string,
     user: Omit<IUser, "organization">

@@ -1,14 +1,14 @@
 import mongoose, { Schema, model, RefType } from "mongoose";
 import calcTotalPrice from "../../../utils/calcTotalPrice";
 
-type Cart<T> = {
+export type CartType<T> = {
     product: T,
     amount: number
 }
 export interface ICartSchema<U = RefType, P = RefType> {
     _id: mongoose.Types.ObjectId,
     user: U,
-    products: Cart<P>[],
+    products: CartType<P>[],
     totalPrice: number
 }
 
@@ -39,18 +39,7 @@ export const CartSchema = new Schema<ICartSchema>({
     }
 }, { versionKey: false });
 
-
-async function middleWareCalcTotalPriceCb(this: any){
-    console.log(this.getQuery());
-
-    const cart = await Model.findOne({_id: this.getQuery() as mongoose.Types.ObjectId}).populate("products.product");
-    
-    const totalPrice = calcTotalPrice(cart.products);
-    await Model.updateOne({_id: this.getQuery() as mongoose.Types.ObjectId}, {totalPrice});
-}
-
 CartSchema.post("findOneAndUpdate", async function(){
-    console.log(this.getQuery());
 
     const cart = await Model.findOne({_id: this.getQuery() as mongoose.Types.ObjectId}).populate("products.product");
     
