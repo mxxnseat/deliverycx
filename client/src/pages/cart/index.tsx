@@ -73,7 +73,7 @@ const Cart: FC = () => {
     }
 
     return (
-        <div className="app" style={{ backgroundColor: "#fff" }}>
+        <div className="cat_app" style={{ backgroundColor: "#fff" }}>
             <div className="cart">
                 {
                     popCheckout
