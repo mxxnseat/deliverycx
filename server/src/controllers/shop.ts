@@ -60,8 +60,10 @@ class Shop {
 
             await cart.populate("products.product");
 
+            const totalPrice = calcTotalPrice(cart.products);
             res.status(200).json({
-                products: cart.products
+                products: cart.products,
+                totalPrice
             });
         } catch (e: unknown) {
             console.log(e);
@@ -84,8 +86,9 @@ class Shop {
 
             const totalPrice = calcTotalPrice(cart.products);
             res.status(200).json({
-                products: cart.products
-            })
+                products: cart.products,
+                totalPrice
+            });
         } catch (e: unknown) {
             console.log(e);
             res.status(400).json("Bad request");
@@ -105,9 +108,10 @@ class Shop {
                 throw Error();
             }
 
-
+            const totalPrice = calcTotalPrice(cart.products);
             res.status(200).json({
-                products: cart.products
+                products: cart.products,
+                totalPrice
             });
         } catch (e: unknown) {
             console.log(e);
@@ -134,18 +138,24 @@ class Shop {
                 default: throw Error("Bad request");
             }
 
-            const cart = await Cart.findOne({_id: user.cart, "products._id": cartId}).populate("products.product");
+            let cart = await Cart.findOne({_id: user.cart, "products._id": cartId}).populate("products.product");
             console.log(new mongoose.mongo.ObjectId(cartId))
             const isFind = cart.products.find((el: any)=>el._id.toString() === new mongoose.mongo.ObjectId(cartId).toString());
 
 
-            isFind.amount+=update;
+            const updateAmount = isFind.amount + update;
 
-            await cart.save();
+            cart = await Cart.findOneAndUpdate({_id: user.cart, "products._id": cartId},{
+                $set: {
+                    "products.$.amount": updateAmount
+                }
+            }, {new: true}).populate("products.product");
+
 
             const totalPrice = calcTotalPrice(cart.products);
             res.status(200).json({
-                products: cart.products
+                products: cart.products,
+                totalPrice
             });
         } catch (e: unknown) {
             console.log(e);
@@ -161,7 +171,8 @@ class Shop {
 
             const totalPrice = calcTotalPrice(cart.products);
             res.status(200).json({
-                products: cart.products
+                products: cart.products,
+                totalPrice
             });
         } catch (e) {
             console.log(e);

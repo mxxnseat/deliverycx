@@ -6,6 +6,5 @@ type ArgType = {
 }
 
 export default function(cart: ArgType[]){
-    console.log(cart);
     return cart.reduce((acc, el)=>acc+(el.amount*el.product.price), 0);
 }

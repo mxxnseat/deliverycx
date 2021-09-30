@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { usePrevious } from "../../customHooks/usePrevious";
 import { RootState } from "../../store";
 
-import {changePromoCode, setTotalPrice} from "../../store/actions/cart";
+import {changePromoCode} from "../../store/actions/cart";
 import {IInitialState} from "../../types/actions/cart";
 
 const CartInfo: FC = () => {
@@ -13,7 +13,8 @@ const CartInfo: FC = () => {
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        dispatch(setTotalPrice());
+        console.log(1);
+        // dispatch(setTotalPrice());
     }, [cartState.list]);
 
     return (
