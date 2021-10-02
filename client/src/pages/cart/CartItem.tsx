@@ -20,7 +20,7 @@ const CartItem: FC = ({amount, product, _id}: any)=>{
     return (
         <div className="cart__item">
             <div className="cart__item__img-wrap">
-                {product.images ? <img src={product.images.imageUrl} alt={product.name}/> : 'loading' }
+                <img src={product.images.imageUrl} alt={product.name}/>
             </div>
             <div className="cart__item__middle">
                 <div className="cart__item__title">{product.name}</div>
