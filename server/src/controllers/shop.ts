@@ -50,7 +50,7 @@ class Shop {
                     $inc: {
                         "products.$.amount": 1
                     }
-                }, { new: true })
+                }, { new: true }).populate("products.product");
             } else {
                 cart = await Cart.findOneAndUpdate({ _id: user.cart }, {
                     $push: {
@@ -58,10 +58,8 @@ class Shop {
                             product: body.productId
                         }
                     }
-                }, { new: true });
+                }, { new: true }).populate("products.product");
             }
-
-            await cart.populate("products.product");
 
             const totalPrice = calcTotalPrice(cart.products);
             res.status(200).json({
