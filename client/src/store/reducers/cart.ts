@@ -39,6 +39,7 @@ export default (state = initialState, action: CartActionsType): IInitialState =>
             return {
                 ...state,
                 list: action.payload.products,
+                totalPrice: action.payload.totalPrice
             }
         }
         case ACTIONS.REMOVE_ITEM: {
