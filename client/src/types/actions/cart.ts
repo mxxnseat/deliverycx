@@ -24,7 +24,8 @@ export interface IСhangeCart{
 
 export type ChangeAmountType = {
     id: string,
-    type: "inc" | "dec"
+    type: "inc" | "dec",
+    count?:number
 }
 export interface ICheckOutCartSuccess{
     type: ACTIONS.CHECKOUT_CART_SUCCESS,

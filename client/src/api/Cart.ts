@@ -51,7 +51,7 @@ const Cart = ({ api }: Api)=>{
                 headers
             })
         },
-        changeAmount<R extends ICart>(cartId: string, type: "inc" | "dec"): AxiosPromise<R>{
+        changeAmount<R extends ICart>(cartId: string, type: "inc" | "dec",count:number): AxiosPromise<R>{
             const authToken = localStorage.getItem("authToken");
 
             const headers = authToken ? {
@@ -64,7 +64,8 @@ const Cart = ({ api }: Api)=>{
                 headers,
                 data: {
                     cartId,
-                    type
+                    type,
+                    count
                 }
             });
         },

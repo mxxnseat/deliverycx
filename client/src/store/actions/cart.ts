@@ -48,7 +48,6 @@ function addToCartAction(productId: string) {
 function removeOne(cartId: string) {
     return async (dispatch: AppDispatch) => {
         const { data, status } = await cart.removeOne<ICart>(cartId)
-
         if (status === 200) {
             dispatch({
                 type: ACTIONS.REMOVE_ITEM,
@@ -59,12 +58,14 @@ function removeOne(cartId: string) {
     }
 }
 
-function changeAmount({id, type}: ChangeAmountType){
+function changeAmount({id, type,count}: ChangeAmountType){
     return async(dispatch: AppDispatch)=>{
         
         try {
-            const { status, data } = await cart.changeAmount<ICart>(id, type);
-                
+            if (count) {
+                console.log('action',count)
+                const { status, data } = await cart.changeAmount<ICart>(id, type,count);
+               
                 if (status === 200) {
                     
                     dispatch({
@@ -73,6 +74,7 @@ function changeAmount({id, type}: ChangeAmountType){
                     })
                     
                 }
+            }
         } catch (error) {
             console.log(error)
         }

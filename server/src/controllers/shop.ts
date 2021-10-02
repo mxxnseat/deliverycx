@@ -122,7 +122,7 @@ class Shop {
     public async changeAmount(req: Request, res: Response) {
         try {
             const type: "inc" | "dec" = req.body.type;
-            const { cartId, username } = req.body;
+            const { cartId, username,count } = req.body;
             let update = {};
 
             const user = await User.findOne({ username });
@@ -140,11 +140,12 @@ class Shop {
             }
 
             let cart = await Cart.findOne({ _id: user.cart, "products._id": cartId }).populate("products.product");
-            console.log(new mongoose.mongo.ObjectId(cartId))
+            //console.log(new mongoose.mongo.ObjectId(cartId))
             const isFind = cart.products.find((el: any) => el._id.toString() === new mongoose.mongo.ObjectId(cartId).toString());
 
 
-            const updateAmount = isFind.amount + update;
+            const updateAmount = count;
+            console.log(count)
 
             cart = await Cart.findOneAndUpdate({ _id: user.cart, "products._id": cartId }, {
                 $set: {
