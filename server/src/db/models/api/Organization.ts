@@ -3,7 +3,7 @@ import mongoose, {Schema, model, mongo, RefType} from "mongoose";
 
 export interface IOrganization{
     _id: string,
-    cityId: RefType,
+    city: RefType,
     longitude: number,
     latitude: number,
     street: string,
@@ -11,6 +11,9 @@ export interface IOrganization{
         phone: string,
         email?: string
     },
+    products: RefType,
+    categories: RefType,
+    groups: RefType
 }
 
 const OrganizationSchema = new Schema<IOrganization>({
@@ -18,7 +21,7 @@ const OrganizationSchema = new Schema<IOrganization>({
         required: true,
         type: String
     },
-    cityId: {
+    city: {
         required: true,
         type: mongoose.Types.ObjectId,
         ref: "City"
@@ -41,6 +44,11 @@ const OrganizationSchema = new Schema<IOrganization>({
             type: String
         },
         email: String
+    },
+    products:{
+        required: true,
+        type: mongoose.Types.ObjectId,
+        ref: "product"
     }
 }, { versionKey: false })
 

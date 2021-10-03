@@ -16,7 +16,7 @@ export interface IProduct{
     id: string,
     code: string,
     parentGroup: string,
-    parentCategoryId: string,
+    productCategoryId: string,
     price: number,
     images: IImage[],
     weight: number,

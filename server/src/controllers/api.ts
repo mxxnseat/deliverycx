@@ -75,30 +75,30 @@ class Api {
     }
 
     public async getProduct(req: Request, res: Response) {
-        try {
-            const { id } = req.params;
+        // try {
+        //     const { id } = req.params;
 
-            const product = await model.Product.findOne({ _id: id as string }, { organizations: false }).populate({
-                path: "group",
-            });
-            if(!product){
-                throw Error();
-            }
+        //     const product = await model.Product.findOne({ _id: id as string }, { organizations: false }).populate({
+        //         path: "group",
+        //     });
+        //     if(!product){
+        //         throw Error();
+        //     }
             
-            let sauces = null;
-            if(!product.code.match(/^SO-\d+$/)){
-                sauces = await model.Product.find({code: {$regex: /^SO-\d+$/}});
-            }
+        //     let sauces = null;
+        //     if(!product.code.match(/^SO-\d+$/)){
+        //         sauces = await model.Product.find({code: {$regex: /^SO-\d+$/}});
+        //     }
 
-            res.json({
-                sauces,
-                product
-            });
-        } catch (e: unknown) {
-            console.log(e);
-            return res.status(404).json("Not found");
+        //     res.json({
+        //         sauces,
+        //         product
+        //     });
+        // } catch (e: unknown) {
+        //     console.log(e);
+        //     return res.status(404).json("Not found");
 
-        }
+        // }
     }
 }
 

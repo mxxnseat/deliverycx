@@ -1,28 +1,28 @@
-import mongoose, {Schema, model} from "mongoose";
-import { Image } from "./Group";
+import mongoose, { Schema, model, RefType, SchemaType } from "mongoose";
 
-export interface IProduct{
-    _id: string,
+export interface IProduct {
+    id: string,
     name: string,
     code: string,
     order: number,
-    images: Image,
+    images: string,
     isIncludedInMenu: boolean,
     price: number,
-    group: string,
-    category: string,
-    organizations: string[],
+    group: RefType,
+    category: RefType,
     weight: number,
     measureUnit: "порц" | "шт",
     description: string,
     additionalInfo: string,
 }
+export interface IProductSchema {
+    _id: string,
+    organization: RefType,
+    products: IProduct[],
+    revision: number
+}
 
-const ProductSchema = new Schema<IProduct>({
-    _id: {
-        required: true,
-        type: String
-    },
+const ListSchema = new Schema({
     name: {
         required: true,
         type: String
@@ -35,11 +35,10 @@ const ProductSchema = new Schema<IProduct>({
         required: true,
         type: Number
     },
-    images: {
-        imageUrl: {
-            required: true,
-            type: String
-        },
+    image: {
+        required: true,
+        type: String
+        ,
     },
     isIncludedInMenu: {
         required: true,
@@ -56,13 +55,6 @@ const ProductSchema = new Schema<IProduct>({
         type: String,
         ref: "Category"
     },
-    organizations: [
-        {
-            required: true,
-            ref: "Organization",
-            type: String
-        }
-    ],
     weight: {
         required: true,
         type: Number
@@ -79,6 +71,19 @@ const ProductSchema = new Schema<IProduct>({
         required: true,
         type: String
     }
+})
+
+const ProductSchema = new Schema({
+    _id: {
+        required: true,
+        type: String
+    },
+    organization: {
+        ref: "organization",
+        type: String
+    },
+    products: [ListSchema],
+    revision: Number
 }, { versionKey: false });
 
-export default model("Product", ProductSchema);
+export default model("Products", ProductSchema);

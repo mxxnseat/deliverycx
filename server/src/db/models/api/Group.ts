@@ -1,15 +1,11 @@
-import {Schema, model} from "mongoose";
+import { Schema, model } from "mongoose";
 
-export type Image = {
-    imageUrl: string
-}
-
-export interface IGroup{
+export interface IGroup {
     _id: string,
     name: string,
     code: string,
     order: number,
-    images: Image,
+    images: string,
     isIncludedInMenu: boolean
 }
 
@@ -31,10 +27,8 @@ const GroupSchema = new Schema<IGroup>({
         type: Number
     },
     images: {
-        imageUrl: {
-            required: true,
-            type: String
-        }
+        required: true,
+        type: String
     },
     isIncludedInMenu: {
         required: true,
