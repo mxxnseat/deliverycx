@@ -14,6 +14,7 @@ const schema = yup.object().shape({
         .matches(/^(\+7)(\s(\d){3}){2}(\s(\d){2}){2}/, {
             message: "Не верный формат телефона"
         })
+        .required('Поле обязательно для заполнения')
 });
 
 export default schema;
