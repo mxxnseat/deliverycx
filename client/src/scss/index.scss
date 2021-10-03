@@ -26,12 +26,11 @@ body{
     font-family: $light;
     color: $gray3;
     font-size: $fstext;
-    //overflow: hidden;
+    overflow: hidden;
 }
 #root{
-    //max-height: 812px;
-    //height: 80vh;
-    height: 875px;
+    height: 86vh;
+    max-height: 100vh;
     width: 100%;
     max-width: 375px;
     display: flex;
@@ -44,20 +43,7 @@ body{
     border-radius: 30px;
     position: relative;
 }
-@media screen and (min-height: 600px) and (max-height: 800px) and (min-width: 1024px){
-    #root{
-        min-height: 700px;
-        overflow:auto;
-        height:95vh;
-    }
-}
-@media screen and (max-width: 768px) and (max-height: 480px) and (orientation: landscape){
-    #root{
-      min-height: 600px;
-      height:100vh;  
-    }
-    
-}
+
 
 .cat_app{
     min-height: 100%;
