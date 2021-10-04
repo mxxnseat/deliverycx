@@ -2,10 +2,11 @@ import mongoose, { Schema, model, RefType } from "mongoose";
 import calcTotalPrice from "../../../utils/calcTotalPrice";
 
 export type CartType<T> = {
+    _id: mongoose.Types.ObjectId,
     product: T,
     amount: number
 }
-export interface ICartSchema<U = RefType, P = RefType> {
+export interface ICartSchema<U = RefType, P = string> {
     _id: mongoose.Types.ObjectId,
     user: U,
     products: CartType<P>[],
@@ -20,11 +21,7 @@ export const CartSchema = new Schema<ICartSchema>({
     },
     products: [
         {
-            product: {
-                required: true,
-                ref: "Product",
-                type: String
-            },
+            product: String,
             amount: {
                 type: Number,
                 default: 1,
@@ -39,13 +36,13 @@ export const CartSchema = new Schema<ICartSchema>({
     }
 }, { versionKey: false });
 
-CartSchema.post("findOneAndUpdate", async function(){
+// CartSchema.post("findOneAndUpdate", async function(){
 
-    const cart = await Model.findOne({_id: this.getQuery() as mongoose.Types.ObjectId}).populate("products.product");
+//     const cart = await Model.findOne({_id: this.getQuery() as mongoose.Types.ObjectId}).populate("products.product");
     
-    const totalPrice = calcTotalPrice(cart.products);
-    await Model.updateOne({_id: this.getQuery() as mongoose.Types.ObjectId}, {totalPrice});
-});
+//     const totalPrice = calcTotalPrice(cart.products);
+//     await Model.updateOne({_id: this.getQuery() as mongoose.Types.ObjectId}, {totalPrice});
+// });
 
 const Model = model("Cart", CartSchema);
 

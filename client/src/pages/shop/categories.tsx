@@ -62,7 +62,7 @@ const Categories: FC = () => {
                             <div className="categories__item__content-wrapper">
                                 <div className="categories__item__img-wrap">
                                     <div>
-                                        <img src={category.images.imageUrl} alt={category.name} />
+                                        <img src={category.image} alt={category.name} />
                                     </div>
                                 </div>
                                 <div className="categories__item__title">{category.name}</div>

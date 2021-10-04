@@ -23,7 +23,7 @@ const OrderSchema = new Schema<IOrderSchema>({
             products: [{
                 product: {
                     type: String,
-                    ref: "Product"
+                    ref: "Products"
                 },
                 amount: Number
             }],

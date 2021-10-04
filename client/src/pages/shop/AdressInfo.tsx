@@ -9,7 +9,7 @@ const AdressInfo: FC = () => {
 
     return (
         <div className="adress_info" onClick={()=>history.push("/")}>
-            <div className="adress_info__city">{address.cityId.name}</div>
+            <div className="adress_info__city">{address.city.name}</div>
             <div className="adress_info__street">{address.street}</div>
             <div className="adress_info__phone">{address.contacts.phone}</div>
         </div> 

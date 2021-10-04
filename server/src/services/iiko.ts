@@ -58,52 +58,59 @@ class Iiko {
                     categories: productsResponse.data.productCategories,
                     revision: productsResponse.data.revision
                 }
-                const city = await model.City.findOneAndUpdate({name: organization.address.city as string}, {
+                const city = await model.City.findOneAndUpdate({ name: organization.address.city as string }, {
                     $setOnInsert: {
                         name: organization.address.city as string
                     }
-                }, {new: true, upsert: true});
+                }, { new: true, upsert: true });
 
-                await Promise.all(nomenclature.categories.map(async (category)=>{
-                    await model.Category.findOneAndUpdate({_id: category.id}, {
+                await Promise.all(nomenclature.categories.map(async (category) => {
+                    await model.Category.findOneAndUpdate({ _id: category.id }, {
                         ...category,
                         _id: category.id
-                    }, {upsert: true});
+                    }, { upsert: true });
                 }));
 
-                await Promise.all(nomenclature.groups.map(async (group)=>{
-                    await model.Group.findOneAndUpdate({_id: group.id}, {
+                await Promise.all(nomenclature.groups.map(async (group) => {
+                    await model.Group.findOneAndUpdate({ _id: group.id }, {
                         ...group,
-                        images: group.images[group.images.length-1].imageUrl,
+                        image: group.images[group.images.length - 1].imageUrl,
                         _id: group.id
-                    }, {upsert: true});
+                    }, { upsert: true });
                 }));
 
 
-                const products: any = await model.Product.findOneAndUpdate({organization: organization.id}, {
+                const products: any = await model.Product.findOneAndUpdate({ organization: organization.id }, {
                     $setOnInsert: {
                         organization: organization.id
                     },
                     revision: nomenclature.revision,
-                    products: nomenclature.products.map(product=>({
-                        ...product,
-                        category: product.productCategoryId,
-                        group: product.parentGroup
-                    }))
-                }, {new: true, upsert: true});
+                    $set: {
+                        products: nomenclature.products.map(product =>{
+                            return {
+                                ...product,
+                                image: product.images[product.images.length - 1]?.imageUrl,
+                                category: product.productCategoryId,
+                                group: product.parentGroup
+                            }
+                        })  
+                    }
+                }, { new: true, upsert: true });
 
                 const cord = await geoCode(organization.address.fulladdress);
-                await model.Organization.findOneAndUpdate({_id: organization.id}, {
-                    _id: organization.id,
-                    city: city._id,
-                    street: organization.address.address as string,
-                    longitude: cord?.longitude,
-                    latitude: cord?.latitude,
-                    contacts: {
-                       ...organization.contacts
-                    },
-                    products: products._id
-                }, {new: true});
+                await model.Organization.findOneAndUpdate({ _id: organization.id }, {
+                    $setOnInsert: {
+                        _id: organization.id,
+                        city: city._id,
+                        street: organization.address.address as string,
+                        longitude: cord?.longitude,
+                        latitude: cord?.latitude,
+                        contacts: {
+                            ...organization.contacts
+                        },
+                        products: products._id
+                    }
+                }, { new: true, upsert: true });
             }
         } catch (e) {
             console.log(`Error with get products\n${e}`);

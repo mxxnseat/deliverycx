@@ -5,7 +5,7 @@ import convertWeight from "../../../helpers/convertWeight";
 import { IProduct } from "../../../types/responses";
 
 
-const Product: FC<IProduct> = ({ _id, name, price, measureUnit, weight, description, images }) => {
+const Product: FC<IProduct> = ({ _id, name, price, measureUnit, weight, description, image }) => {
     const history = useHistory();
     const cardRef = useRef<HTMLDivElement>(null);
 
@@ -16,14 +16,10 @@ const Product: FC<IProduct> = ({ _id, name, price, measureUnit, weight, descript
 
     }
 
-    if(!images){
-        return <>loading</>
-    }
-
     return (
         <div ref={cardRef} className="product__item" onClick={clickHandler}>
             <div className="product__item__img-wrap">
-                <img src={images.imageUrl} alt={name} />
+                <img src={image} alt={name} />
             </div>
             <div className="product__item__content">
                 <div className="row justify-between">

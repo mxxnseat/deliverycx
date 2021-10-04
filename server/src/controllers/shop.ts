@@ -5,13 +5,15 @@ import { IProduct } from "../db/models/api/Product";
 import { IUserSchema } from "../db/models/profile/User";
 import { FindOneAndUpdateReturnType, ILastErrorObject } from "../types/mongoose";
 import createOrder, { createOrderType } from "../helpers/createOrder";
+import getProductsInCart from "../helpers/getProductsInCart";
 import calcTotalPrice from "../utils/calcTotalPrice";
 import { ICartSchema } from "../db/models/shop/Cart";
 import iiko from "../services/iiko";
 
 type AddToCartBody = {
     username: string,
-    productId: string
+    product: string,
+    organization: string
 }
 type CreateOrderBody = {
     username: string,
@@ -28,42 +30,47 @@ type CreateOrderBody = {
 
 class Shop {
     public async addToCart(req: Request<{}, {}, AddToCartBody>, res: Response) {
-        const body = req.body;
+        const {product, username} = req.body;
         try {
-            const product = await Product.findOne({ _id: body.productId });
-            if (!product) {
-                throw Error("Bad request");
-            }
-
-            const user = await User.findOne({ username: body.username })
+            const user = await User.findOne({ username: username })
 
             if (!user) {
                 throw Error("Bad request");
             }
 
+            const productOne = await Product.findOne({ organization: user.organization, "products.id": product});
+            if (!productOne) {
+                throw Error("Bad request");
+            }
+
             let cart = await Cart.findOne({ _id: user.cart });
 
-            const isFind = cart.products.find((el: any) => el.product === body.productId);
+            const isFind = cart.products.find((el: any) => el.product === product);
 
             if (isFind) {
-                cart = await Cart.findOneAndUpdate({ _id: user.cart, "products.product": body.productId }, {
+                cart = await Cart.findOneAndUpdate({ _id: user.cart, "products.product": product }, {
                     $inc: {
                         "products.$.amount": 1
                     }
-                }, { new: true }).populate("products.product");
+                }, { new: true });
             } else {
                 cart = await Cart.findOneAndUpdate({ _id: user.cart }, {
                     $push: {
                         products: {
-                            product: body.productId
+                            product
                         }
                     }
-                }, { new: true }).populate("products.product");
+                }, { new: true });
             }
 
-            const totalPrice = calcTotalPrice(cart.products);
+
+            const products = await getProductsInCart(cart.products, user.organization);
+
+            
+
+            const totalPrice = calcTotalPrice(products);
             res.status(200).json({
-                products: cart.products,
+                products,
                 totalPrice
             });
         } catch (e: unknown) {
@@ -83,11 +90,13 @@ class Shop {
                         _id: cartId
                     }
                 }
-            }, { new: true }).populate("products.product");
+            }, { new: true });
+            
+            const products = await getProductsInCart(cart.products, user.organization);
 
-            const totalPrice = calcTotalPrice(cart.products);
+            const totalPrice = calcTotalPrice(products);
             res.status(200).json({
-                products: cart.products,
+                products,
                 totalPrice
             });
         } catch (e: unknown) {
@@ -108,11 +117,9 @@ class Shop {
             if (!user) {
                 throw Error();
             }
-
-            const totalPrice = calcTotalPrice(cart.products);
             res.status(200).json({
-                products: cart.products,
-                totalPrice
+                products: [],
+                totalPrice: 0
             });
         } catch (e: unknown) {
             console.log(e);
@@ -139,8 +146,8 @@ class Shop {
                 default: throw Error("Bad request");
             }
 
-            let cart = await Cart.findOne({ _id: user.cart, "products._id": cartId }).populate("products.product");
-            console.log(new mongoose.mongo.ObjectId(cartId))
+            let cart = await Cart.findOne({ _id: user.cart, "products._id": cartId });
+
             const isFind = cart.products.find((el: any) => el._id.toString() === new mongoose.mongo.ObjectId(cartId).toString());
 
 
@@ -150,12 +157,12 @@ class Shop {
                 $set: {
                     "products.$.amount": updateAmount
                 }
-            }, { new: true }).populate("products.product");
+            }, { new: true });
 
-
-            const totalPrice = calcTotalPrice(cart.products);
+            const products = await getProductsInCart(cart.products, user.organization);
+            const totalPrice = calcTotalPrice(products);
             res.status(200).json({
-                products: cart.products,
+                products,
                 totalPrice
             });
         } catch (e: unknown) {
@@ -168,11 +175,12 @@ class Shop {
 
         try {
             const user = await User.findOne({ username });
-            const cart = await Cart.findOne({ _id: user.cart }).populate("products.product");
+            const cart = await Cart.findOne({ _id: user.cart });
 
-            const totalPrice = calcTotalPrice(cart.products);
+            const products = await getProductsInCart(cart.products, user.organization);
+            const totalPrice = calcTotalPrice(products);
             res.status(200).json({
-                products: cart.products,
+                products,
                 totalPrice
             });
         } catch (e) {

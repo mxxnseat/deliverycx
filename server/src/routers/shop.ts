@@ -2,7 +2,6 @@ import express from "express";
 const route = express.Router();
 
 import Shop from "../controllers/shop";
-import authCheck from "../middlewares/authCheck";
 
 const shop = new Shop();
 

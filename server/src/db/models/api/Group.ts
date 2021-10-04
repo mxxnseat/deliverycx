@@ -5,7 +5,7 @@ export interface IGroup {
     name: string,
     code: string,
     order: number,
-    images: string,
+    image: string,
     isIncludedInMenu: boolean
 }
 
@@ -26,7 +26,7 @@ const GroupSchema = new Schema<IGroup>({
         required: true,
         type: Number
     },
-    images: {
+    image: {
         required: true,
         type: String
     },

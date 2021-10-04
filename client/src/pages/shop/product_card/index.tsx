@@ -41,14 +41,14 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
             <HeaderBack backgroundColor="#fff" onClickCb={() => history.goBack()}>
                 <div className="product-card__category">
                     <div className="category-image-wrap">
-                        <img src={product.group.images.imageUrl} />
+                        <img src={product.group.image} />
                     </div>
                 </div>
             </HeaderBack>
             <div className="product-card__image-wrap">
                 <div className="container">
 
-                    <img className="product-card__image" src={product.images.imageUrl} alt="Картинка продукта" />
+                    <img className="product-card__image" src={product.image} alt="Картинка продукта" />
 
                     <div className="product-card__title">{product.name}</div>
                     <div className="row justify-between">

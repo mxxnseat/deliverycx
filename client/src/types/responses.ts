@@ -11,16 +11,14 @@ export interface IAddress {
         email: string
     },
     _id: string,
-    cityId: ICity,
+    city: ICity,
     latitude: number,
     longitude: number,
     street: string
 }
 
 export interface ICategory {
-    images: {
-        imageUrl: string
-    },
+    image: string,
     _id: string,
     code: string | null,
     isIncludedInMenu: boolean,
@@ -28,9 +26,7 @@ export interface ICategory {
     order: number
 }
 export interface IProduct {
-    images: {
-        imageUrl: string
-    },
+    image: string,
     _id: string,
     category: string,
     code: string,

@@ -19,7 +19,8 @@ const ProductList: FC<IProps> = ({category, searchQuery}) => {
 
     useEffect(()=>{
         (async ()=>{
-            const {data, status} = await api.getProducts<IProduct[]>({organizationId: organization, categoryId: category, searchQuery});
+            console.log(category);
+            const {data, status} = await api.getProducts<IProduct[]>({organization, category, searchQuery});
 
             if(status === 200){
                 setProducts(data);

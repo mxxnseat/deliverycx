@@ -16,13 +16,13 @@ export interface IProduct {
     additionalInfo: string,
 }
 export interface IProductSchema {
-    _id: string,
     organization: RefType,
     products: IProduct[],
     revision: number
 }
 
 const ListSchema = new Schema({
+    id: String,
     name: {
         required: true,
         type: String
@@ -38,7 +38,6 @@ const ListSchema = new Schema({
     image: {
         required: true,
         type: String
-        ,
     },
     isIncludedInMenu: {
         required: true,
@@ -74,10 +73,6 @@ const ListSchema = new Schema({
 })
 
 const ProductSchema = new Schema({
-    _id: {
-        required: true,
-        type: String
-    },
     organization: {
         ref: "organization",
         type: String
