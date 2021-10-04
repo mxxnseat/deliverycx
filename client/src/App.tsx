@@ -14,7 +14,6 @@ const App: FC = () => {
   const location = useLocation();
   const isAuth = useSelector((state: RootState) => state.profile.isAuth);
 
-  //test commit 2
 
   const transitions = useTransition(location, {
     key: location.pathname,
@@ -25,10 +24,10 @@ const App: FC = () => {
 
   useEffect(() => {
     dispatch(loadData());
-  }, []);
+  },[isAuth]);
 
   if (!isAuth) {
-    //return <ChooseAdress />
+    return <ChooseAdress />
   }
 
   return transitions((style, item, t, key) => (

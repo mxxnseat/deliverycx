@@ -147,18 +147,20 @@ class Profile {
                     }
                 })
 
-            console.log(user);
-
-            if (!user.organization) {
+            //console.log(user);
+            /*    
+            if (!user.organization) { 
+                
                 return res.status(200).json({
                     isAuth: false
                 });
             }
-            console.log(user);
+            */
+            //console.log(user);
 
             if (!user.cart) user.cart = [];
 
-            console.log(user);
+            //console.log(user);
 
             res.status(200).json({
                 isAuth: true,

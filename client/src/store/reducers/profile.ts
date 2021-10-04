@@ -15,8 +15,14 @@ export default (state = initialState, {type, payload}: IActionsType)=>{
         case ACTIONS.SET_PROFILE: {
             return {
                 ...state,
-                ...payload
+                ...payload as any
             }
+        }
+        case ACTIONS.AUTH_SUCCESS: {
+            return {...state,isAuth:payload}
+        }
+        case ACTIONS.AUTH_FAIL: {
+            return {...state,isAuth:payload}
         }
         default: return state;
     }

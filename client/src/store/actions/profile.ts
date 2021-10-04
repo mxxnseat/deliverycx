@@ -1,5 +1,5 @@
 import { AppDispatch } from "..";
-import { ACTIONS, ISetProfileAction, IInitialState } from "../../types/actions/profile";
+import { ACTIONS, ISetProfileAction, IInitialState, IAuthSuccessAction, IAuthFailAction } from "../../types/actions/profile";
 import { loadCart } from "../actions/cart";
 import profile from '../../api/Profile';
 import { setAddressAction } from "./adress";
@@ -15,6 +15,19 @@ function setProfileAction(payload: IInitialState): ISetProfileAction {
         payload
     }
 }
+function AuthSuccessAction(): IAuthSuccessAction {
+    return {
+        type: ACTIONS.AUTH_SUCCESS,
+        payload:true
+    }
+}
+function AuthFailAction(): IAuthFailAction {
+    return {
+        type: ACTIONS.AUTH_FAIL,
+        payload:false
+    }
+}
+
 function loadData() {
     return async (dispatch: AppDispatch) => {
         try {
@@ -24,17 +37,16 @@ function loadData() {
 
             const { data, status } = await profile.getProfile();
             
-            console.log(data,status)
 
             if(status === 200){
-                if(data.isAuth){
+                if (data.isAuth) {
+                    dispatch(AuthSuccessAction())
                     dispatch(loadCart(data.user?.cart as ICart));
                     dispatch(setAddressAction(data.user?.organization as IAddress))
-
-                    history.push("/");
+                    //history.push("/");
                 }
             }else{
-                throw Error();
+                dispatch(AuthFailAction());
             }
         } catch (e: unknown) {
             history.push("/");
