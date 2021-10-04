@@ -39,7 +39,6 @@ async function authCheck(req: Request, res: Response, next: NextFunction) {
     })
     .then((username)=>{
         const {access, refresh} = generateUserTokens(username as string);
-
         User.findOneAndUpdate({username: username as string}, {
             $set: {
                 token: {

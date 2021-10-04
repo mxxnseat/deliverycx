@@ -13,7 +13,7 @@ const CartInfo: FC = () => {
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        console.log(1);
+        //console.log(1);
         // dispatch(setTotalPrice());
     }, [cartState.list]);
 

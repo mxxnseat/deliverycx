@@ -7,8 +7,10 @@ import { setCityAction } from "../../store/actions/adress";
 import { RootState } from "../../store";
 import Api from "../../api/Api";
 import { ICity } from "../../types/responses";
+import { useHistory } from "react-router";
 
 const CityList: FC<{}> = () => {
+    const history = useHistory();
     const { city: selectedCity } = useSelector((state: RootState) => state.address);
     const [cities, setCities] = useState<ICity[]>([]);
     const dispatch = useDispatch();
@@ -24,6 +26,7 @@ const CityList: FC<{}> = () => {
     
     const actionsWrapper = (city: ICity)=>{
         dispatch(setCityAction(city));
+        history.push("/address");
     }
 
     return (
