@@ -28,7 +28,7 @@ const App: FC = () => {
   }, []);
 
   if (!isAuth) {
-    return <ChooseAdress />
+    //return <ChooseAdress />
   }
 
   return transitions((style, item, t, key) => (

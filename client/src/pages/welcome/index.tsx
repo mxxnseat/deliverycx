@@ -2,6 +2,7 @@ import cn from "classnames";
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { ROUTES } from "../../routes";
 import { RootState } from "../../store";
 import CityList from "./CityList";
 import SelectAdress from "./SelectAdress";
@@ -14,35 +15,26 @@ const ChooseAdress: FC = () => {
 
     useEffect(()=>{
         if(isAuth){
-            history.push("/shop");
+            //history.push("/shop");
         }
+        
     }, [isAuth])
 
     return (
         <div className="welcome">
-            <div className={welcomeHeaderCN}>
+            <div className="welcome__header">
                 <div className="container row justify-between align-center">
-                    <div className="welcome__header__ico-wrapper" >
-                        <img src={require("../../assets/i/back.svg").default} alt="Вернуться назад" />
-                    </div>
+                    
 
                     <div className="welcome__header__content">
-                        {
-                            !Object.keys(city).length ? <>Выберите <span className="select-red">город</span></> :
-                                <>
-                                    <img src={require("../../assets/img/logo.png").default} />
-                                    <div className="select-red">{city.name}</div>
-                                </>
-                        }
+                        Выберите <span className="select-red">город</span>
                     </div>
 
-                    <div className="welcome__header__ico-wrapper">
-                        <img src={require("../../assets/i/aim.svg").default} alt="Цель" />
-                    </div>
+                    
                 </div>
             </div>
 
-            {!Object.keys(city).length ? <CityList /> : <SelectAdress />}
+            <CityList />
         </div >
 
     )

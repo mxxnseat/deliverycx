@@ -22,7 +22,9 @@ function loadData() {
             
             localStorage.setItem("authToken", loginResponse.data);
 
-            const {data, status} = await profile.getProfile();
+            const { data, status } = await profile.getProfile();
+            
+            console.log(data,status)
 
             if(status === 200){
                 if(data.isAuth){

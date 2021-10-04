@@ -8,10 +8,10 @@ const AdressInfo: FC = () => {
     const history = useHistory();
 
     return (
-        <div className="adress_info" onClick={()=>history.push("/")}>
-            <div className="adress_info__city">{address.cityId.name}</div>
-            <div className="adress_info__street">{address.street}</div>
-            <div className="adress_info__phone">{address.contacts.phone}</div>
+        <div className="adress_info">
+            <div className="adress_info__city" onClick={()=>history.push("/")}>{address.cityId.name}</div>
+            <div className="adress_info__street" onClick={()=>history.push("/address")}>{address.street}</div>
+            <a href={"tel:" + address.contacts.phone} className="adress_info__phone">{address.contacts.phone}</a>
         </div> 
     )
 }

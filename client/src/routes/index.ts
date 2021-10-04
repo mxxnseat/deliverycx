@@ -6,9 +6,11 @@ import Shop from "../pages/shop";
 import Cart from "../pages/cart";
 import About from "../pages/about";
 import NotFound from "../pages/notFound";
+import SelectAdress from "../pages/welcome/SelectAdress";
 
-enum ROUTES {
+export enum ROUTES {
     WELCOME = "/",
+    ADDRESS = '/address',
     SHOP = "/shop",
     SHOP_PRODUCT = "/shop/product/:id",
     CART = "/cart",
@@ -26,6 +28,11 @@ const routes: IRoute[] = [
         exact: true,
         path: ROUTES.WELCOME,
         component: ChooseAdress
+    },
+    {
+        exact: true,
+        path: ROUTES.ADDRESS,
+        component: SelectAdress
     },
     {
         exact: true,
