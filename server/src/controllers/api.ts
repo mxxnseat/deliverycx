@@ -16,12 +16,12 @@ class Api {
     }
 
     public async getAddresses(req: Request, res: Response) {
-        const cityId = req.query.cityId;
-        if (!cityId) {
+        const city = req.query.city;
+        if (!city) {
             return res.status(400).json("Bad request");
         }
         try {
-            const organizations = await model.Organization.find({ cityId: cityId as object }).populate("cityId");
+            const organizations = await model.Organization.find({ city: city as object }).populate("city");
 
             res.json(organizations);
         } catch (e: unknown) {
@@ -41,33 +41,50 @@ class Api {
 
     public async getProducts(req: Request, res: Response) {
         try {
-            const categoryId = req.query.categoryId as string;
-            const organizationId = req.query.organizationId as string;
+            const category = req.query.category as string;
+            const organization = req.query.organization as string;
             const queryString = req.query.searchQuery as string;
-            if (!organizationId) {
+
+            if (!organization) {
                 throw Error();
             }
-            let products = [];
 
-            if(!categoryId){
-                products = await model.Product.find(
-                    {
-                        organizations: organizationId,
-                        name: {
-                            $regex: queryString ? queryString : '',
-                            $options: "i"
-                        }
-                    },
-                    {organizations: false}
-                )
-            }else{
-                products = await model.Product.find(
-                    { group: categoryId, "organizations": organizationId },
-                    { organizations: false }
-                );
+            let matchQuery = {}
+
+            if (!category) {
+                matchQuery = {
+                    organization,
+                    'products.name': {
+                        $regex: queryString ? queryString : '',
+                        $options: "i"
+                    }
+                }
+            } else {
+                matchQuery = {
+                    organization,
+                    'products.group': category
+                }
             }
-            
-            res.status(200).json(products);
+
+            const products = await model.Product.aggregate([
+                { $unwind: "$products" },
+                {
+                    $match: matchQuery
+                },
+                {
+                    $group: {
+                        _id: null,
+                        products: { $addToSet: "$products" }
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        organization: 0
+                    }
+                }
+            ])
+            res.status(200).json(products[0] ? products[0].products : []);
         } catch (e: unknown) {
             console.log(e);
             res.status(400).json("Bad request");
@@ -77,17 +94,37 @@ class Api {
     public async getProduct(req: Request, res: Response) {
         try {
             const { id } = req.params;
-
-            const product = await model.Product.findOne({ _id: id as string }, { organizations: false }).populate({
-                path: "group",
-            });
-            if(!product){
+            const organization = req.body.organization;
+            console.log(id, organization);
+            let product: any = await model.Product.aggregate([
+                { $unwind: "$products" },
+                { $match: { "products.id": id, organization } },
+                {
+                    $project: {
+                        _id: 0,
+                        organization: 0
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        products: { $addToSet: "$products" }
+                    }
+                },
+            ])
+            if (!product) {
                 throw Error();
             }
-            
+            product = product.map((p:any)=>new model.Product(p));
+            product = await model.Product.populate(product, {path: "products.group"});
+            product = product[0].products[0];
+
             let sauces = null;
-            if(!product.code.match(/^SO-\d+$/)){
-                sauces = await model.Product.find({code: {$regex: /^SO-\d+$/}});
+            if (!product.code.match(/^SO-\d+$/)) {
+                sauces = await model.Product.aggregate([
+                    { $unwind: "$products" },
+                    { $match: { organization, "products.code": { $regex: /^SO-\d+$/ } } },
+                ])
             }
 
             res.json({

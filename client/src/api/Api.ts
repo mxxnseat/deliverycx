@@ -3,15 +3,15 @@ import Api from ".";
 import encodeQueryData from "../helpers/encodeQuery";
 
 type ProductsParams = {
-  organizationId: string,
-  categoryId?: string,
+  organization: string,
+  category?: string,
   searchQuery?: string
 }
 
 const getApi = ({ api }: Api) => {
   const request: AxiosInstance = api
   return {
-    getProducts<R>(query: ProductsParams): AxiosPromise<R> {
+      getProducts<R>(query: ProductsParams): AxiosPromise<R> {
       
       const encodeQuery = encodeQueryData(query);
 
@@ -38,7 +38,7 @@ const getApi = ({ api }: Api) => {
     getAddrresses<R>(cityId: string): AxiosPromise<R> {
       return request({
         method: "get",
-        url: `api/getAddresses?cityId=${cityId}`
+        url: `api/getAddresses?city=${cityId}`
       })
     },
 

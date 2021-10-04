@@ -133,7 +133,7 @@ class Profile {
                 .populate({
                     path: "organization",
                     populate: {
-                        path: "cityId"
+                        path: "city"
                     }
                 })
                 .populate({ 

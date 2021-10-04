@@ -3,8 +3,9 @@ import { parseOrganization, Organization } from "../helpers/iiko";
 import * as model from "../db/models";
 import { ICity } from "../db/models/api/City";
 import { geoCode, IPosition } from "../helpers/geoCoder";
-import {IOrganization as IApiOrganization} from "../db/models/api/Organization";
+import { IOrganization as IApiOrganization } from "../db/models/api/Organization";
 import { ICategory, IGroup, INomenclature, IOrganization, IProduct } from "../types/axiosResponses";
+import { IProductSchema } from "db/models/api/Product";
 
 
 class Iiko {
@@ -12,20 +13,17 @@ class Iiko {
     private static _instance: Iiko;
 
     private organizations: Organization[] = [];
-    private nomenclature: any = {};
-    private categories: ICategory[] = [];
-    private groups: IGroup[] = [];
 
-    private constructor(){}
+    private constructor() { }
 
-    public static getInstance(){
-        if(!Iiko._instance){
+    public static getInstance() {
+        if (!Iiko._instance) {
             Iiko._instance = new Iiko();
         }
         return Iiko._instance;
     }
 
-    public get token(){
+    public get token() {
         return Iiko.token;
     }
     public async getToken() {
@@ -42,138 +40,80 @@ class Iiko {
             console.log("starting get organizations");
             const organizationsResponse = await axios.get<IOrganization[]>(`https://iiko.biz:9900/api/0/organization/list?access_token=${Iiko.token}`);
 
-            const organizations = organizationsResponse.data.map(organization => {
+            this.organizations = organizationsResponse.data.map(organization => {
                 return parseOrganization(organization);
             });
-            this.organizations = organizations;
         } catch (e) {
             console.log(`Error with get organizations\n${e}`);
         }
     }
-    private async getNomenclature() {
+    private async getAndSaveNomenclature() {
         try {
             for (let k in this.organizations) {
                 const productsResponse = await axios.get<INomenclature>(`https://iiko.biz:9900/api/0/nomenclature/${this.organizations[k].id}?access_token=${Iiko.token}`);
-                this.nomenclature = {
-                    [this.organizations[k].id]: [
-                        ...productsResponse.data.products
-                    ]
+                const organization = this.organizations[k];
+                const nomenclature = {
+                    products: productsResponse.data.products,
+                    groups: productsResponse.data.groups,
+                    categories: productsResponse.data.productCategories,
+                    revision: productsResponse.data.revision
                 }
-                this.categories = productsResponse.data.productCategories;
-                this.groups = productsResponse.data.groups;
+                const city = await model.City.findOneAndUpdate({ name: organization.address.city as string }, {
+                    $setOnInsert: {
+                        name: organization.address.city as string
+                    }
+                }, { new: true, upsert: true });
+
+                await Promise.all(nomenclature.categories.map(async (category) => {
+                    await model.Category.findOneAndUpdate({ _id: category.id }, {
+                        ...category,
+                        _id: category.id
+                    }, { upsert: true });
+                }));
+
+                await Promise.all(nomenclature.groups.map(async (group) => {
+                    await model.Group.findOneAndUpdate({ _id: group.id }, {
+                        ...group,
+                        image: group.images[group.images.length - 1].imageUrl,
+                        _id: group.id
+                    }, { upsert: true });
+                }));
+
+
+                const products: any = await model.Product.findOneAndUpdate({ organization: organization.id }, {
+                    $setOnInsert: {
+                        organization: organization.id
+                    },
+                    revision: nomenclature.revision,
+                    $set: {
+                        products: nomenclature.products.map(product =>{
+                            return {
+                                ...product,
+                                image: product.images[product.images.length - 1]?.imageUrl,
+                                category: product.productCategoryId,
+                                group: product.parentGroup
+                            }
+                        })  
+                    }
+                }, { new: true, upsert: true });
+
+                const cord = await geoCode(organization.address.fulladdress);
+                await model.Organization.findOneAndUpdate({ _id: organization.id }, {
+                    $setOnInsert: {
+                        _id: organization.id,
+                        city: city._id,
+                        street: organization.address.address as string,
+                        longitude: cord?.longitude,
+                        latitude: cord?.latitude,
+                        contacts: {
+                            ...organization.contacts
+                        },
+                        products: products._id
+                    }
+                }, { new: true, upsert: true });
             }
         } catch (e) {
             console.log(`Error with get products\n${e}`);
-        }
-    }
-    private async save() {
-        for (let k in this.organizations) {
-            const organization = this.organizations[k];
-
-            /*
-                Сохраняем город если его нет
-            */
-            const cityResponseMongoose = await model.City.findOneAndUpdate(
-                { name: organization.address.city as string },
-                { $setOnInsert: { name: organization.address.city as string } },
-                { upsert: true, new: true }
-            );
-            const cityId = cityResponseMongoose._id;
-
-            const products = this.nomenclature[organization.id]; // товары\продукты
-
-            /*
-                Сохраняем продукты
-            */
-            for(let pk of products){
-                const productResponseMongoose = await model.Product.findOneAndUpdate(
-                    {_id: pk.id},
-                    {
-                        $setOnInsert: {
-                            category: pk.productCategoryId,
-                            group: pk.parentGroup,
-                            _id: pk.id,
-                            code: pk.code,
-                            name: pk.name,
-                            weight: pk.weight,
-                            images: pk.images[pk.images.length-1],
-                            isIncludedInMenu: pk.isIncludedInMenu,
-                            order: pk.order,
-                            price: pk.price,
-                            additionalInfo: pk.additionalInfo,
-                            description: pk.description,
-                            measureUnit: pk.measureUnit,
-                        },
-                        $addToSet: {
-                            "organizations": organization.id
-                        }
-                    },
-                    { upsert: true, new: true }
-                )
-            }
-
-            /*
-                Сохраняем категории
-            */
-            for(let ck of this.categories){
-                const categoryResponseMongoose = await model.Category.findOneAndUpdate(
-                    {_id: ck.id},
-                    {
-                        $setOnInsert: {
-                            _id: ck.id,
-                            name: ck.name
-                        }
-                    },
-                    { upsert: true, new: true }
-                )
-            }
-
-            /*
-                Сохраняем группы
-            */
-            for(let gk of this.groups){
-                const categoryResponseMongoose = await model.Group.findOneAndUpdate(
-                    {_id: gk.id},
-                    {
-                        $setOnInsert: {
-                            _id: gk.id,
-                            name: gk.name,
-                            code: gk.code,
-                            images: gk.images[gk.images.length-1],
-                            order: gk.order,
-                            isIncludedInMenu: gk.isIncludedInMenu                            
-                        }
-                    },
-                    { upsert: true, new: true }
-                )
-            }
-
-            /*
-                Сохраняем организации с рефами на город
-            */
-            const cord = await geoCode(organization.address.fulladdress);
-            if(cord !== null){
-                const {latitude, longitude} = cord;
-
-                const organizationResponseMongoose = await model.Organization.findOneAndUpdate(
-                    { _id: organization.id },
-                    {
-                        $setOnInsert: {
-                            cityId,
-                            latitude,
-                            longitude,
-                            contacts: {
-                                phone: organization.contacts.phone,
-                                email: organization.contacts.email
-                            },
-                            _id: organization.id,
-                            street: organization.address.address as string,
-                        }
-                    },
-                    { upsert: true, new: true }
-                );
-            }
-            
         }
     }
     public async pooling() {
@@ -181,9 +121,8 @@ class Iiko {
 
         await this.getToken();
         await this.getOrganizations();
-        await this.getNomenclature();
+        await this.getAndSaveNomenclature();
 
-        await this.save();
 
         console.log("end pooling");
     }
