@@ -27,7 +27,7 @@ export interface ICategory {
 }
 export interface IProduct {
     image: string,
-    _id: string,
+    id: string,
     category: string,
     code: string,
     group: ICategory,

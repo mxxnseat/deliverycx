@@ -102,7 +102,7 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
 
                             {
                                 sauces.map(sauce=>{
-                                    return <Sauce key={sauce._id} {...sauce}/>
+                                    return <Sauce key={sauce.id} {...sauce}/>
                                 })
                             }
                             

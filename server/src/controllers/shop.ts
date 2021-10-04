@@ -79,20 +79,20 @@ class Shop {
         }
     }
     public async removeOne(req: Request, res: Response) {
-        const { username, cartId } = req.body;
+        const { username, cart } = req.body;
 
         try {
             const user = await User.findOne({ username });
 
-            const cart = await Cart.findOneAndUpdate({ _id: user.cart, "products._id": cartId }, {
+            const carts = await Cart.findOneAndUpdate({ _id: user.cart, "products._id": cart }, {
                 $pull: {
                     "products": {
-                        _id: cartId
+                        _id: cart
                     }
                 }
             }, { new: true });
             
-            const products = await getProductsInCart(cart.products, user.organization);
+            const products = await getProductsInCart(carts.products, user.organization);
 
             const totalPrice = calcTotalPrice(products);
             res.status(200).json({
@@ -129,7 +129,7 @@ class Shop {
     public async changeAmount(req: Request, res: Response) {
         try {
             const type: "inc" | "dec" = req.body.type;
-            const { cartId, username,count } = req.body;
+            const { cart, username,count } = req.body;
             let update = {};
 
             const user = await User.findOne({ username });
@@ -146,21 +146,18 @@ class Shop {
                 default: throw Error("Bad request");
             }
 
-            let cart = await Cart.findOne({ _id: user.cart, "products._id": cartId });
-
-            const isFind = cart.products.find((el: any) => el._id.toString() === new mongoose.mongo.ObjectId(cartId).toString());
-
+            let carts = await Cart.findOne({ _id: user.cart, "products._id": cart });
 
             const updateAmount = count;
             console.log(count)
 
-            cart = await Cart.findOneAndUpdate({ _id: user.cart, "products._id": cartId }, {
+            carts = await Cart.findOneAndUpdate({ _id: user.cart, "products._id": cart }, {
                 $set: {
                     "products.$.amount": updateAmount
                 }
             }, { new: true });
 
-            const products = await getProductsInCart(cart.products, user.organization);
+            const products = await getProductsInCart(carts.products, user.organization);
             const totalPrice = calcTotalPrice(products);
             res.status(200).json({
                 products,

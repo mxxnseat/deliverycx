@@ -6,7 +6,7 @@ const Cart = ({ api }: Api)=>{
     const request: AxiosInstance = api;
 
     return {
-        addToCart<R extends ICart>(productId: string): AxiosPromise<R>{
+        addToCart<R extends ICart>(product: string): AxiosPromise<R>{
             const authToken = localStorage.getItem("authToken");
 
             const headers = authToken ? {
@@ -18,11 +18,11 @@ const Cart = ({ api }: Api)=>{
                 url: `shop/addToCart`,
                 headers,
                 data: {
-                    productId
+                    product
                 }
             });
         },
-        removeOne<R extends ICart>(cartId: string): AxiosPromise<R>{
+        removeOne<R extends ICart>(cart: string): AxiosPromise<R>{
             const authToken = localStorage.getItem("authToken");
 
             const headers = authToken ? {
@@ -34,7 +34,7 @@ const Cart = ({ api }: Api)=>{
                 url: `shop/remove`,
                 headers,
                 data: {
-                    cartId
+                    cart
                 }
             }) 
         },
@@ -51,7 +51,7 @@ const Cart = ({ api }: Api)=>{
                 headers
             })
         },
-        changeAmount<R extends ICart>(cartId: string, type: "inc" | "dec",count:number): AxiosPromise<R>{
+        changeAmount<R extends ICart>(cart: string, type: "inc" | "dec",count:number): AxiosPromise<R>{
             const authToken = localStorage.getItem("authToken");
 
             const headers = authToken ? {
@@ -63,7 +63,7 @@ const Cart = ({ api }: Api)=>{
                 url: `shop/changeAmount`,
                 headers,
                 data: {
-                    cartId,
+                    cart,
                     type,
                     count
                 }

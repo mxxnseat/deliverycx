@@ -23,11 +23,10 @@ export default async function getProductsInCart(cart: CartType<string>[], organi
             {
                 $group: {
                     _id: null,
-                    product: { $addToSet: "$products" }
+                    product: {$addToSet: "$products"}
                 }
             }
         ]);
-
         if(product){
             products.push({
                 product: product[0].product[0],

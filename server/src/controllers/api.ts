@@ -32,7 +32,7 @@ class Api {
     public async getCategories(req: Request, res: Response) {
         try {
             const groups = await model.Group.find({}).sort({ order: 1 });
-
+            
             res.json(groups);
         } catch (e: unknown) {
             console.log(e);

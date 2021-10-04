@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { removeOne, changeAmount } from "../../store/actions/cart";
 import debounce from 'lodash.debounce';
 import { ICart } from "../../types/responses";
-import { number } from "yup/lib/locale";
 
 
 const CartItem: FC = ({amount, product, _id}: any)=>{
@@ -42,20 +41,10 @@ const CartItem: FC = ({amount, product, _id}: any)=>{
         }
     }
 
-    //console.log('coutn',count)
-
-    /*
-    const changeAmountHandler = (e: any, { id, type }: ChangeAmountType) =>
-        !(amount <= 1 && type == 'dec') && dispatch(changeAmount({ id, type}))
-    */
-    //const debouncedChangeHandler = useMemo(() => debounce(changeAmountHandler, 500),[amount])  
-    //e => debouncedChangeHandler(e, {id: _id, type:"dec"})
-    //(e)=> debouncedChangeHandler(e, {id: _id, type:"inc"})
-
     return (
         <div className="cart__item">
             <div className="cart__item__img-wrap">
-                <img src={product.images.imageUrl} alt={product.name}/>
+                <img src={product.image} alt={product.name}/>
             </div>
             <div className="cart__item__middle">
                 <div className="cart__item__title">{product.name}</div>

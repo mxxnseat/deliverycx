@@ -34,7 +34,7 @@ const ProductList: FC<IProps> = ({category, searchQuery}) => {
 
             {
                 products.map(item=>{
-                    return <Product key={item._id} {...item}/>
+                    return <Product key={item.id} {...item}/>
                 })
             }
         </div>

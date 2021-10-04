@@ -5,13 +5,13 @@ import convertWeight from "../../../helpers/convertWeight";
 import { IProduct } from "../../../types/responses";
 
 
-const Product: FC<IProduct> = ({ _id, name, price, measureUnit, weight, description, image }) => {
+const Product: FC<IProduct> = ({ id, name, price, measureUnit, weight, description, image }) => {
     const history = useHistory();
     const cardRef = useRef<HTMLDivElement>(null);
 
     const clickHandler = (e: MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
         if (e.target === cardRef.current) {
-            history.push(`/shop/product/${_id}`)
+            history.push(`/shop/product/${id}`)
         }
 
     }
@@ -40,7 +40,7 @@ const Product: FC<IProduct> = ({ _id, name, price, measureUnit, weight, descript
                         <div className="product__item__price">{price} ₽</div>
                     </div>
 
-                    <AddToCart id={_id} />
+                    <AddToCart id={id} />
                 </div>
             </div>
         </div>
