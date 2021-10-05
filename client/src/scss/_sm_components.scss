@@ -184,7 +184,7 @@
     overflow: hidden;
     z-index: 999;
     text-decoration: none;
-
+    transition: all .2s ease-in;
     &__empty{
         
 
@@ -233,6 +233,14 @@
         opacity: .5;
         filter: brightness(0) invert(1);
     }
+}
+.link-to-cart.open{
+    min-height: 300px;
+    background-color: transparent;
+}
+.link-to-cart.open .link-to-cart__empty{
+    bottom: 0;
+    height: 300px;
 }
 
 .header-back{
