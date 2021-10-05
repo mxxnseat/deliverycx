@@ -43,12 +43,18 @@ body{
     border-radius: 30px;
     position: relative;
 }
-
-
-.cat_app{
-    min-height: 100%;
+.shop__box{
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    &-items{
+        flex-grow: 2;
+        padding-bottom: 80px;
+    }
 }
+
+
 .viewport{
     display: flex;
     align-items: center;
