@@ -203,14 +203,6 @@ class Shop {
                 }
             }, { new: false })
 
-            const orderNum = await Order.aggregate([
-                { $project: { orders: 1 }},
-                { $unwind: "$orders" },
-                { $group: {_id: "Order", count: { $sum: 1 }}}
-            ]);
-
-            console.log(orderNum);
-
 
             const order = await Order.findOneAndUpdate(
                 { user: user._id },
@@ -222,6 +214,12 @@ class Shop {
                     }
                 }
             });
+
+            const orderNum = await Order.aggregate([
+                { $project: { orders: 1 }},
+                { $unwind: "$orders" },
+                { $group: {_id: null, count: { $sum: 1 }}}
+            ]);
 
             res.status(200).json({
                 success: true,
