@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import * as model from "../db/models";
+import { User } from "../db/models";
 import { ICity } from "../db/models/api/City";
 
 
@@ -94,8 +95,7 @@ class Api {
     public async getProduct(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const organization = req.body.organization;
-            console.log(id, organization);
+            const organization = req.query.organization;
             let product: any = await model.Product.aggregate([
                 { $unwind: "$products" },
                 { $match: { "products.id": id, organization } },
@@ -124,7 +124,15 @@ class Api {
                 sauces = await model.Product.aggregate([
                     { $unwind: "$products" },
                     { $match: { organization, "products.code": { $regex: /^SO-\d+$/ } } },
-                ])
+                    { $project: {organization: 0, revision: 0, _id: 0}},
+                    { $group: {
+                        _id: null,
+                        sauces: {$addToSet: "$products"}
+                    }}
+                ]);
+                if(sauces.length){
+                    sauces = sauces[0].sauces;
+                }
             }
 
             res.json({

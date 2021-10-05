@@ -42,10 +42,10 @@ const getApi = ({ api }: Api) => {
       })
     },
 
-    getProduct<R>(productId: string): AxiosPromise<R> {
+    getProduct<R>(productId: string, organization: string): AxiosPromise<R> {
       return request({
         method: "get",
-        url: `api/getProduct/${productId}`
+        url: `api/getProduct/${productId}?organization=${organization}`
       })
     }
   }
