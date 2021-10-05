@@ -35,7 +35,7 @@ const OrderSchema = new Schema<IOrderSchema>({
             orderNum: Number
         }
     ]
-})
+}, {versionKey: false})
 
 const Model = model("Order", OrderSchema);
 
