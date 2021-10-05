@@ -12,7 +12,7 @@ const LinkToCart: FC = () => {
     const [isPopupEmpty, setIsPopupEmpty] = useState(false);
     const ref = useRef<HTMLDivElement | null>(null);
 
-    const emptyCN = cn("link-to-cart__empty", {open: isPopupEmpty});
+    const emptyCN = cn("link-to-cart", {open: isPopupEmpty});
 
     const linkHandler = () => {
         productsInCart && productsInCart.length ? history.push("/cart") : setIsPopupEmpty(true);
@@ -20,7 +20,7 @@ const LinkToCart: FC = () => {
     useOutside(ref, ()=>setIsPopupEmpty(false), isPopupEmpty);
 
     return (
-        <div onClick={linkHandler} className="link-to-cart">
+        <div onClick={linkHandler} className={emptyCN}>
             <div className="container row justify-between align-center">
                 <div className="link-to-cart__count">
                     {productsInCart.length}
@@ -32,7 +32,7 @@ const LinkToCart: FC = () => {
 
                 <div className="link-to-cart__booking"></div>
 
-                <div className={emptyCN} ref={ref}>
+                <div className="link-to-cart__empty" ref={ref}>
                         <h1>
                             Вы еще ничего<br/> <span className="select-red">не заказали</span>
                         </h1>

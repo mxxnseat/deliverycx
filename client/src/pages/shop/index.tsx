@@ -23,14 +23,14 @@ const Shop: FC<{}> = () => {
     return transitions((style, item) => (
         <>
             {!item ?
-                <animated.div style={style}>
+                <animated.div className="shop__box" style={style}>
                     <div className="container">
                         <AdressInfo />
                         <Header />
                     </div>
                     <Categories />
                     <Stocks />
-                    <div className="container">
+                    <div className="shop__box-items container">
                         {category && category._id ? <ProductList category={category._id} /> : "loading..."}
                     </div>
                     <LinkToCart />
