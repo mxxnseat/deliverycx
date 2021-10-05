@@ -16,13 +16,9 @@ export interface ISetProfileAction{
     type: ACTIONS.SET_PROFILE,
     payload: IInitialState
 }
-export interface IAuthSuccessAction{
-    type: ACTIONS.AUTH_SUCCESS,
-    payload: boolean
-}
-export interface IAuthFailAction{
-    type: ACTIONS.AUTH_FAIL,
+export interface IAuthAction<T extends ACTIONS.AUTH_SUCCESS | ACTIONS.AUTH_FAIL>{
+    type: T,
     payload: boolean
 }
 
-export type IActionsType = ISetProfileAction | IAuthSuccessAction | IAuthFailAction;
+export type IActionsType = ISetProfileAction | IAuthAction<ACTIONS.AUTH_SUCCESS | ACTIONS.AUTH_FAIL>;

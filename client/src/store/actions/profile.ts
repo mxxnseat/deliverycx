@@ -1,5 +1,5 @@
 import { AppDispatch } from "..";
-import { ACTIONS, ISetProfileAction, IInitialState, IAuthSuccessAction, IAuthFailAction } from "../../types/actions/profile";
+import { ACTIONS, ISetProfileAction, IInitialState, IAuthAction } from "../../types/actions/profile";
 import { loadCart } from "../actions/cart";
 import profile from '../../api/Profile';
 import { setAddressAction } from "./adress";
@@ -15,13 +15,13 @@ function setProfileAction(payload: IInitialState): ISetProfileAction {
         payload
     }
 }
-function AuthSuccessAction(): IAuthSuccessAction {
+function AuthSuccessAction(): IAuthAction<ACTIONS.AUTH_SUCCESS> {
     return {
         type: ACTIONS.AUTH_SUCCESS,
         payload:true
     }
 }
-function AuthFailAction(): IAuthFailAction {
+function AuthFailAction(): IAuthAction<ACTIONS.AUTH_FAIL> {
     return {
         type: ACTIONS.AUTH_FAIL,
         payload:false
@@ -40,13 +40,17 @@ function loadData() {
 
             if(status === 200){
                 if (data.isAuth) {
-                    dispatch(AuthSuccessAction())
+                    console.log(data.user);
                     dispatch(loadCart(data.user?.cart as ICart));
-                    dispatch(setAddressAction(data.user?.organization as IAddress))
-                    //history.push("/");
+                    dispatch(setAddressAction(data.user?.organization as IAddress));
+                    dispatch(AuthSuccessAction())
+
+                }else{
+                    history.push("/");
                 }
             }else{
                 dispatch(AuthFailAction());
+                history.push("/");
             }
         } catch (e: unknown) {
             history.push("/");

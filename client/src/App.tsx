@@ -1,6 +1,6 @@
 import { FC, useEffect, } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Switch, Route, useLocation, useHistory } from "react-router-dom";
+import { Switch, Route, useLocation, useHistory, Router } from "react-router-dom";
 import { useTransition, animated } from "react-spring";
 import ChooseAdress from './pages/welcome';
 
@@ -12,6 +12,7 @@ import { loadData } from './store/actions/profile';
 const App: FC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
+  const history = useHistory();
   const isAuth = useSelector((state: RootState) => state.profile.isAuth);
 
 
@@ -24,9 +25,14 @@ const App: FC = () => {
 
   useEffect(() => {
     dispatch(loadData());
-  },[isAuth]);
 
-  if (!isAuth) {
+    if(!isAuth){
+
+      return history.push("/");
+    }
+  }, [isAuth]);
+
+  if(!isAuth){
     return <ChooseAdress />
   }
 
@@ -34,7 +40,7 @@ const App: FC = () => {
     <animated.div key={key} style={{ ...style, }}>
       <div style={{ position: "absolute", width: "100%", height: "100%" }}>
         <Switch location={item}>
-          {routes.map((route, index) => <Route key={index} {...route} />)}
+            { routes.map((route, index) => <Route key={index} {...route} />)}
         </Switch>
       </div>
     </animated.div>
