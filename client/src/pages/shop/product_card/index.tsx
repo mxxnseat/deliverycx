@@ -9,6 +9,7 @@ import Sauce from "./Sauce";
 import Api from "../../../api/Api";
 import { RootState } from "../../../store";
 import { useSelector } from "react-redux";
+import { stat } from "fs";
 
 interface IMatchProps {
     id: string
@@ -24,11 +25,12 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
     const history = useHistory();
     const [sauces, setSauces] = useState<IProduct[]>([]);
     const [product, setProduct] = useState<IProduct | null>(null);
+    const organization = useSelector((state: RootState) =>state.address.address._id);
 
     useEffect(() => {
         const productId = match.params.id;
         (async ()=>{
-            const response = await Api.getProduct<IResponse>(productId);
+            const response = await Api.getProduct<IResponse>(productId, organization);
             console.log(response.data);
         
             setSauces(response.data.sauces);

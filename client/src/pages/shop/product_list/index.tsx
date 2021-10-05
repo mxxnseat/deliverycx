@@ -29,6 +29,7 @@ const ProductList: FC<IProps> = ({category, searchQuery}) => {
         
     }, [category, searchQuery]);
 
+    
     return (
         <div className="product__list">
 
@@ -41,4 +42,4 @@ const ProductList: FC<IProps> = ({category, searchQuery}) => {
     )
 }
 
-export default ProductList;
+export default memo(ProductList);

@@ -4,12 +4,11 @@ import AddToCart from "../../../components/AddToCart";
 import convertWeight from "../../../helpers/convertWeight";
 import { IProduct } from "../../../types/responses";
 
-
 const Product: FC<IProduct> = ({ id, name, price, measureUnit, weight, description, image }) => {
     const history = useHistory();
     const cardRef = useRef<HTMLDivElement>(null);
 
-    const clickHandler = (e: MouseEvent<HTMLDivElement | HTMLButtonElement>) => { //MouseEvent<HTMLDivElement | HTMLButtonElement>
+    const clickHandler = (e: MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
 
         if ((e.target as HTMLButtonElement).type !== 'submit') {
             history.push(`/shop/product/${id}`)

@@ -64,6 +64,7 @@
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.6",
     "@types/react-input-mask": "^3.0.1",
+    "@types/react-lazy-load-image-component": "^1.5.2",
     "@types/react-router": "^5.1.16",
     "@types/react-router-dom": "^5.1.8",
     "@types/react-router-redux": "^5.0.19",
