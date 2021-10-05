@@ -6,14 +6,15 @@ import debounce from 'lodash.debounce';
 
 interface IProps {
     id: string
+    classe:string
 }
 
-const AddToCart: FC<IProps> = ({ id }) => {
+const AddToCart: FC<IProps> = ({ id,classe }) => {
     const dispatch = useDispatch();
 
-    const debouncedChangeHandler = debounce(() => dispatch(addToCartAction(id)), 500)  
+    //const debouncedChangeHandler = debounce(() => dispatch(addToCartAction(id)), 100)  
 
-    return <button className="add-to-cart" onClick={debouncedChangeHandler}></button>
+    return <button className={classe} onClick={() => dispatch(addToCartAction(id))}></button>
 }
 
 export default memo(AddToCart);

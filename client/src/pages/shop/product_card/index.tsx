@@ -10,6 +10,7 @@ import Api from "../../../api/Api";
 import { RootState } from "../../../store";
 import { useSelector } from "react-redux";
 import { stat } from "fs";
+import AddToCart from "../../../components/AddToCart";
 
 interface IMatchProps {
     id: string
@@ -25,10 +26,11 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
     const history = useHistory();
     const [sauces, setSauces] = useState<IProduct[]>([]);
     const [product, setProduct] = useState<IProduct | null>(null);
-    const organization = useSelector((state: RootState) =>state.address.address._id);
+    const organization = useSelector((state: RootState) => state.address.address._id);
+    const productId = match.params.id;
 
     useEffect(() => {
-        const productId = match.params.id;
+        
         (async ()=>{
             const response = await Api.getProduct<IResponse>(productId, organization);
             console.log(response.data);
@@ -63,7 +65,7 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
                             </div>
                             <span className="select-red">{product.price} ₽</span>
                         </div>
-                        <button className="product-card__add"></button>
+                        <AddToCart id={productId} classe={"product-card__add"} />
                     </div>
                 </div>
             </div>
