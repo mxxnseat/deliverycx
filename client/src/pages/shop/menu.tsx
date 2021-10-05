@@ -12,6 +12,7 @@ const Menu: FC<IProps> = ({isActive, setter})=>{
 
     return (
         <div className={menuCN}>
+            
                 <div className="header__menu__header">
                     <div className="header__menu__close" onClick={setter}></div>
                     <div className="header__logo"><img src={require("../../assets/img/logo.png").default} alt="Логотип" /></div>
@@ -41,7 +42,9 @@ const Menu: FC<IProps> = ({isActive, setter})=>{
                         <a target="_blank" rel="noreferrer" href="//xn--80aaudyq1a9a.xn--80apgfh0ct5a.xn--p1ai/" className="header__menu__link franchise">Франшиза</a>
                     </div>
                 </div>
-            </div>
+                <div className="header__menu__bg-images"></div>
+            
+        </div>
     )
 }
 

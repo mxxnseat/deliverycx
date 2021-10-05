@@ -184,7 +184,7 @@
     overflow: hidden;
     z-index: 999;
     text-decoration: none;
-
+    transition: all .2s ease-in;
     &__empty{
         
 
@@ -234,10 +234,20 @@
         filter: brightness(0) invert(1);
     }
 }
+.link-to-cart.open{
+    min-height: 300px;
+    background-color: transparent;
+}
+.link-to-cart.open .link-to-cart__empty{
+    bottom: 0;
+    height: 300px;
+}
 
 .header-back{
     box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.05), 0px 5px 10px rgba(0, 0, 0, 0.05), 0px 3px 5px rgba(0, 0, 0, 0.05);
     padding: 30px 0;
+    position: relative;
+    z-index: 2;
 
     &__return-btn{
         background: transparent;
@@ -490,10 +500,12 @@
 
 .about{
     height: 100%;
+    min-height: 570px;
     background-image: url("../assets/img/menu-background_tile.png");
     background-repeat: repeat no-repeat;
     background-position: bottom;
-    .container{
+    overflow-y: auto;
+    & > .container{
         display: flex;
         flex-direction: column;
     }
@@ -512,10 +524,7 @@
         line-height: 140%;
         max-width: 161px;
         text-align: center;   
-        position: absolute;
-        bottom: 86px;
-        left: 50%;
-        transform: translateX(-50%);
+        margin: 20px auto 0 auto;
     }    
 }
 

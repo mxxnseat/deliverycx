@@ -269,11 +269,14 @@
         padding-bottom: 30%;
         align-items: center;
         width: 100%;
-        height: calc(100% - 80px);
         font-size: 15px;
         line-height: 18px;
         color: #333333;
         background: url('../assets/img/starik.png') right bottom no-repeat;
+        position: absolute;
+        height: 100%;
+        min-height: 500px;
+        z-index: 1;
         & > *{
             text-align: center;
         }
@@ -296,5 +299,10 @@
             font-weight: 300;
         }
         
+    }
+}
+@media screen and (max-width: 360px){
+    .cart__order-btn{
+        width: 320px;
     }
 }

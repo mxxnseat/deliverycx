@@ -8,12 +8,22 @@
         left: -100%;
         overflow: hidden;
         transition: left 0.8s cubic-bezier(0, 0.21, 0.47, 1.1);
-        padding: 46px;
+        //padding: 46px;
+        padding-top: 46px;
         top: 0;
-        background-image: url("../assets/img/menu-background_tile.png");
-        background-position: bottom;
-        background-repeat: repeat no-repeat;
-
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        
+        &__bg-images{
+            background-image: url("../assets/img/menu-background_tile.png");
+            background-position: bottom;
+            background-repeat: repeat no-repeat; 
+            height: 49px;
+            width: 100%;
+            
+        }
         &.active{
             left: 0;
         }
@@ -105,6 +115,7 @@
             justify-content: center;
             align-items: center;
             position: relative;
+            margin:0 46px;
         }
         .header__logo{
             margin: 0 auto;
@@ -118,8 +129,8 @@
         &__list{
             display: flex;
             flex-direction: column;
-            align-items: center;
-            margin-top: 30px;
+            align-items: center;    
+            margin:30px 46px;
         }
         &__qrcode{
             text-align: center;

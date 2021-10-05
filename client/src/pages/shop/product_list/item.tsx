@@ -9,8 +9,9 @@ const Product: FC<IProduct> = ({ id, name, price, measureUnit, weight, descripti
     const history = useHistory();
     const cardRef = useRef<HTMLDivElement>(null);
 
-    const clickHandler = (e: MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
-        if (e.target === cardRef.current) {
+    const clickHandler = (e: MouseEvent<HTMLDivElement | HTMLButtonElement>) => { //MouseEvent<HTMLDivElement | HTMLButtonElement>
+
+        if ((e.target as HTMLButtonElement).type !== 'submit') {
             history.push(`/shop/product/${id}`)
         }
 
