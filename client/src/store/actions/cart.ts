@@ -34,25 +34,33 @@ function checkoutCartSuccess(payload:ICheckoutResponse): ICheckOutCartSuccess {
 
 function addToCartAction(productId: string) {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
-        const { status, data } = await cart.addToCart<ICart>(productId);
+        try {
+            const { status, data } = await cart.addToCart<ICart>(productId);
 
-        if (status === 200) {
-            dispatch({
-                type: ACTIONS.ADD_TO_CART,
-                payload: data
-            })
+            if (status === 200) {
+                dispatch({
+                    type: ACTIONS.ADD_TO_CART,
+                    payload: data
+                })
 
+            }
+        } catch (error) {
+            console.log(error)
         }
     }
 }
 function removeOne(cartId: string) {
     return async (dispatch: AppDispatch) => {
-        const { data, status } = await cart.removeOne<ICart>(cartId)
-        if (status === 200) {
-            dispatch({
-                type: ACTIONS.REMOVE_ITEM,
-                payload: data
-            })
+        try {
+            const { data, status } = await cart.removeOne<ICart>(cartId)
+            if (status === 200) {
+                dispatch({
+                    type: ACTIONS.REMOVE_ITEM,
+                    payload: data
+                })
+            } 
+        } catch (error) {
+            console.log(error)
         }
 
     }
