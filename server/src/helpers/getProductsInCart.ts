@@ -3,7 +3,6 @@ import { CartType } from "db/models/shop/Cart";
 
 export default async function getProductsInCart(cart: CartType<string>[], organization: string){
     const products = [];
-
     for(let k in cart){
         const cartEl = cart[k];
         const product = await Product.aggregate([
@@ -27,7 +26,8 @@ export default async function getProductsInCart(cart: CartType<string>[], organi
                 }
             }
         ]);
-        if(product){
+
+        if(product.length){
             products.push({
                 product: product[0].product[0],
                 _id: cartEl._id,

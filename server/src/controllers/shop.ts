@@ -68,7 +68,7 @@ class Shop {
 
             
 
-            const totalPrice = calcTotalPrice(products);
+            const totalPrice = await calcTotalPrice(products, cart._id);
             res.status(200).json({
                 products,
                 totalPrice
@@ -94,7 +94,7 @@ class Shop {
             
             const products = await getProductsInCart(carts.products, user.organization);
 
-            const totalPrice = calcTotalPrice(products);
+            const totalPrice = await calcTotalPrice(products, cart._id);
             res.status(200).json({
                 products,
                 totalPrice
@@ -158,7 +158,7 @@ class Shop {
             }, { new: true });
 
             const products = await getProductsInCart(carts.products, user.organization);
-            const totalPrice = calcTotalPrice(products);
+            const totalPrice = await calcTotalPrice(products, cart._id);
             res.status(200).json({
                 products,
                 totalPrice
@@ -176,7 +176,7 @@ class Shop {
             const cart = await Cart.findOne({ _id: user.cart });
 
             const products = await getProductsInCart(cart.products, user.organization);
-            const totalPrice = calcTotalPrice(products);
+            const totalPrice = await calcTotalPrice(products, cart._id);
             res.status(200).json({
                 products,
                 totalPrice

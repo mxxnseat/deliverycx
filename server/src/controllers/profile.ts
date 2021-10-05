@@ -5,6 +5,7 @@ import calcTotalPrice from "../utils/calcTotalPrice";
 import { User, Cart, Order } from "../db/models";
 import { IUserSchema } from "../db/models/profile/User";
 import generateUserTokens from "../helpers/generateTokens";
+import getProductsInCart from "../helpers/getProductsInCart";
 
 
 
@@ -146,8 +147,6 @@ class Profile {
                         _id: 0
                     }
                 })
-
-            //console.log(user);
             
             if (!user.organization) { 
                 
@@ -156,15 +155,16 @@ class Profile {
                     user
                 });
             }
-            //console.log(user);
-
-            if (!user.cart) user.cart = [];
-
-            //console.log(user);
-
+            const products = await getProductsInCart(user.cart.products, user.organization._id);
             res.status(200).json({
                 isAuth: true,
-                user,
+                user: {
+                    ...user._doc,
+                    cart: {
+                        totalPrice: user.cart.totalPrice,
+                        products
+                    }
+                },
             })
         } catch (e: unknown) {
             console.log(e);
