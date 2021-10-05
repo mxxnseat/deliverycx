@@ -2,9 +2,9 @@ import { FC, useEffect, } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Switch, Route, useLocation, useHistory, Router } from "react-router-dom";
 import { useTransition, animated } from "react-spring";
-import ChooseAdress from './pages/welcome';
-
-import routes from "./routes";
+import ProtectedRouter from "./components/ProtectedRouter";
+import protectedRoutes from "./routes/protectedRouters";
+import publicRoutes from "./routes/publicRouters";
 import { RootState } from './store';
 
 import { loadData } from './store/actions/profile';
@@ -25,26 +25,14 @@ const App: FC = () => {
 
   useEffect(() => {
     dispatch(loadData());
+  }, []);
 
-    if(!isAuth){
-
-      return history.push("/");
-    }
-  }, [isAuth]);
-
-  if(!isAuth){
-    return <ChooseAdress />
-  }
-
-  return transitions((style, item, t, key) => (
-    <animated.div key={key} style={{ ...style, }}>
-      <div style={{ position: "absolute", width: "100%", height: "100%" }}>
-        <Switch location={item}>
-            { routes.map((route, index) => <Route key={index} {...route} />)}
-        </Switch>
-      </div>
-    </animated.div>
-  ));
+  return (
+    <Switch>
+      { protectedRoutes.map((route, index)=><ProtectedRouter key={index} {...route} isAuth={isAuth} />)}
+      { publicRoutes.map((route, index) => <Route key={index} {...route} />)}
+    </Switch>
+  )
 }
 
 export default App;

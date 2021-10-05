@@ -15,7 +15,6 @@ const Categories: FC = () => {
     const category = useSelector((state: RootState)=>state.shop.category);
     const [categories, setCategories] = useState<ICategory[]>([]);
     const [currentSlide, setCurrentSlide] = useState<number>(0);
-
     const handleSliderClick = (index: number) => {
         slider.current?.slickGoTo(index);
         setCurrentSlide(index);
