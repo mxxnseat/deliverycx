@@ -26,7 +26,6 @@ App.use(bodyParser())
 
 App.use("/api", api);
 
-
 App.use("/profile", profile);
 App.use("/shop", authCheck ,shop);
 
