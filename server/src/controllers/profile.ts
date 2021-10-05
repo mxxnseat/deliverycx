@@ -148,14 +148,14 @@ class Profile {
                 })
 
             //console.log(user);
-            /*    
+            
             if (!user.organization) { 
                 
                 return res.status(200).json({
-                    isAuth: false
+                    isAuth: false,
+                    user
                 });
             }
-            */
             //console.log(user);
 
             if (!user.cart) user.cart = [];
