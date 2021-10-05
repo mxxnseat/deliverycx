@@ -17,7 +17,7 @@ export enum ROUTES {
     ABOUT = "/about",
     NOT_FOUND = "*"
 }
-interface IRoute{
+export interface IRoute{
     exact?: boolean,
     path: string,
     component: ComponentType<any>

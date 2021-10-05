@@ -6,7 +6,6 @@ import { useHistory } from "react-router";
 const AdressInfo: FC = () => {
     const {address, city} = useSelector((state:RootState)=>state.address);
     const history = useHistory();
-
     return (
         <div className="adress_info">
             <div className="adress_info__city" onClick={()=>history.push("/")}>{address.city.name}</div>
