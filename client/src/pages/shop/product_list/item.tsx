@@ -40,7 +40,7 @@ const Product: FC<IProduct> = ({ id, name, price, measureUnit, weight, descripti
                         <div className="product__item__price">{price} ₽</div>
                     </div>
 
-                    <AddToCart id={id} classe={"add-to-cart"} />
+                    <AddToCart id={id} _class={"add-to-cart"} />
                 </div>
             </div>
         </div>
