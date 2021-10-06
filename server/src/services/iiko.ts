@@ -4,8 +4,9 @@ import * as model from "../db/models";
 import { ICity } from "../db/models/api/City";
 import { geoCode, IPosition } from "../helpers/geoCoder";
 import { IOrganization as IApiOrganization } from "../db/models/api/Organization";
-import { ICategory, IGroup, INomenclature, IOrganization, IProduct } from "../types/axiosResponses";
+import { ICategory, IGroup, INomenclature, IOrganization, IProduct,IOrderCheckCreationResult } from "../types/axiosResponses";
 import { IProductSchema } from "db/models/api/Product";
+import { createOrderType } from "helpers/createOrder";
 
 
 class Iiko {
@@ -45,6 +46,37 @@ class Iiko {
             });
         } catch (e) {
             console.log(`Error with get organizations\n${e}`);
+        }
+    }
+    public async createOrder(orderBody: createOrderType){
+        try{
+            const {data: checkData} = await axios.post<IOrderCheckCreationResult>(
+                `https://iiko.biz:9900/api/0/orders/checkCreate?access_token=${Iiko.token}`,
+                orderBody
+            )
+
+            if(checkData.resultState !== 0){
+                return {
+                    status: 400,
+                    message: checkData.problem
+                }
+            }
+            const {data: createData} = await axios.post(
+                `https://iiko.biz:9900/api/0/orders/add?access_token=${Iiko.token}`,
+                orderBody
+            )
+
+            return {
+                status: 200,
+                message: createData
+            }
+            
+        }catch(e){
+            console.log(e);
+            return {
+                status: 500,
+                message: `cannot create order \n${e}`
+            }
         }
     }
     private async getAndSaveNomenclature() {

@@ -4,11 +4,12 @@ import { User, Cart, Product, Order } from "../db/models";
 import { IProduct } from "../db/models/api/Product";
 import { IUserSchema } from "../db/models/profile/User";
 import { FindOneAndUpdateReturnType, ILastErrorObject } from "../types/mongoose";
-import createOrder, { createOrderType } from "../helpers/createOrder";
+import createOrder, { createOrderType, CustomerData } from "../helpers/createOrder";
 import getProductsInCart from "../helpers/getProductsInCart";
 import calcTotalPrice from "../utils/calcTotalPrice";
 import { ICartSchema } from "../db/models/shop/Cart";
 import iiko from "../services/iiko";
+import { separateAddress, SeparateType } from "../helpers/geoCoder";
 
 type AddToCartBody = {
     username: string,
@@ -17,20 +18,15 @@ type AddToCartBody = {
 }
 type CreateOrderBody = {
     username: string,
-    name: string,
     address: string,
-    phone: string,
-    comment: string,
-    date: string,
-    paymentMethod: string,
-    promocode: string,
+    notCall: boolean,
+    payment: object,
     cart_choice: string,
-
-}
+} & CustomerData;
 
 class Shop {
     public async addToCart(req: Request<{}, {}, AddToCartBody>, res: Response) {
-        const {product, username} = req.body;
+        const { product, username } = req.body;
         try {
             const user = await User.findOne({ username: username })
 
@@ -38,7 +34,7 @@ class Shop {
                 throw Error("Bad request");
             }
 
-            const productOne = await Product.findOne({ organization: user.organization, "products.id": product});
+            const productOne = await Product.findOne({ organization: user.organization, "products.id": product });
             if (!productOne) {
                 throw Error("Bad request");
             }
@@ -66,7 +62,7 @@ class Shop {
 
             const products = await getProductsInCart(cart.products, user.organization);
 
-            
+
 
             const totalPrice = await calcTotalPrice(products, cart._id);
             res.status(200).json({
@@ -91,7 +87,7 @@ class Shop {
                     }
                 }
             }, { new: true });
-            
+
             const products = await getProductsInCart(carts.products, user.organization);
 
             const totalPrice = await calcTotalPrice(products, cart._id);
@@ -129,7 +125,7 @@ class Shop {
     public async changeAmount(req: Request, res: Response) {
         try {
             const type: "inc" | "dec" = req.body.type;
-            const { cart, username,count } = req.body;
+            const { cart, username, count } = req.body;
             let update = {};
 
             const user = await User.findOne({ username });
@@ -187,7 +183,19 @@ class Shop {
         }
     }
     public async createOrder(req: Request<{}, {}, CreateOrderBody>, res: Response) {
-        const username = req.body.username;
+        const {
+            username,
+            address,
+            comment,
+            phone,
+            date,
+            promocode,
+            cart_choice,
+            name,
+            payment,
+            times,
+            notCall
+        } = req.body;
 
         try {
             const user = await User.findOne({ username: username });
@@ -196,29 +204,53 @@ class Shop {
                 throw Error();
             }
 
+            const addressData = await separateAddress(address);
 
-            const cart = await Cart.findOneAndUpdate({ _id: user.cart }, {
+            if (addressData.status !== 200) {
+                return res.status(addressData.status).json(addressData.message);
+            }
+
+            const cart = await Cart.findOne({ _id: user.cart });
+            const cartList = await getProductsInCart(cart.products, user.organization);
+
+            const { locality, street, house } = addressData.separateAddressObject!;
+            console.log(locality);
+            const orderBody = createOrder({ locality, street, house }, user.organization, {
+                name,
+                comment,
+                date,
+                phone,
+                times,
+                promocode
+            }, cartList);
+
+            const {status, message} = await iiko.createOrder(orderBody);
+            if(status !== 200){
+                return res.status(status).json(message);
+            }
+            await Cart.updateOne({ _id: user.cart }, {
                 $set: {
-                    products: []
+                    products: [],
+                    totalPrice: 0
                 }
             }, { new: false })
-
-
             const order = await Order.findOneAndUpdate(
                 { user: user._id },
-                {$push: {
-                    orders: {
-                        products: cart.products,
-                        totalPrice: cart.totalPrice,
-                        orderNum: 2
+                {
+                    $push: {
+                        orders: {
+                            products: cart.products,
+                            totalPrice: cart.totalPrice,
+                            orderNum: 2
+                        }
                     }
-                }
-            });
+                });
+
 
             const orderNum = await Order.aggregate([
-                { $project: { orders: 1 }},
+                { $project: { orders: 1 } },
                 { $unwind: "$orders" },
-                { $group: {_id: null, count: { $sum: 1 }}}
+                { $group: { _id: null, count: { $sum: 1 } } }
             ]);
 
             res.status(200).json({

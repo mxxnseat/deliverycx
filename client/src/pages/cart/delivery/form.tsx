@@ -11,31 +11,25 @@ import Checkbox from "../../../components/HOC/Checkbox";
 interface IInitialValues{
     comment: string,
     name: string,
+    address: string,
     phone: string,
     notCall: boolean
 }
 export interface ISubmitData extends IInitialValues{
     payment: any,
-    adress: object,
     times: object,
 }
 
 const initialValues:IInitialValues = {
     comment: '',
     name: '',
+    address: '',
     phone: '',
     notCall: false
 }
 
 
 const CartForm: FC = () => {
-    function computedAdress(adress: any) {
-        return {
-            id: adress.id,
-            value: `${adress.value}\n${adress.adress}`
-        }
-    }
-
     //mocki array
     const paymentMethods: any = [{
         id: "3",
@@ -44,25 +38,12 @@ const CartForm: FC = () => {
         id: "4",
         value: "Наличными курьеру"
     }];
-    const adressesMocki: any = [
-        {
-            id: "1",
-            value: "г. Cимферополь",
-            adress: "павленко 123123"
-        },
-        {
-            id: "2",
-            value: "г. Cимферополь",
-            adress: "турецкая 123123"
-        },
-    ];
     const timesArray: object[] = [{
         id: "1",
         value: "По готовности"
     }];
 
     const [payment, setPayment] = useState(paymentMethods[0]);
-    const [adress, setAdress] = useState<object>({ ...computedAdress(adressesMocki[0]) });
     const [times, setTimes] = useState<object>(timesArray[0]);
 
     return (
@@ -73,7 +54,6 @@ const CartForm: FC = () => {
                 submitHandler<ISubmitData>({
                     ...values,
                     payment,
-                    adress,
                     times
                 }, meta)
             }}
@@ -91,14 +71,20 @@ const CartForm: FC = () => {
 
                                 <FormFieldWrapper
                                     placeholderIco={require("../../../assets/i/mark-red.svg").default}
-                                    placeholderValue="Заведение"
+                                    placeholderValue="Где"
                                 >
-                                    <CartSelect options={adressesMocki} selected={adress} setter={(adress: any) => setAdress({...computedAdress(adress)})} />
+                                    <input 
+                                        className="form__field-wrapper__input"
+                                        name="address"
+                                        placeholder="Укажу позже"
+                                        value={formik.values.address}
+                                        onChange={formik.handleChange} 
+                                    />
                                 </FormFieldWrapper>
 
                                 <FormFieldWrapper
                                     placeholderIco={require("../../../assets/i/clock.svg").default}
-                                    placeholderValue="Имя"
+                                    placeholderValue="Когда"
                                 >
                                     <CartSelect options={timesArray} selected={times} setter={(time: object) => setTimes(time)} />
 
