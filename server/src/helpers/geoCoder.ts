@@ -1,5 +1,6 @@
 import axios from "axios";
 import {DOMParser} from "xmldom";
+import { AsyncReturnType } from "types/asyncReturnType";
 
 export interface IPosition {
     longitude: number,
@@ -40,5 +41,58 @@ export async function geoCode(address: string) {
     }
     
 }
+
+interface ISeparateResponse{
+    response: {
+        GeoObjectCollection: {
+            featureMember: Array<{
+                GeoObject: {
+                    metaDataProperty: {
+                        GeocoderMetaData: {
+                            Address: {
+                                Components: Array<{
+                                    kind: string,
+                                    name: string
+                                }>
+                            }
+                        }
+                    }
+                    name: string
+                }
+            }>
+        }
+    }
+}
+
+export type SeparateType = {
+    [key: string]: string
+}
+
+export async function separateAddress(address: string){
+    address = encodeURI(address);
+
+    const {data, status} = await axios.get<ISeparateResponse>(
+        `https://geocode-maps.yandex.ru/1.x/?geocode=${address}&format=json&apikey=${process.env.yandex_apiKey}`
+        );
+    console.log(data);
+    if(status !== 200) return {status,message: "Something went wrong"}
+    if(!data.response.GeoObjectCollection.featureMember.length) return {status: 400, message: "Не верно задан адрес"}
+
+    const separateAddressObject:SeparateType = {};
+    
+    data.response.GeoObjectCollection.featureMember[0]
+    .GeoObject.metaDataProperty.GeocoderMetaData
+    .Address.Components
+    .forEach(el=>{
+        separateAddressObject[el.kind] = el.name;
+    })
+
+    return {
+        status: 200,
+        message: "OK",
+        separateAddressObject
+    };
+}
+export type SeparateReturnType = AsyncReturnType<typeof separateAddress>
 
 export default parseXmlToCord;

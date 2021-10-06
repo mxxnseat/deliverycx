@@ -1,83 +1,66 @@
 import { IProduct } from "db/models/api/Product";
-import { ICartSchema } from "db/models/shop/Cart";
-import {Document} from "mongoose";
+import { CartType } from "db/models/shop/Cart";
 import { AsyncReturnType } from "types/asyncReturnType";
-import Profile, { IUserSchema } from "../db/models/profile/User";
 
-interface IModifiers{
-    id: string,
-    name: string,
-    amount: number
+type Address = {
+    locality: string,
+    street: string,
+    house: string
 }
-interface IItems{
-    _id: string,
+export type CustomerData = {
     name: string,
-    amount: number,
-    code: string,
-    sum: number,
-    modifiers?: IModifiers[]
-}
-type ArgType = {
-    username: string,
-    name: string,
-    phone: string,
     comment: string,
+    phone: string,
+    times: object, 
     date: string,
-    address: string
+    promocode: string,
 }
 
-export default async function createOrderBody({username, address, comment, name, phone, date}: ArgType){
+export default function createOrderBody(
+    address: Address,
+    organization: string,
+    customerData: CustomerData, cart: CartType<IProduct>[]
+){
     try{
-        // const user = await Profile.findOne({username}).populate({
-        //     path: "cart",
-        //     populate: {
-        //         path: "product"
-        //     },
-        //     select: {
-        //         user: 0
-        //     }
-        // });
-
-        // const items = user.cart.map(el=>{
-        //     return {
-        //         id: el.product.,
-        //         "name": "Хинкали с мясом без зелени",
-        //         "amount": 1,
-        //         "code": "HI-5",
-        //         "sum": 35
-        //     }
-        // })
-        // // const addressGroup = address.match(//i).groups;
-
-        // return {
-        //     organization,
-        //     customer: {
-        //         name,
-        //         phone
-        //     },
-        //     "order": {
-        //         "date": "2021-09-28 12:00:00",
-        //         phone,
-        //         "isSelfService": "false",
-        //         "items": [
-        //             {
-        //                 "id": "ba0c5dd2-c5a8-4d15-a81c-8bbdb7c9adf5",
-        //                 "name": "Хинкали с мясом без зелени",
-        //                 "amount": 1,
-        //                 "code": "HI-5",
-        //                 "sum": 35
-        //             }
-        //         ],
-        //         "address": {
-        //             "city": "Симферополь",
-        //             "street": "Павленко",
-        //             // home,
-        //             comment
-        //         }
-        //     }
-        // }
+        const {phone, name, comment} = customerData;
+        return {
+            organization,
+            customer: {
+                name,
+                phone
+            },
+            order: {
+                date: "2021-09-28 12:00:00",
+                phone,
+                isSelfService: "false",
+                items: cart.map(cartEl=>({
+                    id: cartEl.product.id,
+                    name: cartEl.product.name,
+                    amount: cartEl.amount,
+                    code: cartEl.product.code,
+                    sum: cartEl.product.price
+                }))
+                // [
+                //     {
+                //         "id": "ba0c5dd2-c5a8-4d15-a81c-8bbdb7c9adf5",
+                //         "name": "Хинкали с мясом без зелени",
+                //         "amount": 1,
+                //         "code": "HI-5",
+                //         "sum": 35
+                //     }
+                // ]
+                ,
+                address: {
+                    city: address.locality,
+                    street: address.street.split(" ")[1],
+                    home: address.house,
+                    comment
+                }
+            }
+        }
 
     }catch(e){
+        console.log(e);
         return {};
     }
 
@@ -85,4 +68,4 @@ export default async function createOrderBody({username, address, comment, name,
 }
 
 
-export type createOrderType = AsyncReturnType<typeof createOrderBody>;
+export type createOrderType = ReturnType<typeof createOrderBody>;

@@ -42,3 +42,9 @@ export interface INomenclature{
     productCategories: ICategory[]
     revision: number
 }
+
+export interface IOrderCheckCreationResult{
+    problem: string,
+    resultState: number,
+    deliveryDurationInMinute: number
+}
