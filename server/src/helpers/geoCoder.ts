@@ -42,7 +42,7 @@ export async function geoCode(address: string) {
     
 }
 
-interface ISeparateResponse{
+interface IGeoCodeResponse{
     response: {
         GeoObjectCollection: {
             featureMember: Array<{
@@ -59,7 +59,14 @@ interface ISeparateResponse{
                     }
                     name: string
                 }
-            }>
+            }>,
+            metaDataProperty: {
+                GeocoderResponseMetaData: {
+                    found: string,
+                    requrest: string,
+                    results: string
+                }
+            }
         }
     }
 }
@@ -71,12 +78,12 @@ export type SeparateType = {
 export async function separateAddress(address: string){
     address = encodeURI(address);
 
-    const {data, status} = await axios.get<ISeparateResponse>(
+    const {data, status} = await axios.get<IGeoCodeResponse>(
         `https://geocode-maps.yandex.ru/1.x/?geocode=${address}&format=json&apikey=${process.env.yandex_apiKey}`
         );
     console.log(data);
     if(status !== 200) return {status,message: "Something went wrong"}
-    if(!data.response.GeoObjectCollection.featureMember.length) return {status: 400, message: "Не верно задан адрес"}
+    if(+data.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found === 0) return {status: 400, message: "Не верно задан адрес"}
 
     const separateAddressObject:SeparateType = {};
     
