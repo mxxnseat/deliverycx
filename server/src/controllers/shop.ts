@@ -24,6 +24,7 @@ type CreateOrderBody = {
     cart_choice: string,
 } & CustomerData;
 
+
 class Shop {
     public async addToCart(req: Request<{}, {}, AddToCartBody>, res: Response) {
         const { product, username } = req.body;
@@ -214,7 +215,6 @@ class Shop {
             const cartList = await getProductsInCart(cart.products, user.organization);
 
             const { locality, street, house } = addressData.separateAddressObject!;
-            console.log(locality);
             const orderBody = createOrder({ locality, street, house }, user.organization, {
                 name,
                 comment,
@@ -224,7 +224,8 @@ class Shop {
                 promocode
             }, cartList);
 
-            const {status, message} = await iiko.createOrder(orderBody);
+            const {status, message} = await iiko.iikoMethodBuilder(()=>iiko.createOrder(orderBody));
+            console.log(status);
             if(status !== 200){
                 return res.status(status).json(message);
             }
@@ -241,7 +242,6 @@ class Shop {
                         orders: {
                             products: cart.products,
                             totalPrice: cart.totalPrice,
-                            orderNum: 2
                         }
                     }
                 });

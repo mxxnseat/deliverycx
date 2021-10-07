@@ -39,17 +39,7 @@ export default function createOrderBody(
                     amount: cartEl.amount,
                     code: cartEl.product.code,
                     sum: cartEl.product.price
-                }))
-                // [
-                //     {
-                //         "id": "ba0c5dd2-c5a8-4d15-a81c-8bbdb7c9adf5",
-                //         "name": "Хинкали с мясом без зелени",
-                //         "amount": 1,
-                //         "code": "HI-5",
-                //         "sum": 35
-                //     }
-                // ]
-                ,
+                })),
                 address: {
                     city: address.locality,
                     street: address.street.split(" ")[1],

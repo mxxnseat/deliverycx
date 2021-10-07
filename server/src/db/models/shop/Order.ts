@@ -5,7 +5,6 @@ interface IOrder{
     products: CartType<string>[],
     date: Date,
     totalPrice: number,
-    orderNum: number
 }
 
 interface IOrderSchema extends Document{
@@ -32,7 +31,6 @@ const OrderSchema = new Schema<IOrderSchema>({
                 default: Date.now
             },
             totalPrice: Number,
-            orderNum: Number
         }
     ]
 }, {versionKey: false})
