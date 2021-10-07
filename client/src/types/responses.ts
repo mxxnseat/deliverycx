@@ -52,6 +52,8 @@ export interface IUser {
     username: string,
     _id: string,
     isVerify: boolean,
+    name?: string,
+    phone?: string,
     cart: ICart,
     organization: IAddress
 }

@@ -253,6 +253,12 @@ class Shop {
                 { $group: { _id: null, count: { $sum: 1 } } }
             ]);
 
+
+            await User.updateOne({username}, {
+                isVerify: true,
+                phone,
+                name
+            });
             res.status(200).json({
                 success: true,
                 orderNumber: orderNum[0].count

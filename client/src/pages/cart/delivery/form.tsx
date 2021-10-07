@@ -6,6 +6,8 @@ import InputMask from "react-input-mask";
 import submitHandler from "../../../helpers/submitFormHandler";
 import schema from "../../../helpers/validationSchema";
 import Checkbox from "../../../components/HOC/Checkbox";
+import { RootState } from "../../../store";
+import { useSelector } from "react-redux";
 
 
 interface IInitialValues{
@@ -20,16 +22,18 @@ export interface ISubmitData extends IInitialValues{
     times: object,
 }
 
-const initialValues:IInitialValues = {
-    comment: '',
-    name: '',
-    address: '',
-    phone: '',
-    notCall: false
-}
-
 
 const CartForm: FC = () => {
+    const {isVerify, ...user} = useSelector((state: RootState) => state.profile);
+
+    const initialValues:IInitialValues = {
+        comment: '',
+        name: isVerify ? user.name : '',
+        address: '',
+        phone: isVerify ? user.phone : '',
+        notCall: false
+    }
+
     //mocki array
     const paymentMethods: any = [{
         id: "3",

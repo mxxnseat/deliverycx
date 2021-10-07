@@ -1,3 +1,5 @@
+import { IUser } from "../responses";
+
 export interface IInitialState{
     isAuth: boolean,
     isVerify: boolean,
