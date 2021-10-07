@@ -54,6 +54,10 @@ function loadData() {
             }
         } catch (e: unknown) {
             history.push("/");
+            localStorage.removeItem("authToken");
+
+            const loginResponse = await profile.login();
+            localStorage.setItem("authToken", loginResponse.data);
         }
 
     };

@@ -16,7 +16,12 @@ class Iiko {
     private organizations: Organization[] = [];
 
     private constructor() { }
+    public async iikoMethodBuilder(fn: ()=>any){
+        await this.getToken();
 
+        const result = await fn();
+        return result;
+    }
     public static getInstance() {
         if (!Iiko._instance) {
             Iiko._instance = new Iiko();
@@ -27,7 +32,7 @@ class Iiko {
     public get token() {
         return Iiko.token;
     }
-    public async getToken() {
+    private async getToken() {
         try {
             const tokenResponse = await axios.get<string>(`https://iiko.biz:9900/api/0/auth/access_token?user_id=${process.env.iiko_user}&user_secret=${process.env.iiko_password}`);
 
@@ -71,11 +76,10 @@ class Iiko {
                 message: createData
             }
             
-        }catch(e){
-            console.log(e);
+        }catch(e: any){
             return {
-                status: 500,
-                message: `cannot create order \n${e}`
+                status: e.response.data.httpStatusCode,
+                message: e.response.data.description
             }
         }
     }
@@ -158,6 +162,7 @@ class Iiko {
 
         console.log("end pooling");
     }
+    
 }
 
 export default Iiko.getInstance();
