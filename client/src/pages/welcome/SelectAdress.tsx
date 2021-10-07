@@ -42,7 +42,6 @@ const SelectAdress: FC = () => {
 
     const placemarkClickHandler = (address: IAddress) => {
         setIsOpen(true);
-        console.log(address);
         setSelectedAddress({...address});
     }
 

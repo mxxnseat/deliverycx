@@ -21,12 +21,9 @@ const Categories: FC = () => {
     }
 
     useEffect(() => {
-        console.log("categories");
-
         (async ()=>{
             let setCategory = null;
             const {data} = await Api.getCategories<ICategory[]>();
-            console.log(category);
             if(!category){
                 setCategory = data[0];
             }else{
@@ -47,8 +44,6 @@ const Categories: FC = () => {
     useEffect(()=>{
         dispatch(setCategoryAction(categories[currentSlide]));
     }, [currentSlide]);
-
-    console.log(categories)
 
     return categories.length ? (<Slider
             className="categories"

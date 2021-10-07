@@ -71,7 +71,6 @@ function changeAmount({id, type,count}: ChangeAmountType){
         
         try {
             if (count) {
-                console.log('action',count)
                 const { status, data } = await cart.changeAmount<ICart>(id, type,count);
                
                 if (status === 200) {

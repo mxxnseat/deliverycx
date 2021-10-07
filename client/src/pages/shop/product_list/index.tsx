@@ -12,14 +12,12 @@ interface IProps  {
 }
 
 const ProductList: FC<IProps> = ({category, searchQuery}) => {
-    console.log(category);
     const [products, setProducts] = useState<IProduct[]>([]);
     const organization = useSelector((state: RootState)=>state.address.address._id);
 
 
     useEffect(()=>{
         (async ()=>{
-            console.log(category);
             const {data, status} = await api.getProducts<IProduct[]>({organization, category, searchQuery});
 
             if(status === 200){

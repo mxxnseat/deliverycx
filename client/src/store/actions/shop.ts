@@ -10,7 +10,6 @@ function isSearchAction(payload: boolean): ISetIsSearchAction {
     }
 }
 function setCategoryAction(category: ICategory) {
-    console.log(category);
     return {
         type: ACTIONS.SET_CATEGORY,
         payload: category
