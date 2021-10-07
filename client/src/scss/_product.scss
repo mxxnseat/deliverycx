@@ -20,13 +20,14 @@
         }
         &__favorite{
             background-image: url("../assets/i/favorite.svg");
+            background-repeat: no-repeat;
             width: 20px;
             height: 16px;
             cursor: pointer;
-    
-            &.yes{
-                background-image: url("../assets/i/favorite-red.svg");
-            }
+            border: none;
+        }
+        .favorite_active{
+            background-image: url("../assets/i/favorite-red.svg");
         }
         &__title{
             color: $gray3;

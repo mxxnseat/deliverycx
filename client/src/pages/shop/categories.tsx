@@ -33,13 +33,22 @@ const Categories: FC = () => {
                 setCategory = category;
             }
             dispatch(setCategoryAction(setCategory));
-            setCategories(data);
+            setCategories(prev => [...data,{
+                image: require("../../assets/i/favorite.svg").default,
+                _id: "favorite",
+                code:null,
+                isIncludedInMenu: false,
+                name: "Избранное",
+                order: 9
+            }]);
             setCurrentSlide(setCategory.order);
         })();
     }, []);
     useEffect(()=>{
         dispatch(setCategoryAction(categories[currentSlide]));
     }, [currentSlide]);
+
+    console.log(categories)
 
     return categories.length ? (<Slider
             className="categories"

@@ -40,7 +40,9 @@ export interface IProduct {
     description: string,
     additionalInfo: string,
 }
-
+export interface IFavorites {
+    list: string[]
+}
 
 export type ICartProducts  = IProduct & {amount: number, _id: string}
 export interface ICart {
