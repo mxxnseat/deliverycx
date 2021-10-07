@@ -1,6 +1,7 @@
 import { FC, memo, MouseEvent, useCallback, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import AddToCart from "../../../components/AddToCart";
+import AddToFavorites from "../../../components/AddToFavorites";
 import convertWeight from "../../../helpers/convertWeight";
 import { IProduct } from "../../../types/responses";
 
@@ -24,7 +25,7 @@ const Product: FC<IProduct> = ({ id, name, price, measureUnit, weight, descripti
             <div className="product__item__content">
                 <div className="row justify-between">
                     <div className="product__item__cooking-time">15 мин</div>
-                    <div className="product__item__favorite"></div>
+                    <AddToFavorites id={id} />
                 </div>
 
                 <div className="product__item__title">

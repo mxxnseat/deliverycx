@@ -5,6 +5,8 @@ import profile from '../../api/Profile';
 import { setAddressAction } from "./adress";
 import { IAddress, ICart } from "../../types/responses";
 import { createBrowserHistory } from "history";
+import { getStorageFavorites } from "../../helpers/getStorage";
+import { loadFavorites } from "./shop";
 
 const history = createBrowserHistory();
 
@@ -34,6 +36,7 @@ function loadData() {
             const loginResponse = await profile.login();
             
             localStorage.setItem("authToken", loginResponse.data);
+            
 
             const { data, status } = await profile.getProfile();
             
@@ -44,6 +47,11 @@ function loadData() {
                     dispatch(loadCart(data.user?.cart as ICart));
                     dispatch(setAddressAction(data.user?.organization as IAddress));
                     dispatch(AuthSuccessAction())
+
+                    const listFavorites = getStorageFavorites(data.user?.username)
+                    listFavorites && dispatch(loadFavorites(listFavorites))
+
+                    
 
                 }else{
                     history.push("/");
