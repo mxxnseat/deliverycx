@@ -12,11 +12,6 @@ const CartInfo: FC = () => {
     });
     const dispatch = useDispatch();
 
-    useEffect(()=>{
-        //console.log(1);
-        // dispatch(setTotalPrice());
-    }, [cartState.list]);
-
     return (
         <div className="cart__order-info">
             <div className="cart__order__sale-wrap">

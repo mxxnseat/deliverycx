@@ -9,23 +9,26 @@ import { RootState } from './store';
 
 import { loadData } from './store/actions/profile';
 
+interface ILocationState{
+  from: {
+    pathname: string;
+  };
+}
+
 const App: FC = () => {
   const dispatch = useDispatch();
-  const location = useLocation();
+  const location = useLocation<ILocationState>();
   const history = useHistory();
   const isAuth = useSelector((state: RootState) => state.profile.isAuth);
-
-
-  const transitions = useTransition(location, {
-    key: location.pathname,
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 }
-  });
+  const {from} = location.state || {from: "/"};
 
   useEffect(() => {
     dispatch(loadData());
   }, []);
+
+  useEffect(() => {
+    isAuth && history.replace(from);
+  }, [isAuth])
 
   return (
     <Switch>

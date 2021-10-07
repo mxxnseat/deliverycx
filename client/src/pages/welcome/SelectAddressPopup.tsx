@@ -15,7 +15,6 @@ const SelectAddressPopup: FC<IAddress> = memo(({ ...address }) => {
             dispatch(setAddressAction(address));
 
             const {data} = await profile.update({ organization: address._id });
-            console.log(data);
             dispatch(setProfileAction({
                 isAuth: true,
                 ...data.user

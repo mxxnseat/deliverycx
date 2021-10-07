@@ -33,7 +33,6 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
         
         (async ()=>{
             const response = await Api.getProduct<IResponse>(productId, organization);
-            console.log(response.data);
         
             setSauces(response.data.sauces);
             setProduct(response.data.product);

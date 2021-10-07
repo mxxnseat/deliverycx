@@ -9,7 +9,7 @@ const ProtectedRouter: FC<IProps> = ({ isAuth, ...rest})=>{
     const location = useLocation();
 
     return (
-        isAuth ? <Route {...rest} /> : <Redirect to={{pathname: "/", state: {from: location}}} />
+        isAuth ? <Route {...rest} /> : <Redirect to={{pathname: "/", state: {from: location.pathname}}} />
     );
 }
 

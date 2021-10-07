@@ -35,7 +35,6 @@ export default (state = initialState, action: CartActionsType): IInitialState =>
             }
         }
         case ACTIONS.ADD_TO_CART: {
-            console.log('action', action.payload);
             return {
                 ...state,
                 list: action.payload.products,

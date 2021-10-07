@@ -43,7 +43,6 @@ function loadData() {
 
             if(status === 200){
                 if (data.isAuth) {
-                    console.log(data.user);
                     dispatch(loadCart(data.user?.cart as ICart));
                     dispatch(setAddressAction(data.user?.organization as IAddress));
                     dispatch(AuthSuccessAction())
