@@ -32,7 +32,7 @@ interface IGeoCodeResponse{
 }
 
 
-async function checkAddress(value: string, resolve: any){
+async function checkAddress(value: string, resolve: (value: boolean)=>void){
     try{
         const address = encodeURI(value);
         const {data} = await axios.get<IGeoCodeResponse>(
