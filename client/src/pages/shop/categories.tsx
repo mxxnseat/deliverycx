@@ -31,7 +31,7 @@ const Categories: FC = () => {
             }
             dispatch(setCategoryAction(setCategory));
             setCategories(prev => [...data,{
-                image: require("../../assets/i/favorite.svg").default,
+                image: require("../../assets/i/favorite.png").default,
                 _id: "favorite",
                 code:null,
                 isIncludedInMenu: false,
