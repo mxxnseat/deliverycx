@@ -6,6 +6,7 @@ type ProductsParams = {
   organization: string,
   category?: string,
   searchQuery?: string
+  favoritesList?:any // временно
 }
 
 const getApi = ({ api }: Api) => {

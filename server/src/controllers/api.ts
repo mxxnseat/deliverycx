@@ -45,10 +45,11 @@ class Api {
             const category = req.query.category as string;
             const organization = req.query.organization as string;
             const queryString = req.query.searchQuery as string;
-
+            const favoritesList = req.query.favoritesList
             if (!organization) {
                 throw Error();
             }
+
 
             let matchQuery = {}
 
@@ -59,6 +60,10 @@ class Api {
                         $regex: queryString ? queryString : '',
                         $options: "i"
                     }
+                }
+            } else if (category === 'favorite') {
+                if (favoritesList) {
+                    console.log(favoritesList)
                 }
             } else {
                 matchQuery = {
