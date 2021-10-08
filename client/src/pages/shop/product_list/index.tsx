@@ -22,7 +22,7 @@ const ProductList: FC<IProps> = ({category, searchQuery}) => {
 
     useEffect(()=>{
         (async ()=>{
-            const {data, status} = await api.getProducts<IProduct[]>({organization, category, searchQuery});
+            const {data, status} = await api.getProducts<IProduct[]>({organization, category, searchQuery,favoritesList});
 
             if(status === 200){
                 setProducts(data);
