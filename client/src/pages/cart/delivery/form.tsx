@@ -8,7 +8,6 @@ import schema from "../../../helpers/validationSchema";
 import Checkbox from "../../../components/HOC/Checkbox";
 import { RootState } from "../../../store";
 import { useSelector } from "react-redux";
-import AddressesList from "../../../components/AddressesList";
 
 
 interface IInitialValues{
@@ -88,7 +87,6 @@ const CartForm: FC = () => {
                                         value={formik.values.address}
                                         onChange={formik.handleChange} 
                                     />
-                                    <AddressesList />
                                     {/* <CartSelect options={timesArray} selected={times} setter={(time: object) => setTimes(time)} /> */}
                                     
                                 </FormFieldWrapper>
