@@ -27,8 +27,6 @@ const App: FC = () => {
   useEffect(() => {
     if (isAuth) {
       from === "/" ? history.replace("/shop") : history.replace(from);
-    } else {
-      history.replace("/");
     }
   }, [isAuth]);
 
