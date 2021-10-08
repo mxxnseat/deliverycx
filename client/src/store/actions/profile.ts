@@ -49,9 +49,6 @@ function loadData() {
 
                     const listFavorites = getStorageFavorites(data.user?.username)
                     listFavorites && dispatch(loadFavorites(listFavorites))
-
-                    
-
                 }else{
                     history.push("/");
                 }

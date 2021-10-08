@@ -22,14 +22,14 @@ const AddToFavorites: FC<IProps> = ({ id }) => {
 
     const checkSetFavorites = async () => {
         try {
-            const { data, status } = await profile.getProfile();
-            if (status === 200 && (data.isAuth && !data.user?.isVerify)) {
-                const Storage = {
-                    username:data.user?.username,
-                    favoritesList
-                }
-                localStorage.setItem("favorites",JSON.stringify(Storage) );
-            }
+            // // const { data, status } = await profile.getProfile();
+            // if (status === 200 && (data.isAuth && !data.user?.isVerify)) {
+            //     const Storage = {
+            //         username:data.user?.username,
+            //         favoritesList
+            //     }
+            //     localStorage.setItem("favorites",JSON.stringify(Storage) );
+            // }
         } catch (error) {
             console.log(error);
             return
