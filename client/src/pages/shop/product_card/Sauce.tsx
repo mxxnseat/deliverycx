@@ -15,7 +15,6 @@ const Sauce: FC<IProps> = ({id, name, weight, price}) => {
             <div className="sauce__name">{name}</div>
             <div className="sauce__weight">{convertWeight(weight)} г</div>
             <div className="sauce__price select-red">{price} ₽</div>
-            {/* <div className="sauce__add-btn"></div> */}
             <AddToCart id={id} _class="sauce__add-btn" />
         </div> 
     )

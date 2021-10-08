@@ -9,10 +9,8 @@ import { RootState } from './store';
 
 import { loadData } from './store/actions/profile';
 
-interface ILocationState{
-  from: {
-    pathname: string;
-  };
+interface ILocationState {
+  from: string;
 }
 
 const App: FC = () => {
@@ -20,20 +18,24 @@ const App: FC = () => {
   const location = useLocation<ILocationState>();
   const history = useHistory();
   const isAuth = useSelector((state: RootState) => state.profile.isAuth);
-  const {from} = location.state || {from: "/"};
+  const { from } = location.state || { from: "/" };
 
   useEffect(() => {
     dispatch(loadData());
   }, []);
 
   useEffect(() => {
-    isAuth && history.replace(from);
-  }, [isAuth])
+    if (isAuth) {
+      from === "/" ? history.replace("/shop") : history.replace(from);
+    } else {
+      history.replace("/");
+    }
+  }, [isAuth]);
 
   return (
     <Switch>
-      { protectedRoutes.map((route, index)=><ProtectedRouter key={index} {...route} isAuth={isAuth} />)}
-      { publicRoutes.map((route, index) => <Route key={index} {...route} />)}
+      {protectedRoutes.map((route, index) => <ProtectedRouter key={index} {...route} isAuth={isAuth} />)}
+      {publicRoutes.map((route, index) => <Route key={index} {...route} />)}
     </Switch>
   )
 }
