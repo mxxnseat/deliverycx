@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import CartSelect from "../../../components/HOC/CartSelect";
 import FormFieldWrapper from "../../../components/HOC/FormFieldWrapper";
 import { Formik, Form } from "formik";
@@ -8,6 +8,9 @@ import schema from "../../../helpers/validationSchema";
 import Checkbox from "../../../components/HOC/Checkbox";
 import { RootState } from "../../../store";
 import { useSelector } from "react-redux";
+import { Dropdown } from 'semantic-ui-react'
+import { withYMaps, YMaps } from "react-yandex-maps";
+import MapSuggestComponent from "../MapSuggest";
 
 
 interface IInitialValues{
@@ -21,7 +24,6 @@ export interface ISubmitData extends IInitialValues{
     payment: any,
     times: object,
 }
-
 
 const CartForm: FC = () => {
     const {isVerify, ...user} = useSelector((state: RootState) => state.profile);
@@ -49,6 +51,28 @@ const CartForm: FC = () => {
 
     const [payment, setPayment] = useState(paymentMethods[0]);
     const [times, setTimes] = useState<object>(timesArray[0]);
+
+    /* баг с падением
+    useEffect(() => {
+        const script = document.createElement('script');
+        script.src = "https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=f5bd494f-4a11-4375-be30-1d2d48d88e93";
+        script.async = true;
+        document.body.appendChild(script);
+        return () => {
+          document.body.removeChild(script);
+        }
+    }, []);
+    */
+
+
+    const SuggestComponent = useMemo(() => {
+        return withYMaps(MapSuggestComponent, true, [
+          "SuggestView",
+          "geocode",
+          "coordSystem.geo"
+        ]);
+      }, []);
+    
 
     return (
         <Formik
@@ -80,14 +104,15 @@ const CartForm: FC = () => {
                                     error={formik.errors.address ? true : false}
                                     errorValue={formik.errors.address}
                                 >
-                                    <input 
-                                        className="form__field-wrapper__input"
-                                        name="address"
-                                        placeholder="Укажу позже"
-                                        value={formik.values.address}
-                                        onChange={formik.handleChange} 
-                                    />
+                                   
                                     {/* <CartSelect options={timesArray} selected={times} setter={(time: object) => setTimes(time)} /> */}
+                                    <YMaps
+                                        enterprise
+                                        query={{ apikey: "f5bd494f-4a11-4375-be30-1d2d48d88e93" }}
+                                    >
+                                        <SuggestComponent handl={formik.handleChange} />
+                                    </YMaps>
+                                    
                                     
                                 </FormFieldWrapper>
 

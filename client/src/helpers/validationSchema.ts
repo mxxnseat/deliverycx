@@ -1,6 +1,9 @@
 import * as yup from "yup";
 import debounce from 'lodash.debounce';
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
+import store from "../store";
 
 interface IGeoCodeResponse{
     response: {
@@ -31,15 +34,37 @@ interface IGeoCodeResponse{
     }
 }
 
+const findSiti = (GeoCode: {
+    Components:
+        Array<{
+            kind: string,
+            name: string
+        }>
+}): boolean | void => {
+        const getSiti = store.getState()
+        const kind = (element:any, index:number) => (element.kind === 'locality')
+    const GeoName = GeoCode.Components.find(kind)
+    console.log(GeoCode.Components)
+        return GeoName?.name === getSiti.address.city.name
+}
 
 async function checkAddress(value: string, resolve: (value: boolean)=>void){
     try{
         const address = encodeURI(value);
         const {data} = await axios.get<IGeoCodeResponse>(
             `https://geocode-maps.yandex.ru/1.x/?geocode=${address}&format=json&apikey=f5bd494f-4a11-4375-be30-1d2d48d88e93`
-            )
+        )
+        const GeoCode = data.response
+        .GeoObjectCollection
+        .featureMember[0]
+        .GeoObject
+        .metaDataProperty
+        .GeocoderMetaData
+        .Address
+        
+        //!findSiti(GeoCode) пофиксить баг  
 
-        if(+data.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found === 0) throw Error();
+        if(+data.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found === 0 ) throw Error();
         
         resolve(true);
     }catch(e){
@@ -47,14 +72,14 @@ async function checkAddress(value: string, resolve: (value: boolean)=>void){
     }
 }
 
-const debounceCheckAddress = debounce(checkAddress, 600);
+const debounceCheckAddress = debounce(checkAddress, 200);
 
 
 const schema = yup.object().shape({
     address: yup
             .string()
             .test('checkAddress', 'Не верно указан адрес', function(value){
-                return new Promise(resolve=>debounceCheckAddress(value!, resolve));
+                return new Promise(resolve => debounceCheckAddress(value!, resolve));
             })
             .min(5, "Не верно указан адрес")
             .required('Поле обязательно для заполнения'),
