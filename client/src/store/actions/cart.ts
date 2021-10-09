@@ -32,6 +32,26 @@ function checkoutCartSuccess(payload:ICheckoutResponse): ICheckOutCartSuccess {
     }
 }
 
+function clearCartAction(){
+    return async(dispatch: AppDispatch)=>{
+        try{
+            const { status, data } = await cart.clear();
+
+            if (status === 200) {
+                dispatch({
+                    type: ACTIONS.CLEAR_CART,
+                    payload: {
+                        products: [],
+                        totalPrice: 0
+                    }
+                })
+
+            }
+        }catch (error) {
+            console.log(error)
+        }
+    }
+}
 function addToCartAction(productId: string) {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         try {
@@ -110,5 +130,6 @@ export {
     removeOne,
     changeAmount,
     checkOut,
-    checkoutCartSuccess
+    checkoutCartSuccess,
+    clearCartAction
 }

@@ -25,7 +25,7 @@ const Product: FC<IProduct> = ({ id, name, price, measureUnit, weight, descripti
             <div className="product__item__content">
                 <div className="row justify-between">
                     <div className="product__item__cooking-time">15 мин</div>
-                    <AddToFavorites isFav={isFav} id={id} />
+                    <AddToFavorites _class="product__item__favorite" isFav={isFav} id={id} />
                 </div>
 
                 <div className="product__item__title">

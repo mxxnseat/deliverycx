@@ -300,6 +300,17 @@
         }
         
     }
+    .clear{
+        min-width: 72px;
+        height: 72px;
+        margin-right: 30PX;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $grayEF;
+        cursor: pointer;
+        border-radius: 8px;
+    }
 }
 @media screen and (max-width: 360px){
     .cart__order-btn{

@@ -17,9 +17,9 @@ export interface ITotalPriceAction{
     payload: number
 }
 
-export interface IСhangeCart{
-    type: "LOAD_CART" | "REMOVE_ITEM" | "CHANGE_AMOUNT" | "ADD_TO_CART",
-    payload: ICart
+export interface IСhangeCart<T = ICart>{
+    type: "LOAD_CART" | "REMOVE_ITEM" | "CHANGE_AMOUNT" | "ADD_TO_CART" | "CLEAR_CART",
+    payload: T
 }
 
 export type ChangeAmountType = {
@@ -31,7 +31,6 @@ export interface ICheckOutCartSuccess{
     type: ACTIONS.CHECKOUT_CART_SUCCESS,
     payload: ICheckoutResponse
 }
-
 
 export enum CART_CHOICE{
     PICKUP = "PICKUP",
@@ -48,7 +47,8 @@ export enum ACTIONS{
     LOAD_CART = "LOAD_CART",
     REMOVE_ITEM = "REMOVE_ITEM",
     TOTAL_PRICE = "TOTAL_PRICE",
-    CHANGE_AMOUNT = "CHANGE_AMOUNT"
+    CHANGE_AMOUNT = "CHANGE_AMOUNT",
+    CLEAR_CART = "CLEAR_CART"
 }
 
 

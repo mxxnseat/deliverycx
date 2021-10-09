@@ -174,35 +174,108 @@ class Api {
     public async getProduct(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const organization = req.query.organization;
+            const {username } = req.body;
+
+            const user = await User.findOne({ username });
+
+            if(!user){
+              throw Error();
+            }
+
             let product: any = await model.Product.aggregate([
-                { $unwind: "$products" },
-                { $match: { "products.id": id, organization } },
-                {
-                    $project: {
-                        _id: 0,
-                        organization: 0
-                    }
-                },
-                {
-                    $group: {
+              {
+                $match: {
+                  "organization": user.organization,
+                }
+              },
+              {
+                $unwind: "$products"
+              },
+              {
+                $match: {
+                  "products.id": id
+                }
+              },
+              {
+                $lookup: {
+                  "from": "favorites",
+                  pipeline: [
+                    {
+                      $match: {
+                        "user": user._id
+                      }
+                    },
+                    {
+                      $unwind: "$products"
+                    },
+                    {
+                      $group: {
                         _id: null,
-                        products: { $addToSet: "$products" }
+                        products: {
+                          $addToSet: "$products.id"
+                        }
+                      }
+                    },
+                    {
+                      $unset: "_id"
                     }
-                },
-            ])
+                  ],
+                  as: "fav"
+                }
+              },
+              {
+                $addFields: {
+                  "firstFromFav": {
+                    $cond: [
+                      {
+                        $eq: [
+                          {
+                            $size: "$fav"
+                          },
+                          0
+                        ]
+                      },
+                      [],
+                      {
+                        $first: "$fav"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "$addFields": {
+                  "products.isFav": {
+                    $cond: [
+                      {
+                        $in: [
+                          "$$ROOT.products.id",
+                          "$firstFromFav.products"
+                        ]
+                      },
+                      true,
+                      false
+                    ]
+                  },
+                }
+              },
+              {
+                $project:{
+                  products: 1
+                }
+              }
+            ]);
+            product = product[0].products;
             if (!product) {
                 throw Error();
             }
-            product = product.map((p: any) => new model.Product(p));
-            product = await model.Product.populate(product, { path: "products.group" });
-            product = product[0].products[0];
-
+            const group = await model.Group.findOne({_id: product.group});
+        
             let sauces = null;
             if (!product.code.match(/^SO-\d+$/)) {
                 sauces = await model.Product.aggregate([
                     { $unwind: "$products" },
-                    { $match: { organization, "products.code": { $regex: /^SO-\d+$/ } } },
+                    { $match: { organization: user.organization, "products.code": { $regex: /^SO-\d+$/ } } },
                     { $project: { organization: 0, revision: 0, _id: 0 } },
                     {
                         $group: {
@@ -217,6 +290,7 @@ class Api {
             }
 
             res.json({
+                group,
                 sauces,
                 product
             });
