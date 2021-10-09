@@ -6,13 +6,14 @@ import Product from "./api/Product";
 
 import Cart from "./shop/Cart";
 import Order from "./shop/Order";
-
+import Favorite from "./shop/Favorites";
 
 import User from "./profile/User";
 
 
 export {
     Category,
+    Favorite,
     City,
     Group,
     Organization,

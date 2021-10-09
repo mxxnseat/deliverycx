@@ -1,15 +1,11 @@
-import mongoose, { Document } from "mongoose";
 import { Request, Response } from "express";
 import { User, Cart, Product, Order } from "../db/models";
-import { IProduct } from "../db/models/api/Product";
-import { IUserSchema } from "../db/models/profile/User";
-import { FindOneAndUpdateReturnType, ILastErrorObject } from "../types/mongoose";
 import createOrder, { createOrderType, CustomerData } from "../helpers/createOrder";
 import getProductsInCart from "../helpers/getProductsInCart";
 import calcTotalPrice from "../utils/calcTotalPrice";
-import { ICartSchema } from "../db/models/shop/Cart";
 import iiko from "../services/iiko";
 import { separateAddress, SeparateType } from "../helpers/geoCoder";
+import Favorite from "../db/models/shop/Favorites";
 
 type AddToCartBody = {
     username: string,
@@ -70,6 +66,53 @@ class Shop {
                 products,
                 totalPrice
             });
+        } catch (e: unknown) {
+            console.log(e);
+            res.status(400).json("Bad request");
+        }
+    }
+    public async addToFavorite(req: Request, res: Response) {
+        try {
+            const { username, productId: id } = req.body;
+
+            const user = await User.findOne({ username });
+
+            const product = await Product.aggregate([
+                { $unwind: "$products" },
+                {
+                    $match: {
+                        organization: user.organization, "products.id": id
+                    }
+                },
+                {
+                    $project: {
+                        products: 1
+                    }
+                }
+            ]);
+            if (!product.length) throw Error('Product not found');
+            console.log(product[0]);
+            const isFindFavorite = await Favorite.findOne({ user: user._id, "products.id":id });
+
+            let updateOption = {};
+
+            if(isFindFavorite){
+                updateOption = {
+                    $pull: {
+                        "products":{ id }
+                    }
+                }
+            }else{
+                updateOption = {
+                    $push: {
+                        products: product[0].products
+                    }
+                }
+            }
+
+            await Favorite.updateOne({user: user._id}, updateOption);
+
+            res.status(200).json("success add favorite");
         } catch (e: unknown) {
             console.log(e);
             res.status(400).json("Bad request");
@@ -224,9 +267,9 @@ class Shop {
                 promocode
             }, cartList);
 
-            const {status, message} = await iiko.iikoMethodBuilder(()=>iiko.createOrder(orderBody));
+            const { status, message } = await iiko.iikoMethodBuilder(() => iiko.createOrder(orderBody));
             console.log(status);
-            if(status !== 200){
+            if (status !== 200) {
                 return res.status(status).json(message);
             }
             await Cart.updateOne({ _id: user.cart }, {
@@ -254,7 +297,7 @@ class Shop {
             ]);
 
 
-            await User.updateOne({username}, {
+            await User.updateOne({ username }, {
                 isVerify: true,
                 phone,
                 name

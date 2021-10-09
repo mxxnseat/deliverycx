@@ -21,7 +21,7 @@ export interface IProductSchema {
     revision: number
 }
 
-const ListSchema = new Schema({
+export const ProductSchema = new Schema({
     id: String,
     name: {
         required: true,
@@ -72,13 +72,13 @@ const ListSchema = new Schema({
     }
 })
 
-const ProductSchema = new Schema({
+const ProductListSchema = new Schema({
     organization: {
         ref: "organization",
         type: String
     },
-    products: [ListSchema],
+    products: [ProductSchema],
     revision: Number
 }, { versionKey: false });
 
-export default model("Products", ProductSchema);
+export default model("Products", ProductListSchema);

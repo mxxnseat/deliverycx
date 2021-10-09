@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { Request, Response } from "express";
 import jwt, { VerifyErrors } from "jsonwebtoken";
 import calcTotalPrice from "../utils/calcTotalPrice";
-import { User, Cart, Order } from "../db/models";
+import { User, Cart, Order, Favorite } from "../db/models";
 import { IUserSchema } from "../db/models/profile/User";
 import generateUserTokens from "../helpers/generateTokens";
 import getProductsInCart from "../helpers/getProductsInCart";
@@ -74,6 +74,7 @@ class Profile {
             const { access, refresh, username } = generateUserTokens();
             const User_id = new mongoose.Types.ObjectId();
             const Cart_id = new mongoose.Types.ObjectId();
+            const Favorite_id = new mongoose.Types.ObjectId();
             const cart = await Cart.create({
                 _id: Cart_id,
                 user: User_id,
@@ -83,6 +84,11 @@ class Profile {
                 user: User_id,
                 orders: []
             });
+            const favorite = await Favorite.create({
+                _id: Favorite_id,
+                user: User_id,
+                products: []
+            })
 
             await User.create({
                 _id: User_id,
@@ -91,6 +97,7 @@ class Profile {
                     refresh
                 },
                 cart: Cart_id,
+                favorite: Favorite_id,
                 username
             });
 

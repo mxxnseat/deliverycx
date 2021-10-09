@@ -12,6 +12,7 @@ export interface IUserSchema{
     phone?: string,
     isVerify: boolean,
     organization: RefType,
+    favorite: RefType,
     orderHistory: RefType
 }
 const UserSchema = new Schema<IUserSchema>({
@@ -24,6 +25,10 @@ const UserSchema = new Schema<IUserSchema>({
             required: true,
             type: String
         }
+    },
+    favorite: {
+        ref: "Favorite",
+        type: mongoose.Types.ObjectId,
     },
     cart: {
         ref: "Cart",
