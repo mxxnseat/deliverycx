@@ -27,16 +27,10 @@ const Cart = ({ api }: Api)=>{
             }) 
         },
         clear(): AxiosPromise<[]>{
-            const authToken = localStorage.getItem("authToken");
-
-            const headers = authToken ? {
-                authorization: `Bearer ${authToken}`
-            } : {}
 
             return request({
                 method: "DELETE",
                 url: `shop/clear`,
-                headers
             })
         },
         changeAmount<R extends ICart>(cart: string, type: "inc" | "dec",count:number): AxiosPromise<R>{

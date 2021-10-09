@@ -25,6 +25,7 @@
             height: 16px;
             cursor: pointer;
             border: none;
+            background-color: transparent;
         }
         .favorite_active{
             background-image: url("../assets/i/favorite-red.svg");
@@ -84,6 +85,10 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
+
+            &.favorite_active{
+                background-image: url("../assets/i/favorite-red.svg");
+            }
         }
         &__add{
             cursor: pointer;

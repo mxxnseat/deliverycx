@@ -7,13 +7,14 @@ import { IAddToFavorite } from "../types/responses";
 
 interface IProps {
     id: string,
-    isFav: boolean
+    isFav: boolean,
+    _class: string
 }
 
-const AddToFavorites: FC<IProps> = ({ id, isFav}) => {
+const AddToFavorites: FC<IProps> = ({ id, isFav, _class}) => {
     const [isActive, setIsActive] = useState<boolean>(isFav);
     
-    const favoriteCN = cn("product__item__favorite", { favorite_active: isActive });
+    const favoriteCN = cn(_class, { favorite_active: isActive });
     
 
     const debaunceHandleClick = debounce(async ()=>{

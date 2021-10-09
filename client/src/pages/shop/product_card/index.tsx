@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { RouteComponentProps, useHistory, withRouter } from "react-router";
 import convertWeight from "../../../helpers/convertWeight";
-import { IProduct } from "../../../types/responses";
+import { IProduct, ICategory } from "../../../types/responses";
 import HeaderBack from "../../../components/HOC/HeaderBack";
 import LinkToCart from "../LinkToCart";
 import Sauce from "./Sauce";
@@ -9,8 +9,8 @@ import Sauce from "./Sauce";
 import Api from "../../../api/Api";
 import { RootState } from "../../../store";
 import { useSelector } from "react-redux";
-import { stat } from "fs";
 import AddToCart from "../../../components/AddToCart";
+import AddToFavorites from "../../../components/AddToFavorites";
 
 interface IMatchProps {
     id: string
@@ -19,12 +19,14 @@ type RouteProps = RouteComponentProps<IMatchProps>;
 
 interface IResponse{
     sauces: IProduct[],
-    product: IProduct
+    product: IProduct,
+    group: ICategory
 }
 
 const ProductCard: FC<RouteProps> = ({ match }) => {
     const history = useHistory();
     const [sauces, setSauces] = useState<IProduct[]>([]);
+    const [group, setGroup] = useState<ICategory>({} as ICategory);
     const [product, setProduct] = useState<IProduct | null>(null);
     const organization = useSelector((state: RootState) => state.address.address._id);
     const productId = match.params.id;
@@ -33,7 +35,8 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
         
         (async ()=>{
             const response = await Api.getProduct<IResponse>(productId, organization);
-        
+            
+            setGroup(response.data.group);
             setSauces(response.data.sauces);
             setProduct(response.data.product);
         })();
@@ -44,7 +47,7 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
             <HeaderBack backgroundColor="#fff" onClickCb={() => history.goBack()}>
                 <div className="product-card__category">
                     <div className="category-image-wrap">
-                        <img src={product.group.image} />
+                        <img src={group.image} />
                     </div>
                 </div>
             </HeaderBack>
@@ -55,7 +58,8 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
 
                     <div className="product-card__title">{product.name}</div>
                     <div className="row justify-between">
-                        <button className="add-favorite"></button>
+                        <AddToFavorites id={product.id} _class="add-favorite" isFav={product.isFav} />
+                        {/* <button className="add-favorite"></button> */}
                         <div className="product-card__price">
                             <div className="product-card__measure">
                                 {
