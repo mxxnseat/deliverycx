@@ -4,19 +4,15 @@ import Api from ".";
 const FavoritesApi = ({ api }: Api) => {
   const request: AxiosInstance = api;
   return {
-    addRequestFavorites(favorites:string[]) {
-        const authToken = localStorage.getItem("authToken");
-
-        const headers = authToken ? {
-            authorization: `Bearer ${authToken}`
-        } : {}
+    addFavorite<R>(productId: string): AxiosPromise<R> {
 
         return request({
             method: "POST",
-            url: `shop/addToCart`,
-            headers,
-            data: favorites
-        });  
+            url: `shop/addToFavorite`,
+            data: {
+              productId
+            }
+        });
     }
   }
 }

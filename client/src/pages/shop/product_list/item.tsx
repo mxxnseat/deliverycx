@@ -5,7 +5,7 @@ import AddToFavorites from "../../../components/AddToFavorites";
 import convertWeight from "../../../helpers/convertWeight";
 import { IProduct } from "../../../types/responses";
 
-const Product: FC<IProduct> = ({ id, name, price, measureUnit, weight, description, image }) => {
+const Product: FC<IProduct> = ({ id, name, price, measureUnit, weight, description, image, isFav }) => {
     const history = useHistory();
     const cardRef = useRef<HTMLDivElement>(null);
 
@@ -25,7 +25,7 @@ const Product: FC<IProduct> = ({ id, name, price, measureUnit, weight, descripti
             <div className="product__item__content">
                 <div className="row justify-between">
                     <div className="product__item__cooking-time">15 мин</div>
-                    <AddToFavorites id={id} />
+                    <AddToFavorites isFav={isFav} id={id} />
                 </div>
 
                 <div className="product__item__title">

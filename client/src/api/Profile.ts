@@ -17,44 +17,35 @@ interface ICheckData{
 const profile = ({ api }: Api) => {
     const request: AxiosInstance = api;
     
-
     return {
         login(): AxiosPromise<string> {
-            const authToken = localStorage.getItem("authToken");
-            const headers = authToken ? {
-                authorization: `Bearer ${authToken}`
-            } : {}
 
             return request({
                 method: "POST",
                 url: `profile/login`,
-                headers
             })
         },
         getProfile(): AxiosPromise<ICheckData> {
-            const authToken = localStorage.getItem("authToken");
-            console.log(authToken);
-            const headers = authToken ? {
-                authorization: `Bearer ${authToken}`
-            } : {}
-
+            
             return request({
                 method: "POST",
-                url: `profile/getProfile`,
-                headers
+                url: `profile/getProfile`
             })
         },
         update(data: IUpdateData): AxiosPromise<IUpdateUserResponse> {
-            const authToken = localStorage.getItem("authToken");
-            const headers = authToken ? {
-                authorization: `Bearer ${authToken}`
-            } : {}
-
             return request({
                 method: "POST",
                 url: `profile/update`,
-                headers,
                 data
+            })
+        },
+        register<R>(organization: string): AxiosPromise<R>{
+            return request({
+                method: "POST",
+                url: `profile/register`,
+                data: {
+                    organization
+                }
             })
         }
     }

@@ -57,11 +57,7 @@ class Profile {
 
                 });
             } else {
-                const access = await this.register();
-                if (!access) {
-                    throw Error();
-                }
-                res.status(200).json(access);
+                throw Error();
             }
         } catch (e: any) {
             console.log(e);
@@ -69,8 +65,15 @@ class Profile {
         }
     }
 
-    async register(): Promise<string | void> {
+    public async register(req: Request, res: Response) {
         try {
+            const {organization, username: authUsername} = req.body;
+            if(authUsername){
+                return res.status(200).json({
+                    isRegister: true
+                });
+            }
+
             const { access, refresh, username } = generateUserTokens();
             const User_id = new mongoose.Types.ObjectId();
             const Cart_id = new mongoose.Types.ObjectId();
@@ -98,12 +101,14 @@ class Profile {
                 },
                 cart: Cart_id,
                 favorite: Favorite_id,
+                organization,
                 username
             });
 
-            return access;
+            res.status(200).json(access)
         } catch (e) {
             console.log(e);
+            res.status(500).json("Server error")
         }
     }
     public async updateProfile(req: Request, res: Response) {

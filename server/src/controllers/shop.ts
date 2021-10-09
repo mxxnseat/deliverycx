@@ -76,7 +76,7 @@ class Shop {
             const { username, productId: id } = req.body;
 
             const user = await User.findOne({ username });
-
+            
             const product = await Product.aggregate([
                 { $unwind: "$products" },
                 {
@@ -95,24 +95,31 @@ class Shop {
             const isFindFavorite = await Favorite.findOne({ user: user._id, "products.id":id });
 
             let updateOption = {};
-
+            const returnData = {
+                isActive: false
+            }
             if(isFindFavorite){
                 updateOption = {
                     $pull: {
                         "products":{ id }
                     }
                 }
+                returnData.isActive = false;
             }else{
                 updateOption = {
                     $push: {
                         products: product[0].products
                     }
                 }
+                returnData.isActive = true;
             }
 
             await Favorite.updateOne({user: user._id}, updateOption);
 
-            res.status(200).json("success add favorite");
+            res.status(200).json({
+                message: "success",
+                ...returnData
+            });
         } catch (e: unknown) {
             console.log(e);
             res.status(400).json("Bad request");

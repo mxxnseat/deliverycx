@@ -53,7 +53,6 @@ class Api {
 
             const user = await User.findOne({ username });
             let matchQuery = {}
-
             if (!category) {
                 matchQuery = {
                     'products.name': {
@@ -62,84 +61,109 @@ class Api {
                     }
                 }
             } else {
-                matchQuery = {
+                if(category !== "favorite"){
+                  matchQuery = {
                     'products.group': category ? category : ''
+                  }
                 }
             }
-            console.log(user);
-            const products = await model.Product.aggregate([
-                {
-                  $match: {
-                    organization: organization
-                  }
-                },
-                {
-                  $unwind: "$products"
-                },
-                {
-                  $lookup: {
-                    from: "favorites",
-                    let: {
-                      favId: "$products"
+            const aggregatePipeline: any = [
+              {
+                $match: {
+                  organization
+                }
+              },
+              {
+                $unwind: "$products"
+              },
+              {
+                $match: matchQuery
+              },
+              {
+                $lookup: {
+                  from: "favorites",
+                  let: {
+                    favId: "$products"
+                  },
+                  pipeline: [
+                    {
+                      $match: {
+                        user: user._id
+                      }
                     },
-                    pipeline: [
-                      {
-                        $match: {
-                          user: user._id
-                        }
-                      },
-                      {
-                        $project: {
-                          products: {
-                            $setIntersection: [
-                              "$$ROOT.products",
-                              "$products"
-                            ]
-                          }
+                    {
+                      $project: {
+                        products: {
+                          $setIntersection: [
+                            "$$ROOT.products",
+                            "$products"
+                          ]
                         }
                       }
-                    ],
-                    as: "fav"
-                  }
-                },
-                {
-                  $addFields: {
-                    "firstFromFav": {
-                      $first: "$fav.products"
                     }
+                  ],
+                  as: "fav"
+                }
+              },
+              {
+                $addFields: {
+                  "firstFromFav": {
+                    $first: "$fav.products"
                   }
-                },
-                {
-                  $addFields: {
-                    "products.isFav": {
-                      $cond: [
-                        {
-                          $in: [
-                            "$products.id",
-                            "$firstFromFav.id",
-                            
-                          ]
-                        },
-                        true,
-                        false
-                      ]
-                    }
+                }
+              },
+              {
+                $addFields: {
+                  "products.isFav": {
+                    $cond: [
+                      {
+                        $in: [
+                          "$products.id",
+                          "$firstFromFav.id",
+                          
+                        ]
+                      },
+                      true,
+                      false
+                    ]
                   }
-                },
-                {
-                  $set: {
-                    "fav": "$$REMOVE"
+                }
+              },
+              {
+                $set: {
+                  "fav": "$$REMOVE"
+                }
+              },
+              {
+                $group: {
+                  _id: null,
+                  products: {
+                    $push: "$$ROOT.products"
                   }
-                },
-                {
-                  $group: {
-                    _id: null,
-                    products: {
-                      $push: "$$ROOT.products"
+                }
+              }
+            ]
+
+            if(category === "favorite"){
+              aggregatePipeline.push({
+                $project: {
+                  products: {
+                    $filter: {
+                      input: "$products",
+                      as: "product",
+                      cond: {
+                        $eq: [
+                          "$$product.isFav",
+                          true
+                        ]
+                      }
                     }
                   }
                 }
-              ])
+              })
+            }
+
+            const products = await model.Product.aggregate(aggregatePipeline)
             res.status(200).json(products[0] ? products[0].products : []);
         } catch (e: unknown) {
             console.log(e);

@@ -33,6 +33,7 @@ export interface IProduct {
     group: ICategory,
     isIncludedInMenu: boolean,
     name: string,
+    isFav: boolean,
     order: number,
     price: number,
     weight: number,
@@ -75,4 +76,8 @@ export interface IUpdateUserResponse{
 }
 export interface IRemoveCartItemResponse {
     cartId: string
+}
+export interface IAddToFavorite{
+    message: string,
+    isActive: boolean
 }
