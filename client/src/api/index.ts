@@ -1,4 +1,4 @@
-import Axios, { AxiosInstance, AxiosPromise, AxiosResponse, AxiosError } from "axios";
+import Axios, { AxiosInstance, AxiosPromise, AxiosResponse, AxiosError, AxiosRequestConfig } from "axios";
 import {config} from "../config";
 import {createBrowserHistory} from "history";
 
@@ -19,7 +19,16 @@ class Api {
             history.push("/");
             
             return Promise.reject(err);
-        })
+        });
+        
+        this.api.interceptors.request.use((config: AxiosRequestConfig)=>{
+            const token = localStorage.getItem("authToken");
+            if(token){
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+
+            return config;
+        });
     }
     static get getInstance() {
         if (!Api._instanse) {

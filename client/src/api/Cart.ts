@@ -7,32 +7,20 @@ const Cart = ({ api }: Api)=>{
 
     return {
         addToCart<R extends ICart>(product: string): AxiosPromise<R>{
-            const authToken = localStorage.getItem("authToken");
-
-            const headers = authToken ? {
-                authorization: `Bearer ${authToken}`
-            } : {}
 
             return request({
                 method: "POST",
                 url: `shop/addToCart`,
-                headers,
                 data: {
                     product
                 }
             });
         },
         removeOne<R extends ICart>(cart: string): AxiosPromise<R>{
-            const authToken = localStorage.getItem("authToken");
-
-            const headers = authToken ? {
-                authorization: `Bearer ${authToken}`
-            } : {}
 
             return request({
                 method: "DELETE",
                 url: `shop/remove`,
-                headers,
                 data: {
                     cart
                 }
@@ -52,16 +40,10 @@ const Cart = ({ api }: Api)=>{
             })
         },
         changeAmount<R extends ICart>(cart: string, type: "inc" | "dec",count:number): AxiosPromise<R>{
-            const authToken = localStorage.getItem("authToken");
-
-            const headers = authToken ? {
-                authorization: `Bearer ${authToken}`
-            } : {}
 
             return request({
                 method: "PATCH",
                 url: `shop/changeAmount`,
-                headers,
                 data: {
                     cart,
                     type,
@@ -72,26 +54,17 @@ const Cart = ({ api }: Api)=>{
         getCart<R extends ICart>(): AxiosPromise<R>{
             const authToken = localStorage.getItem("authToken");
 
-            const headers = authToken ? {
-                authorization: `Bearer ${authToken}`
-            } : {};
 
             return request({
                 method: "GET",
                 url: `shop/getCart`,
-                headers
             })
         },
         checkOutCart<R>(data:ICheckOUT): AxiosPromise<R> {
-            const authToken = localStorage.getItem("authToken");
 
-            const headers = authToken ? {
-                authorization: `Bearer ${authToken}`
-            } : {};
             return request({
                 method: "POST",
                 url: `shop/createOrder`,
-                headers,
                 data
             })
         }

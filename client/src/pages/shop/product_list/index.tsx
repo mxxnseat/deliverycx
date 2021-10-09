@@ -4,7 +4,6 @@ import { RootState } from "../../../store";
 import { IProduct } from "../../../types/responses";
 import Product from "./item"
 import api from "../../../api/Api";
-import React from "react";
 
 
 interface IProps  {
@@ -12,17 +11,15 @@ interface IProps  {
     searchQuery?: string
 }
 
-export const FavoritesContext = React.createContext<string[]>([])
     
 const ProductList: FC<IProps> = ({category, searchQuery}) => {
     const [products, setProducts] = useState<IProduct[]>([]);
     const organization = useSelector((state: RootState)=>state.address.address._id);
-    const favoritesList = useSelector((state: RootState) => state.shop.favorites.list);
     
 
     useEffect(()=>{
         (async ()=>{
-            const {data, status} = await api.getProducts<IProduct[]>({organization, category, searchQuery,favoritesList});
+            const {data, status} = await api.getProducts<IProduct[]>({organization, category, searchQuery});
 
             if(status === 200){
                 setProducts(data);
@@ -36,9 +33,9 @@ const ProductList: FC<IProps> = ({category, searchQuery}) => {
         <div className="product__list">
 
             {
-                products.map(item=>{
-                    return <FavoritesContext.Provider value={favoritesList}><Product key={item.id} {...item}/></FavoritesContext.Provider>
-                })
+                products.length ? products.map(item=>{
+                    return <Product key={item.id} {...item}/>
+                }) : "Эта категория пуста"
             }
         </div>
     )

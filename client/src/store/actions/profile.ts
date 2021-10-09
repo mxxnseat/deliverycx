@@ -37,7 +37,6 @@ function loadData() {
             
             localStorage.setItem("authToken", loginResponse.data);
             
-
             const { data, status } = await profile.getProfile();
             
 
@@ -58,10 +57,6 @@ function loadData() {
             }
         } catch (e: unknown) {
             history.push("/");
-            localStorage.removeItem("authToken");
-
-            const loginResponse = await profile.login();
-            localStorage.setItem("authToken", loginResponse.data);
         }
 
     };

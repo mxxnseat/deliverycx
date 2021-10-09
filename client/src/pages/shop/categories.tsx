@@ -21,7 +21,7 @@ const Categories: FC = () => {
     }
 
     useEffect(() => {
-        (async ()=>{
+        (async()=>{
             let setCategory = null;
             const {data} = await Api.getCategories<ICategory[]>();
             if(!category){

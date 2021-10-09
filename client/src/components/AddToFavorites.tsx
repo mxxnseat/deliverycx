@@ -1,31 +1,30 @@
-import { FC, memo, useCallback, useContext, useEffect, useMemo } from "react";
+import { FC, memo, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
-import { FavoritesAction } from "../store/actions/shop";
 import cn from "classnames";
-import profile from '../api/Profile';
-import { FavoritesContext } from "../pages/shop/product_list";
+import { debounce } from "lodash";
+import FavoritesApi from "../api/FavoritesApi";
+import { IAddToFavorite } from "../types/responses";
 
 interface IProps {
-    id: string
+    id: string,
+    isFav: boolean
 }
 
-const AddToFavorites: FC<IProps> = ({ id }) => {
-    const dispatch = useDispatch();
-    const favoritesList = useContext(FavoritesContext);
-    const favoritesActive = favoritesList.includes(id)
+const AddToFavorites: FC<IProps> = ({ id, isFav}) => {
+    const [isActive, setIsActive] = useState<boolean>(isFav);
     
-    const favoriteCN = cn("product__item__favorite", { favorite_active: favoritesActive });
-    
-    const handlClick = useCallback(async (id: string) => dispatch(FavoritesAction(id, favoritesActive)), [favoritesActive])
-
-    useEffect(() => {
-        localStorage.setItem("favorites",JSON.stringify(Storage) );
-    }, [favoritesActive])
-
+    const favoriteCN = cn("product__item__favorite", { favorite_active: isActive });
     
 
-    return <button className={favoriteCN} onClick={() => handlClick(id)}></button>
+    const debaunceHandleClick = debounce(async ()=>{
+        const { data, status } = await FavoritesApi.addFavorite<IAddToFavorite>(id);
+        if(status === 200){
+            setIsActive(data.isActive);
+        }
+        
+    }, 400);
+
+    return <button className={favoriteCN} onClick={debaunceHandleClick}></button>
 }
 
 export default memo(AddToFavorites);

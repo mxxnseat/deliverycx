@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { Request, Response } from "express";
 import jwt, { VerifyErrors } from "jsonwebtoken";
 import calcTotalPrice from "../utils/calcTotalPrice";
-import { User, Cart, Order } from "../db/models";
+import { User, Cart, Order, Favorite } from "../db/models";
 import { IUserSchema } from "../db/models/profile/User";
 import generateUserTokens from "../helpers/generateTokens";
 import getProductsInCart from "../helpers/getProductsInCart";
@@ -57,11 +57,7 @@ class Profile {
 
                 });
             } else {
-                const access = await this.register();
-                if (!access) {
-                    throw Error();
-                }
-                res.status(200).json(access);
+                throw Error();
             }
         } catch (e: any) {
             console.log(e);
@@ -69,11 +65,19 @@ class Profile {
         }
     }
 
-    async register(): Promise<string | void> {
+    public async register(req: Request, res: Response) {
         try {
+            const {organization, username: authUsername} = req.body;
+            if(authUsername){
+                return res.status(200).json({
+                    isRegister: true
+                });
+            }
+
             const { access, refresh, username } = generateUserTokens();
             const User_id = new mongoose.Types.ObjectId();
             const Cart_id = new mongoose.Types.ObjectId();
+            const Favorite_id = new mongoose.Types.ObjectId();
             const cart = await Cart.create({
                 _id: Cart_id,
                 user: User_id,
@@ -83,6 +87,11 @@ class Profile {
                 user: User_id,
                 orders: []
             });
+            const favorite = await Favorite.create({
+                _id: Favorite_id,
+                user: User_id,
+                products: []
+            })
 
             await User.create({
                 _id: User_id,
@@ -91,12 +100,15 @@ class Profile {
                     refresh
                 },
                 cart: Cart_id,
+                favorite: Favorite_id,
+                organization,
                 username
             });
 
-            return access;
+            res.status(200).json(access)
         } catch (e) {
             console.log(e);
+            res.status(500).json("Server error")
         }
     }
     public async updateProfile(req: Request, res: Response) {

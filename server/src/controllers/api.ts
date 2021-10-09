@@ -33,7 +33,7 @@ class Api {
     public async getCategories(req: Request, res: Response) {
         try {
             const groups = await model.Group.find({}).sort({ order: 1 });
-            
+
             res.json(groups);
         } catch (e: unknown) {
             console.log(e);
@@ -45,51 +45,125 @@ class Api {
             const category = req.query.category as string;
             const organization = req.query.organization as string;
             const queryString = req.query.searchQuery as string;
-            const favoritesList = req.query.favoritesList
+            const username = req.body.username;
+
             if (!organization) {
                 throw Error();
             }
 
-
+            const user = await User.findOne({ username });
             let matchQuery = {}
-
             if (!category) {
                 matchQuery = {
-                    organization,
                     'products.name': {
                         $regex: queryString ? queryString : '',
                         $options: "i"
                     }
                 }
-            } else if (category === 'favorite') {
-                if (favoritesList) {
-                    console.log(favoritesList)
-                }
             } else {
-                matchQuery = {
-                    organization,
-                    'products.group': category
+                if(category !== "favorite"){
+                  matchQuery = {
+                    'products.group': category ? category : ''
+                  }
                 }
             }
-
-            const products = await model.Product.aggregate([
-                { $unwind: "$products" },
-                {
-                    $match: matchQuery
-                },
-                {
-                    $group: {
-                        _id: null,
-                        products: { $addToSet: "$products" }
-                    }
-                },
-                {
-                    $project: {
-                        _id: 0,
-                        organization: 0
-                    }
+            const aggregatePipeline: any = [
+              {
+                $match: {
+                  organization
                 }
-            ])
+              },
+              {
+                $unwind: "$products"
+              },
+              {
+                $match: matchQuery
+              },
+              {
+                $lookup: {
+                  from: "favorites",
+                  let: {
+                    favId: "$products"
+                  },
+                  pipeline: [
+                    {
+                      $match: {
+                        user: user._id
+                      }
+                    },
+                    {
+                      $project: {
+                        products: {
+                          $setIntersection: [
+                            "$$ROOT.products",
+                            "$products"
+                          ]
+                        }
+                      }
+                    }
+                  ],
+                  as: "fav"
+                }
+              },
+              {
+                $addFields: {
+                  "firstFromFav": {
+                    $first: "$fav.products"
+                  }
+                }
+              },
+              {
+                $addFields: {
+                  "products.isFav": {
+                    $cond: [
+                      {
+                        $in: [
+                          "$products.id",
+                          "$firstFromFav.id",
+                          
+                        ]
+                      },
+                      true,
+                      false
+                    ]
+                  }
+                }
+              },
+              {
+                $set: {
+                  "fav": "$$REMOVE"
+                }
+              },
+              {
+                $group: {
+                  _id: null,
+                  products: {
+                    $push: "$$ROOT.products"
+                  }
+                }
+              }
+            ]
+
+            if(category === "favorite"){
+              aggregatePipeline.push({
+                $project: {
+                  products: {
+                    $filter: {
+                      input: "$products",
+                      as: "product",
+                      cond: {
+                        $eq: [
+                          "$$product.isFav",
+                          true
+                        ]
+                      }
+                    }
+                  }
+                }
+              })
+            }
+
+            const products = await model.Product.aggregate(aggregatePipeline)
             res.status(200).json(products[0] ? products[0].products : []);
         } catch (e: unknown) {
             console.log(e);
@@ -120,8 +194,8 @@ class Api {
             if (!product) {
                 throw Error();
             }
-            product = product.map((p:any)=>new model.Product(p));
-            product = await model.Product.populate(product, {path: "products.group"});
+            product = product.map((p: any) => new model.Product(p));
+            product = await model.Product.populate(product, { path: "products.group" });
             product = product[0].products[0];
 
             let sauces = null;
@@ -129,13 +203,15 @@ class Api {
                 sauces = await model.Product.aggregate([
                     { $unwind: "$products" },
                     { $match: { organization, "products.code": { $regex: /^SO-\d+$/ } } },
-                    { $project: {organization: 0, revision: 0, _id: 0}},
-                    { $group: {
-                        _id: null,
-                        sauces: {$addToSet: "$products"}
-                    }}
+                    { $project: { organization: 0, revision: 0, _id: 0 } },
+                    {
+                        $group: {
+                            _id: null,
+                            sauces: { $addToSet: "$products" }
+                        }
+                    }
                 ]);
-                if(sauces.length){
+                if (sauces.length) {
                     sauces = sauces[0].sauces;
                 }
             }
