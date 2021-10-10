@@ -12,10 +12,10 @@ const SelectAddressPopup: FC<IAddress> = memo(({ ...address }) => {
 
     const selectAdressHandler = async () => {
         try{
-            const {status, data: regData} = await profile.register<{isRegister: boolean} | string>(address._id);
+            const {status, data: regData} = await profile.register<{isNew: boolean, access?: string}>(address._id);
 
-            if(typeof regData === "string"){
-                localStorage.setItem("authToken", regData);
+            if(regData.isNew){
+                localStorage.setItem("authToken", regData.access!);
             }
 
             dispatch(setAddressAction(address));
