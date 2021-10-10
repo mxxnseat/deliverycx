@@ -70,7 +70,7 @@ class Profile {
             const {organization, username: authUsername} = req.body;
             if(authUsername){
                 return res.status(200).json({
-                    isRegister: true
+                    isNew: false
                 });
             }
 
@@ -105,7 +105,10 @@ class Profile {
                 username
             });
 
-            res.status(200).json(access)
+            res.status(200).json({
+                isNew: true,
+                access
+            })
         } catch (e) {
             console.log(e);
             res.status(500).json("Server error")
