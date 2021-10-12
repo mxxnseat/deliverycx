@@ -1,6 +1,6 @@
 import { ISubmitData } from "../pages/cart/delivery/form";
 
-export interface ICity{
+export interface ICity {
     _id: string,
     name: string
 }
@@ -45,7 +45,7 @@ export interface IFavorites {
     list: string[]
 }
 
-export type ICartProducts  = IProduct & {amount: number, _id: string}
+export type ICartProducts = {product: IProduct} & { amount: number, _id: string }
 export interface ICart {
     products: ICartProducts[],
     totalPrice: number
@@ -61,23 +61,31 @@ export interface IUser {
     organization: IAddress
 }
 
-export interface ICheckOUT{
+export interface ICheckOUT {
     promocode: string,
     cart_choice: string,
-    totalPrice:number
+    totalPrice: number
 }
-export interface ICheckoutResponse{
-    success: boolean,
-    orderNumber?: number
-}
-export interface IUpdateUserResponse{
+export interface IUpdateUserResponse {
     message: string,
     user: Omit<IUser, "organization">
 }
 export interface IRemoveCartItemResponse {
     cartId: string
 }
-export interface IAddToFavorite{
+export interface IAddToFavorite {
     message: string,
     isActive: boolean
+}
+export type CheckoutResponseType<T> = {
+    [K in keyof T]: T[K]
+} & { success: boolean }
+
+export type CheckoutSuccessResponseType = CheckoutResponseType<{orderNumber: number}>
+export type CheckoutFailedResponseType = CheckoutResponseType<{errors: IErrors}>
+
+export interface IErrors {
+    [key: string]: {
+        message: string
+    }
 }

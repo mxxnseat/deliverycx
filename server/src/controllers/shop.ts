@@ -7,6 +7,8 @@ import iiko from "../services/iiko";
 import { separateAddress, SeparateType } from "../helpers/geoCoder";
 import Favorite from "../db/models/shop/Favorites";
 
+import validationCount from "../utils/cartValidate/validationCount";
+
 type AddToCartBody = {
     username: string,
     product: string,
@@ -264,6 +266,14 @@ class Shop {
             const cart = await Cart.findOne({ _id: user.cart });
             const cartList = await getProductsInCart(cart.products, user.organization);
 
+            const errors = await validationCount(cartList);
+            if(Object.keys(errors).length > 0){
+                return res.status(200).json({
+                    success: false,
+                    errors
+                });
+            }
+            
             const { locality, street, house } = addressData.separateAddressObject!;
             const orderBody = createOrder({ locality, street, house }, user.organization, {
                 name,
@@ -277,7 +287,10 @@ class Shop {
             const { status, message } = await iiko.iikoMethodBuilder(() => iiko.createOrder(orderBody));
             console.log(status);
             if (status !== 200) {
-                return res.status(status).json(message);
+                return res.status(status).json({
+                    status: false,
+                    message
+                });
             }
             await Cart.updateOne({ _id: user.cart }, {
                 $set: {
@@ -316,7 +329,8 @@ class Shop {
         } catch (e: unknown) {
             console.log(e);
             res.status(404).json({
-                success: false
+                success: false,
+                messsage: e
             })
         }
     }

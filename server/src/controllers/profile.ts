@@ -57,7 +57,7 @@ class Profile {
 
                 });
             } else {
-                throw Error();
+                throw Error('Not have access token, auth failed');
             }
         } catch (e: any) {
             console.log(e);
@@ -67,8 +67,13 @@ class Profile {
 
     public async register(req: Request, res: Response) {
         try {
-            const {organization, username: authUsername} = req.body;
-            if(authUsername){
+            const {organization} = req.body;
+            let token = req.headers.authorization as string;
+            token = token && token.split(" ")[1];
+            const usernameFromToken = jwt.decode(token, { complete: true})?.payload?.username;
+            const userFind = await User.findOne({username: usernameFromToken}); 
+
+            if(userFind){
                 return res.status(200).json({
                     isNew: false
                 });

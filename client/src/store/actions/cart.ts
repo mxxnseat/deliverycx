@@ -1,6 +1,6 @@
 import { AppDispatch, RootState } from "..";
-import { IСhangeCart, ICartChoiceAction, CART_CHOICE, ACTIONS, IChangePromocodeAction, ChangeAmountType, ICheckOutCartSuccess } from "../../types/actions/cart";
-import { ICart, ICheckOUT, ICheckoutResponse } from "../../types/responses";
+import { IСhangeCart, ICartChoiceAction, CART_CHOICE, ACTIONS, IChangePromocodeAction, ChangeAmountType, ICheckOutCartSuccess, ISetErrors } from "../../types/actions/cart";
+import { ICart, ICheckOUT, CheckoutResponseType, IErrors, CheckoutSuccessResponseType, CheckoutFailedResponseType } from "../../types/responses";
 import cart from "../../api/Cart";
 import { ISubmitData } from "../../pages/cart/delivery/form";
 
@@ -25,16 +25,16 @@ function loadCart(payload: ICart): IСhangeCart {
     }
 }
 
-function checkoutCartSuccess(payload:ICheckoutResponse): ICheckOutCartSuccess {
+function checkoutCartSuccess(payload: CheckoutResponseType<{ orderNumber: number }>): ICheckOutCartSuccess {
     return {
         type: ACTIONS.CHECKOUT_CART_SUCCESS,
         payload
     }
 }
 
-function clearCartAction(){
-    return async(dispatch: AppDispatch)=>{
-        try{
+function clearCartAction() {
+    return async (dispatch: AppDispatch) => {
+        try {
             const { status, data } = await cart.clear();
 
             if (status === 200) {
@@ -47,7 +47,7 @@ function clearCartAction(){
                 })
 
             }
-        }catch (error) {
+        } catch (error) {
             console.log(error)
         }
     }
@@ -78,7 +78,7 @@ function removeOne(cartId: string) {
                     type: ACTIONS.REMOVE_ITEM,
                     payload: data
                 })
-            } 
+            }
         } catch (error) {
             console.log(error)
         }
@@ -86,20 +86,24 @@ function removeOne(cartId: string) {
     }
 }
 
-function changeAmount({id, type,count}: ChangeAmountType){
-    return async(dispatch: AppDispatch)=>{
-        
+function changeAmount({ id, type, count, code }: ChangeAmountType) {
+    return async (dispatch: AppDispatch, getState: ()=>RootState) => {
+
         try {
             if (count) {
-                const { status, data } = await cart.changeAmount<ICart>(id, type,count);
-               
+                const { status, data } = await cart.changeAmount<ICart>(id, type, count);
+
+                const errors = getState().cart.errors;
+                const splitCode = code.replace(/\W|\d+/gi, '');
+
+                delete errors[splitCode];
+                dispatch(setErrors(errors));
                 if (status === 200) {
-                    
                     dispatch({
                         type: ACTIONS.CHANGE_AMOUNT,
                         payload: data
                     })
-                    
+
                 }
             }
         } catch (error) {
@@ -107,17 +111,26 @@ function changeAmount({id, type,count}: ChangeAmountType){
         }
     }
 }
-function checkOut(sendingData: ICheckOUT) : any { //ICheckOutCartAction
+
+function setErrors(errors: IErrors): ISetErrors {
+    return {
+        type: ACTIONS.SET_ERRORS,
+        payload: errors
+    }
+}
+function checkOut(sendingData: ICheckOUT): any { //ICheckOutCartAction
     return async (dispatch: AppDispatch) => {
         try {
-                const { status, data } = await cart.checkOutCart<ICheckoutResponse>(sendingData);
+            const { status, data } = await cart.checkOutCart<CheckoutResponseType<{orderNumber: number} | {errors: IErrors}>>(sendingData);
+
+            if (data.success) {
+                dispatch(checkoutCartSuccess(data as CheckoutSuccessResponseType))
+            }else{
+                dispatch(setErrors((data as CheckoutFailedResponseType).errors))
+            }
             
-                if(status === 200){
-                    dispatch(checkoutCartSuccess(data))
-                }
-                
-        } catch (error) {
-            
+        } catch (error: any) {
+            console.log(error);
         }
     }
 }

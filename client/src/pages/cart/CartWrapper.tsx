@@ -11,7 +11,10 @@ const CartWrapper: FC<IProps> = ({ Memo, Form }) => {
         <>
             <div className="container">
                 <Memo />
-                <CartList />
+            </div>
+            <CartList />
+
+            <div className="container">
                 <CartInfo />
             </div>
 
