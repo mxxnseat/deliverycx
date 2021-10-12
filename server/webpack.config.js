@@ -1,6 +1,6 @@
 const path = require("path");
 const nodeExternals = require('webpack-node-externals');
-
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     entry: './src/index.ts',
@@ -11,10 +11,14 @@ module.exports = {
         filename: 'main.js',
     },
     resolve: {
-        extensions: ['.ts', '.js'],
+        extensions: ['.ts', '.js', '.json'],
     },
     module: {
         rules: [
+            {
+                test: /\.json$/,
+                loader: "json-loader"
+            },
             {
                 test: /\.ts$/,
                 enforce: 'pre',
@@ -25,5 +29,12 @@ module.exports = {
                 }
             },
         ],
-    }
+    },
+    plugins: [
+        new CopyPlugin({
+            patterns: [
+                {from: "./src/utils/cartValidate/validationSchema.json", to: "./"}
+            ]
+        })
+    ]
 };
