@@ -9,6 +9,7 @@ const CartList: FC = () => {
     const history = useHistory();
     const cartList = useSelector((state: RootState) => state.cart.list);
     const checkout = useSelector((state: RootState) =>state.cart.checkout);
+    const errors = useSelector((state: RootState)=>state.cart.errors);
 
     useEffect(()=>{
         if(cartList.length === 0 && !checkout.success){
@@ -20,7 +21,7 @@ const CartList: FC = () => {
         <div className="cart__goods-list">
             {
                 cartList.map(el=>{
-                    return <CartItem key={el._id} {...el} />
+                    return <CartItem key={el._id} isError={errors[el.product.code.replace(/\W|\d+/gi, '')]} {...el} />
                 })
             }
         </div>

@@ -1,4 +1,4 @@
-import { ICart, ICartProducts, ICheckOUT, ICheckoutResponse, IProduct } from "../responses";
+import { ICart, ICartProducts, ICheckOUT, IErrors, CheckoutResponseType, IProduct, CheckoutSuccessResponseType } from "../responses";
 
 export interface ICartChoiceAction{
     type: ACTIONS.CHANGE_CHOICE,
@@ -21,15 +21,20 @@ export interface IСhangeCart<T = ICart>{
     type: "LOAD_CART" | "REMOVE_ITEM" | "CHANGE_AMOUNT" | "ADD_TO_CART" | "CLEAR_CART",
     payload: T
 }
+export interface ISetErrors{
+    type: ACTIONS.SET_ERRORS,
+    payload: IErrors
+}
 
 export type ChangeAmountType = {
     id: string,
     type: "inc" | "dec",
+    code: string,
     count?:number
 }
 export interface ICheckOutCartSuccess{
     type: ACTIONS.CHECKOUT_CART_SUCCESS,
-    payload: ICheckoutResponse
+    payload: CheckoutSuccessResponseType
 }
 
 export enum CART_CHOICE{
@@ -48,7 +53,8 @@ export enum ACTIONS{
     REMOVE_ITEM = "REMOVE_ITEM",
     TOTAL_PRICE = "TOTAL_PRICE",
     CHANGE_AMOUNT = "CHANGE_AMOUNT",
-    CLEAR_CART = "CLEAR_CART"
+    CLEAR_CART = "CLEAR_CART",
+    SET_ERRORS = "SET_ERRORS"
 }
 
 
@@ -57,11 +63,13 @@ export interface IInitialState {
     cart_choice: keyof typeof CART_CHOICE,
     list: ICartProducts[],
     totalPrice: number
-    checkout: ICheckoutResponse
+    checkout: CheckoutSuccessResponseType,
+    errors: IErrors
 }
 export type CartActionsType =   ICartChoiceAction |
                                 IChangePromocodeAction |
                                 ISetIsLoadingAction |
                                 IСhangeCart |
                                 ITotalPriceAction |
-                                ICheckOutCartSuccess;
+                                ICheckOutCartSuccess |
+                                ISetErrors;

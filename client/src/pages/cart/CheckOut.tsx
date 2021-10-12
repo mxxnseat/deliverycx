@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
+import { CheckoutResponseType } from "../../types/responses";
 
 const CheckOut: FC = () : JSX.Element => {
 

@@ -1,4 +1,5 @@
 import { ACTIONS, IInitialState, CART_CHOICE, CartActionsType } from "../../types/actions/cart";
+import { IErrors } from "../../types/responses";
 
 
 
@@ -10,7 +11,8 @@ const initialState: IInitialState = {
     checkout: {
         success: false,
         orderNumber: 0,
-    }
+    },
+    errors: {} as IErrors
 };
 
 export default (state = initialState, action: CartActionsType): IInitialState => {
@@ -68,6 +70,16 @@ export default (state = initialState, action: CartActionsType): IInitialState =>
                 ...initialState,
                 list: [],
                 totalPrice: 0
+            }
+        }
+        case ACTIONS.SET_ERRORS:{
+            return {
+                ...state,
+                checkout: {
+                    ...state.checkout,
+                    success: false
+                },
+                errors: action.payload
             }
         }
         default: {

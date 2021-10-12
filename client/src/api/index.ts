@@ -16,8 +16,10 @@ class Api {
         this.api.interceptors.response.use((response: AxiosResponse)=>{
             return response;
         }, (err)=>{
-            history.push("/");
-            
+            if(err.response.status === 401){
+                history.push("/");
+            }
+
             return Promise.reject(err);
         });
         
