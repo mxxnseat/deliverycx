@@ -32,6 +32,8 @@
     "@types/on-finished": "^2.3.1",
     "@types/xml2js": "^0.4.9",
     "@types/xmldom": "^0.1.31",
+    "copy-webpack-plugin": "^9.0.1",
+    "json-loader": "^0.5.7",
     "nodemon": "^2.0.12",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.2.1",

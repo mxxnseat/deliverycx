@@ -1,0 +1,14 @@
+[
+    {
+        "product_code": "SL",
+        "min_amount": 3,
+        "max_amount": 100,
+        "total_amount": true
+    },
+    {
+        "product_code": "SO",
+        "min_amount": 2,
+        "max_amount": 100,
+        "total_amount": true
+    }
+]
