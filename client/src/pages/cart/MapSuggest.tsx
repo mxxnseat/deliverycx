@@ -5,11 +5,12 @@ import { RootState } from "../../store";
 
 declare var ymaps: any;
 
-const MapSuggestComponent = ({ handl }: any) => {
-    const { name } = useSelector((state: RootState) => state.address.city);
-    const [state, setstate] = useState('')
+const MapSuggestComponent = ({ handle }: any) => {
+    const { name } = useSelector((state: RootState) => state.address.address.city);
+    const [state, setstate] = useState('');
+
     useEffect(() => {
-        
+      console.log(`suggest ${name}`);
         const suggestView = new ymaps.SuggestView(
           'suggest', {
             provider: {
@@ -24,9 +25,9 @@ const MapSuggestComponent = ({ handl }: any) => {
         
     }, [ymaps.SuggestView]);
   
-    const ClickHendl = useCallback((e:any) => {
+    const ClickHandle = useCallback((e:any) => {
       e.target.value = state
-      return handl(e)
+      return handle(e)
     },[state])
     
     return <input 
@@ -34,8 +35,8 @@ const MapSuggestComponent = ({ handl }: any) => {
       type="text" id="suggest"    
       name="address"
       placeholder="Адресс доставки"
-      onChange={handl}
-      onClick={ClickHendl}
+      onChange={handle}
+      onClick={ClickHandle}
     />;
 }
 

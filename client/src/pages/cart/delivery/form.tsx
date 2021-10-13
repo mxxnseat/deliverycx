@@ -95,7 +95,6 @@ const CartForm: FC = () => {
                 (formik) => {
                     return (
                         <Form>
-                            <div className="container">
                                 <div className="cart__form">
                                     <FormFieldWrapper
                                         placeholderIco={require("../../../assets/i/card-red.svg").default}
@@ -119,7 +118,7 @@ const CartForm: FC = () => {
                                             enterprise
                                             query={{ apikey: "f5bd494f-4a11-4375-be30-1d2d48d88e93" }}
                                         >
-                                            <SuggestComponent handl={formik.handleChange} />
+                                            <SuggestComponent handle={formik.handleChange} />
                                         </YMaps>
 
 
@@ -157,7 +156,7 @@ const CartForm: FC = () => {
 
                                     <textarea value={formik.values.comment} name="comment" onChange={formik.handleChange} className="form__textarea" placeholder="Напишите сюда, если хотите добавить еще какую-то информацию о заказе..."></textarea>
 
-                                    <div className="row align-center">
+                                    <div className="row align-center form__create">
                                         <div className="clear" onClick={debounceClearHandler}>
                                             <img src={require("../../../assets/i/clear_cart.svg").default} alt="Очистить корзину" />
                                         </div>
@@ -166,7 +165,6 @@ const CartForm: FC = () => {
                                     </div>
                                 </div>
 
-                            </div>
                         </Form>
                     )
                 }

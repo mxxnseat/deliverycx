@@ -1,6 +1,7 @@
 import { IProduct } from "db/models/api/Product";
 import { CartType } from "db/models/shop/Cart";
 import { AsyncReturnType } from "types/asyncReturnType";
+import moment from "moment";
 
 type Address = {
     locality: string,
@@ -23,6 +24,8 @@ export default function createOrderBody(
 ){
     try{
         const {phone, name, comment} = customerData;
+        const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
+
         return {
             organization,
             customer: {
@@ -30,7 +33,7 @@ export default function createOrderBody(
                 phone
             },
             order: {
-                date: "2021-09-28 12:00:00",
+                date: currentDate,
                 phone,
                 isSelfService: "false",
                 items: cart.map(cartEl=>({
