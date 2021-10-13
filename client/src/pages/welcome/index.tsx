@@ -8,10 +8,7 @@ import CityList from "./CityList";
 import SelectAdress from "./SelectAdress";
 
 const ChooseAdress: FC = () => {
-    const history = useHistory();
     const { city } = useSelector((state: RootState) => state.address);
-    const {isAuth} = useSelector((state: RootState) => state.profile);
-    const welcomeHeaderCN = cn("welcome__header", { transparent: Object.keys(city).length });
 
     return (
         <div className="welcome">

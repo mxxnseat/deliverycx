@@ -293,8 +293,12 @@
             color: $gray6;
         }
     }
+    &__create{
+        padding-left: 20px;
+        padding-right: 20px;
+    }
     &__field-wrapper{
-        padding: 16px 15px;
+        padding: 16px 20px;
         align-items: center;
         position: relative;
 
