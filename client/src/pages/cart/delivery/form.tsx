@@ -111,9 +111,6 @@ const CartForm: FC = () => {
                                         
                                         >
                                             
-                                   
-
-                                        {/* <CartSelect options={timesArray} selected={times} setter={(time: object) => setTimes(time)} /> */}
                                         <YMaps
                                             enterprise
                                             query={{ apikey: "f5bd494f-4a11-4375-be30-1d2d48d88e93" }}

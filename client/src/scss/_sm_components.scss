@@ -272,6 +272,13 @@
     display: block;
 }
 
+.adress_fild{
+    ymaps:nth-of-type(1){
+        width: 100% !important;
+        left: 0 !important;
+    }
+}
+
 .form{
     display: flex;
     flex-direction: column;
