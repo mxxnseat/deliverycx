@@ -105,10 +105,10 @@ a{
         width: 0;
     }
 
-    @media screen and (max-width: 560px){
+    @media only screen and (max-width: 560px) and (orientation: portrait){
         #root{
             border: none;
-            height: 100vh;
+            height: 96vh;
             border-radius: 0;
         }
         .link-to-cart{
