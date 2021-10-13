@@ -62,8 +62,9 @@ async function checkAddress(value: string, resolve: (value: boolean)=>void){
         .GeocoderMetaData
         .Address
         
+        console.log(GeoCode)
         //!findSiti(GeoCode) пофиксить баг  
-
+        if(GeoCode.Components.length < 7) throw Error();    
         if(+data.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found === 0 ) throw Error();
         
         resolve(true);
@@ -79,7 +80,10 @@ const schema = yup.object().shape({
     address: yup
             .string()
             .test('checkAddress', 'Не верно указан адрес', function(value){
-                return new Promise(resolve => debounceCheckAddress(value!, resolve));
+                return new Promise(resolve => {
+                    console.log(value)
+                    debounceCheckAddress(value!, resolve)
+                });
             })
             .min(5, "Не верно указан адрес")
             .required('Поле обязательно для заполнения'),

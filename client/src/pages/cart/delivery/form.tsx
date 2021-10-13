@@ -102,14 +102,17 @@ const CartForm: FC = () => {
                                         placeholderValue="Оплата">
                                         <CartSelect options={paymentMethods} selected={payment} setter={(payment: any) => setPayment(payment)} />
                                     </FormFieldWrapper>
-
+                                    <div className="adress_fild">
                                     <FormFieldWrapper
                                         placeholderIco={require("../../../assets/i/mark-red.svg").default}
                                         placeholderValue="Где"
                                         isValid={!formik.values.address.length || formik.errors.address ? true : false}
                                         error={formik.errors.address ? true : false}
                                         errorValue={formik.errors.address}
-                                    >
+                                        
+                                        >
+                                            
+                                   
 
                                         {/* <CartSelect options={timesArray} selected={times} setter={(time: object) => setTimes(time)} /> */}
                                         <YMaps
@@ -121,7 +124,7 @@ const CartForm: FC = () => {
 
 
                                     </FormFieldWrapper>
-
+                                    </div>
                                     <FormFieldWrapper
                                         placeholderIco={require("../../../assets/i/clock.svg").default}
                                         placeholderValue="Когда"
