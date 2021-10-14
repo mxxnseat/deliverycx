@@ -4,7 +4,10 @@ export interface ICity {
     _id: string,
     name: string
 }
-
+export interface IAuthResponse{
+    isAuth: boolean,
+    access?: string
+}
 export interface IAddress {
     contacts: {
         phone: string,

@@ -2,10 +2,7 @@ import mongoose, {model, Schema, RefType} from "mongoose";
 
 
 export interface IUserSchema{
-    token: {
-        access: string,
-        refresh: string
-    },
+    refreshToken: string,
     cart: RefType,
     username: string,
     name?: string,
@@ -16,15 +13,9 @@ export interface IUserSchema{
     orderHistory: RefType
 }
 const UserSchema = new Schema<IUserSchema>({
-    token: {
-        access: {
-            required: true,
-            type: String
-        },
-        refresh: {
-            required: true,
-            type: String
-        }
+    refreshToken: {
+        required: true,
+        type: String
     },
     favorite: {
         ref: "Favorite",

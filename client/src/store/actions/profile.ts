@@ -34,8 +34,7 @@ function loadData() {
     return async (dispatch: AppDispatch) => {
         try {
             const loginResponse = await profile.login();
-            
-            localStorage.setItem("authToken", loginResponse.data);
+            if(loginResponse.data.isAuth) localStorage.setItem("authToken", loginResponse.data.access!);
             
             const { data, status } = await profile.getProfile();
             

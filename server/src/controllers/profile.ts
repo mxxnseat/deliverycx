@@ -11,54 +11,13 @@ import getProductsInCart from "../helpers/getProductsInCart";
 
 class Profile {
     public async login(req: Request, res: Response) {
-        const authToken = req.headers.authorization as string;
         try {
-            if (authToken !== undefined) {
-                const token = authToken.split(" ")[1];
+            const {username, tokens} = req.body;
 
-                jwt.verify(token, process.env.JWT_SECRET as string, async (err, _) => {
-                    const decode = jwt.decode(token, { complete: true })?.payload;
-                    const username = decode?.username;
-
-                    const user = await User.findOne({ username });
-
-                    if (!user) {
-                        res.status(401).json("Not authorized");
-                        return;
-                    }
-                    if (err) {
-                        if (err?.name === "TokenExpiredError") {
-                            return jwt.verify(user.token.refresh, process.env.JWT_SECRET as string, async (err: any, _: any) => {
-
-                                if (err) {
-                                    res.status(401).json("Not authorized, " + err.name);
-                                    return;
-                                }
-
-                                const { access, refresh } = generateUserTokens(user.username);
-                                user.token = {
-                                    access, refresh
-                                }
-                                await user.save();
-
-                                res.status(200).json(access);
-                            });
-                        }
-                        else {
-                            return res.status(401).json("Not authorized, " + err?.name);
-                        }
-                    }
-                    const { access, refresh } = generateUserTokens(user.username);
-                    user.token = {
-                        access, refresh
-                    }
-                    await user.save();
-                    res.status(200).json(access);
-
-                });
-            } else {
-                throw Error('Not have access token, auth failed');
-            }
+            await User.updateOne({username}, {refreshToken: tokens.refresh});
+            
+            res.cookie("refresh", tokens.refresh, {maxAge: 1000*3600*24*30, httpOnly: true});
+            res.status(200).json({isAuth: true, access: tokens.access});
         } catch (e: any) {
             console.log(e);
             res.status(401).json("Not authhorized, \n" + e?.message);
@@ -100,16 +59,13 @@ class Profile {
 
             await User.create({
                 _id: User_id,
-                token: {
-                    access,
-                    refresh
-                },
+                refreshToken: refresh,
                 cart: Cart_id,
                 favorite: Favorite_id,
                 organization,
                 username
             });
-
+            res.cookie("refresh", refresh, {maxAge: 1000*3600*24*30, httpOnly: true})
             res.status(200).json({
                 isNew: true,
                 access

@@ -1,7 +1,7 @@
 import { AxiosInstance, AxiosPromise } from "axios";
 import Api from ".";
 import { IInitialState } from "../types/actions/profile";
-import { IUpdateUserResponse, IUser } from "../types/responses";
+import { IAuthResponse, IUpdateUserResponse, IUser } from "../types/responses";
 
 interface IUpdateData {
     name?: string,
@@ -18,7 +18,7 @@ const profile = ({ api }: Api) => {
     const request: AxiosInstance = api;
     
     return {
-        login(): AxiosPromise<string> {
+        login(): AxiosPromise<IAuthResponse> {
 
             return request({
                 method: "POST",
