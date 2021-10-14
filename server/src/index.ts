@@ -23,7 +23,7 @@ const PORT = process.env.PORT || 5001;
 App.use(express.static(path.resolve(__dirname, "../../client/build")))
 App.use(cors({
     credentials: true,
-    origin: "http://localhost:3000"
+    origin: process.env.CLIENT_URL
 }))
 App.use(bodyParser())
 App.use(cookieParser());
