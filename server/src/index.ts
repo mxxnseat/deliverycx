@@ -3,6 +3,7 @@ dotenv.config();
 
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
 
@@ -18,16 +19,20 @@ import authCheck from "./middlewares/authCheck";
 const INDEXHTML = path.resolve(__dirname, "../../client/build/index.html");
 const App = express();
 const PORT = process.env.PORT || 5001;
-App.use(express.static(path.resolve(__dirname, "../../client/build")))
-App.use(cors())
-App.use(bodyParser())
 
+App.use(express.static(path.resolve(__dirname, "../../client/build")))
+App.use(cors({
+    credentials: true,
+    origin: "http://localhost:3000"
+}))
+App.use(bodyParser())
+App.use(cookieParser());
 
 
 App.use("/api", api);
 
 App.use("/profile", profile);
-App.use("/shop", authCheck ,shop);
+App.use("/shop", authCheck, shop);
 
 App.get("/*", (req: Request, res: Response) => {
     res.sendFile(INDEXHTML);

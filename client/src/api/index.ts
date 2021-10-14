@@ -11,6 +11,7 @@ class Api {
 
     private constructor() {
         this.api = Axios.create({
+            withCredentials: true,
             baseURL: this.URL,
         })
         this.api.interceptors.response.use((response: AxiosResponse)=>{
