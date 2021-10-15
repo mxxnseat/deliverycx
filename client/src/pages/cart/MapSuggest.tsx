@@ -1,20 +1,19 @@
-import { useCallback, useEffect, useState } from "react";
+import { MouseEventHandler, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { withYMaps } from "react-yandex-maps";
 import { RootState } from "../../store";
 
 declare var ymaps: any;
 
-const MapSuggestComponent = ({ handle }: any) => {
+const MapSuggestComponent = ({ formikHandle }: any) => {
     const { name } = useSelector((state: RootState) => state.address.address.city);
     const [state, setstate] = useState('');
 
     useEffect(() => {
-      console.log(`suggest ${name}`);
         const suggestView = new ymaps.SuggestView(
           'suggest', {
             provider: {
-              suggest: (function(request:any, options:any) {
+              suggest: (function(request:string) {
               
                 setstate(request)
                 return ymaps.suggest(name + ", " + request)
@@ -25,9 +24,9 @@ const MapSuggestComponent = ({ handle }: any) => {
         
     }, [ymaps.SuggestView]);
   
-    const ClickHandle = useCallback((e:any) => {
+    const ClickHandleInput = useCallback((e:any) => {
       e.target.value = state
-      return handle(e)
+      return formikHandle(e)
     },[state])
     
     return <input 
@@ -35,8 +34,8 @@ const MapSuggestComponent = ({ handle }: any) => {
       type="text" id="suggest"    
       name="address"
       placeholder="Адресс доставки"
-      onChange={handle}
-      onClick={ClickHandle}
+      onChange={formikHandle}
+      onClick={ClickHandleInput}
     />;
 }
 

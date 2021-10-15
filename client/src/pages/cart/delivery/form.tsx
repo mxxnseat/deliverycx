@@ -1,7 +1,7 @@
 import { FC, useEffect, useMemo, useState } from "react";
 import CartSelect from "../../../components/HOC/CartSelect";
 import FormFieldWrapper from "../../../components/HOC/FormFieldWrapper";
-import { Formik, Form } from "formik";
+import { Formik, Form, Field } from "formik";
 import InputMask from "react-input-mask";
 import submitHandler from "../../../helpers/submitFormHandler";
 import schema from "../../../helpers/validationSchema";
@@ -75,7 +75,7 @@ const CartForm: FC = () => {
         ]);
     }, []);
 
-    const debounceClearHandler = debounce(()=>{
+    const debounceClearHandler = debounce(() => {
         dispatch(clearCartAction())
     }, 400);
 
@@ -115,7 +115,7 @@ const CartForm: FC = () => {
                                             enterprise
                                             query={{ apikey: "f5bd494f-4a11-4375-be30-1d2d48d88e93" }}
                                         >
-                                            <SuggestComponent handle={formik.handleChange} />
+                                            <SuggestComponent formikHandle={formik.handleChange} />
                                         </YMaps>
 
 
@@ -128,25 +128,30 @@ const CartForm: FC = () => {
                                         <CartSelect options={timesArray} selected={times} setter={(time: object) => setTimes(time)} />
 
                                     </FormFieldWrapper>
-
+                                    
                                     <FormFieldWrapper
                                         placeholderIco={require("../../../assets/i/profile-red.svg").default}
                                         placeholderValue="Имя"
                                         isValid={!formik.values.name.length || formik.errors.name ? true : false}
-                                        error={formik.errors.name ? true : false}
+                                        error={formik.errors.name && formik.touched.name ? true : false}
                                         errorValue={formik.errors.name}
-                                    >
-                                        <input className="form__field-wrapper__input" name="name" placeholder="Укажу позже" value={formik.values.name} onChange={formik.handleChange} />
+                                >
+                                    
+                                    <Field className="form__field-wrapper__input" name="name" placeholder="Укажу позже" value={formik.values.name} onChange={formik.handleChange} />
+                                        
                                     </FormFieldWrapper>
 
                                     <FormFieldWrapper
                                         placeholderIco={require("../../../assets/i/phone-red.svg").default}
                                         placeholderValue="Телефон"
                                         isValid={!formik.values.phone.length || formik.errors.phone ? true : false}
-                                        error={formik.errors.phone ? true : false}
+                                        error={formik.errors.phone && formik.touched.phone ? true : false}
                                         errorValue={formik.errors.phone}
-                                    >
-                                        <InputMask mask="+7 999 999 99 99" maskPlaceholder={null} name="phone" className="form__field-wrapper__input" placeholder="Укажу позже" value={formik.values.phone} onChange={formik.handleChange} />
+                                >
+                                    <Field name="phone" render={({ field }:any) => (
+                                        <InputMask {...field} mask="+7 999 999 99 99" maskPlaceholder={null} className="form__field-wrapper__input" placeholder="Укажу позже" value={formik.values.phone} onChange={formik.handleChange} />
+                                    )} />
+                                    {console.log(formik.touched) }   
                                     </FormFieldWrapper>
 
                                     <Checkbox value={formik.values.notCall} handleChange={formik.handleChange} />
