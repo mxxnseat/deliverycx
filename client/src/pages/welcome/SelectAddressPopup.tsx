@@ -5,8 +5,15 @@ import { IAddress } from "../../types/responses";
 import { setAddressAction } from "../../store/actions/adress";
 import { setProfileAction } from "../../store/actions/profile";
 import profile from "../../api/Profile";
+import { number } from "yup";
 
-const SelectAddressPopup: FC<IAddress> = memo(({ ...address }) => {
+interface IProps{
+    slideIndex: any
+    slidecoutn:number | unknown
+    address:IAddress
+}
+
+const SelectAddressPopup:FC<IProps> = memo(({slideIndex,slidecoutn,address}) => {
     const history = useHistory();
     const dispatch = useDispatch();
 
@@ -33,18 +40,33 @@ const SelectAddressPopup: FC<IAddress> = memo(({ ...address }) => {
         
     }
 
+    const SlideHandler = (triger: string) => {
+        
+        if (triger === 'prev') {
+            slideIndex((prev: number) => {
+               return prev <= 0 ? 0 : prev - 1 
+            })
+        } else if (triger === 'next') {
+           if (typeof slidecoutn === 'number') {
+                slideIndex((prev: number) => {
+                    return prev <= slidecoutn -1 ? slidecoutn -1 : prev + 1 
+            }) 
+           } 
+        }
+    }
+
     return (
         <div className="welcome__select-adress opened">
             <div className="container">
                 <div className="welcome__select-adress__header">
-                    <div className="prev">
+                    <div className="prev" onClick={()=> SlideHandler('prev')}>
                         <img src={require("../../assets/i/prev.svg").default} alt="Предыдущее заведенеие" />
                     </div>
                     <div className="welcome__select-adress__adress">
                         Старик Хинкалыч <br />
                         на Турецкой
                     </div>
-                    <div className="next">
+                    <div className="next" onClick={()=> SlideHandler('next')}>
                         <img src={require("../../assets/i/next.svg").default} alt="Следующее заведенеие" />
                     </div>
                 </div>
