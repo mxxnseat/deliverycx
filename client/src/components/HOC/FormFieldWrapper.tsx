@@ -26,10 +26,13 @@ const FormFieldWrapper: FC<IProps> = ({ placeholderIco, placeholderValue, childr
 
                 {children}
             </div>
+            {
+                error && 
+                <div className="form__field-wrapper__error">
+                    {errorValue}
+                </div>
+            }
             
-            <div className="form__field-wrapper__error">
-                {errorValue}
-            </div>
         </div>
     )
 }
