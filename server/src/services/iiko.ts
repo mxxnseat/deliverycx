@@ -111,6 +111,7 @@ class Iiko {
                     await model.Group.findOneAndUpdate({ _id: group.id }, {
                         ...group,
                         image: group.images.length ? group.images[group.images.length - 1]?.imageUrl : '',
+                        organization: organization.id,
                         _id: group.id
                     }, { upsert: true });
                 }));

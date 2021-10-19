@@ -44,6 +44,9 @@ App.listen(PORT, () => {
         mongoConnect()
             .then(() => {
                 iiko.pooling();
+                setInterval(()=>{
+                    iiko.pooling();
+                }, 60*60*1000);
             })
             .catch(e => console.log(e));
     } catch (e: unknown) {

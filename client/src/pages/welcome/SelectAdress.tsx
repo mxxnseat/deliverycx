@@ -15,39 +15,6 @@ const placeMarkOption = {
     iconImageOffset: [-25, -60]
 }
 
-const mock = [
-      {
-        contacts: {
-          "phone": "+79782287220",
-          "email": "gareeva.lily@mail.ru"
-        },
-        city: {
-          _id: "6169326c7759b79df383276c",
-          name: "Симферополь"
-        },
-        _id:"",
-        latitude: 44.945175,
-        longitude: 34.099931,
-        products: "6169326c7759b79df3832784",
-        street: "Турецкая 25"
-    },
-    {
-        contacts: {
-          "phone": "+7978255555",
-          "email": "gareeva.lily@mail.ru"
-        },
-        city: {
-          _id: "6169326c7759b79df383276c",
-          name: "Симферополь"
-        },
-        _id:"",
-        latitude: 44.946406,
-        longitude: 34.101494,
-        products: "6169326c7759b79df3832784",
-        street: "Турецкая 15"
-    }  
-]
-
 const SelectAdress: FC = () => {
     const history = useHistory();
     const [isOpen, setIsOpen] = useState(false);
@@ -64,7 +31,7 @@ const SelectAdress: FC = () => {
            (async ()=>{
             const cityId = selectedCity?._id;
             const {data} = await Api.getAddrresses<IAddress[]>(cityId);
-            setAddresses(mock);
+            setAddresses(data);
         })(); 
         } else {
             history.push("/");

@@ -34,7 +34,11 @@ class Api {
 
     public async getCategories(req: Request, res: Response) {
         try {
-            const groups = await model.Group.find({}).sort({ order: 1 });
+            const {username} = req.body;
+            const user = await User.findOne({ username});
+            const groups = await model.Group.find({organization: user.organization}).sort({ order: 1 });
+
+
 
             res.json(groups);
         } catch (e: unknown) {
@@ -169,9 +173,9 @@ class Api {
             const stopList = await iiko.iikoMethodBuilder(()=>iiko.getStopLists(organization));
 
             const filtterProductsByStopList = products[0] ? products[0].products.filter((product: IProduct)=>{
-              return !stopList[0].find(
+              return stopList[0] ? !stopList[0].find(
                 (stopListProduct: IStopListItem)=>stopListProduct.productId === product.id && stopListProduct.balance === 0
-                );
+                ) : product;
             }) : [];
 
             res.status(200).json(filtterProductsByStopList);
