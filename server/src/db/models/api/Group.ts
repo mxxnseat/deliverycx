@@ -1,10 +1,11 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, RefType } from "mongoose";
 
 export interface IGroup {
     _id: string,
     name: string,
     code: string,
     order: number,
+    organization: RefType,
     image: string,
     isIncludedInMenu: boolean
 }
@@ -29,6 +30,11 @@ const GroupSchema = new Schema<IGroup>({
     image: {
         required: true,
         type: String
+    },
+    organization: {
+        required: true,
+        type: String,
+        ref: "Organization"
     },
     isIncludedInMenu: {
         required: true,

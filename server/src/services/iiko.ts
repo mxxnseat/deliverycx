@@ -4,7 +4,7 @@ import * as model from "../db/models";
 import { ICity } from "../db/models/api/City";
 import { geoCode, IPosition } from "../helpers/geoCoder";
 import { IOrganization as IApiOrganization } from "../db/models/api/Organization";
-import { ICategory, IGroup, INomenclature, IOrganization, IProduct,IOrderCheckCreationResult } from "../types/axiosResponses";
+import { ICategory, IGroup, INomenclature, IOrganization, IProduct,IOrderCheckCreationResult, IStopList } from "../types/axiosResponses";
 import { IProductSchema } from "db/models/api/Product";
 import { createOrderType } from "helpers/createOrder";
 
@@ -110,7 +110,8 @@ class Iiko {
                 await Promise.all(nomenclature.groups.map(async (group) => {
                     await model.Group.findOneAndUpdate({ _id: group.id }, {
                         ...group,
-                        image: group.images[group.images.length - 1].imageUrl,
+                        image: group.images.length ? group.images[group.images.length - 1]?.imageUrl : '',
+                        organization: organization.id,
                         _id: group.id
                     }, { upsert: true });
                 }));
@@ -125,7 +126,7 @@ class Iiko {
                         products: nomenclature.products.map(product =>{
                             return {
                                 ...product,
-                                image: product.images[product.images.length - 1]?.imageUrl,
+                                image: product.images.length ? product.images[product.images.length - 1]?.imageUrl : '',
                                 category: product.productCategoryId,
                                 group: product.parentGroup
                             }
@@ -150,6 +151,22 @@ class Iiko {
             }
         } catch (e) {
             console.log(`Error with get products\n${e}`);
+        }
+    }
+    public async getStopLists(organizationId: string){
+        try{
+            const {data: {stopList}} = await axios.get<IStopList>(
+                `https://iiko.biz:9900/api/0/stopLists/getDeliveryStopList?access_token=${this.token}&organization=${organizationId}`
+                );
+
+            const list = stopList.map(el=>{
+                return el.items;
+            });
+
+            return list;
+        }catch(e: unknown){
+            console.log(e);
+            return [];
         }
     }
     public async pooling() {

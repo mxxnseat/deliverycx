@@ -9,13 +9,13 @@ import cn from "classnames";
 interface IProps{
     isError: undefined | {message: string},
     amount: number,
-    product: IProduct,
+    product: IProduct<string>,
     _id: string
 }
 
 const CartItem: FC<IProps> = ({amount, product, _id, isError})=>{
     console.log(isError);
-    const CN = cn("cart__item", { error: isError }); // activeChoice === CART_CHOICE.
+    const CN = cn("cart__item", { error: isError });
     const dispatch = useDispatch();
     const [changeCount, setChangeCount] = useState<number>(amount)
 

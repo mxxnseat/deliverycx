@@ -2,6 +2,7 @@ import { FC, memo, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { RootState } from "../../store";
+import { IProduct } from "../../types/responses";
 import CartItem from "./CartItem";
 
 
@@ -17,11 +18,13 @@ const CartList: FC = () => {
         }
     }, [cartList]);
 
+    console.log(errors);
+
     return (
         <div className="cart__goods-list">
             {
-                cartList.map(el=>{
-                    return <CartItem key={el._id} isError={errors[el.product.code.replace(/\W|\d+/gi, '')]} {...el} />
+                cartList.map((el)=>{
+                    return <CartItem key={el._id} isError={errors[el.product.group]} {...el} />
                 })
             }
         </div>

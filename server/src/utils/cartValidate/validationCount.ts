@@ -8,7 +8,7 @@ async function validationCount(cart: Array<{ product: IProduct, amount: number }
     const validationSchema: IValidateSchema[] = JSON.parse(fs.readFileSync(path.resolve(__dirname, "./validationSchema.json"), { encoding: "utf-8" }));
     let errors: IErrors = {};
     cart.forEach(cartEl => {
-        const productCode = cartEl.product.code.replace(/\W|\d+/gi, '');
+        const productCode = cartEl.product.group as string;
         const isValidate = validationSchema.find(validateField => {
             return validateField.product_code === productCode;
         });
@@ -16,7 +16,7 @@ async function validationCount(cart: Array<{ product: IProduct, amount: number }
         if (isValidate) {
             if (isValidate.total_amount === true) {
                 const validateProducts = cart.filter(el => {
-                    return el.product.code.match(productCode);
+                    return el.product.group === productCode;
                 });
 
                 const counter = validateProducts.reduce((acc, curVal) => {

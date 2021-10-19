@@ -28,12 +28,12 @@ export interface ICategory {
     name: string,
     order: number
 }
-export interface IProduct {
+export interface IProduct<C = ICategory> {
     image: string,
     id: string,
     category: string,
     code: string,
-    group: ICategory,
+    group: C,
     isIncludedInMenu: boolean,
     name: string,
     isFav: boolean,
@@ -48,7 +48,7 @@ export interface IFavorites {
     list: string[]
 }
 
-export type ICartProducts = {product: IProduct} & { amount: number, _id: string }
+export type ICartProducts = {product: IProduct<string>} & { amount: number, _id: string }
 export interface ICart {
     products: ICartProducts[],
     totalPrice: number

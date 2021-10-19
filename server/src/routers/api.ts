@@ -8,7 +8,7 @@ const api = new Api();
 
 route.get("/getCities", api.getCities);
 route.get("/getAddresses", api.getAddresses);
-route.get("/getCategories", api.getCategories);
+route.get("/getCategories", authCheck, api.getCategories);
 route.get("/getProducts", authCheck, api.getProducts);
 route.get("/getProduct/:id", authCheck, api.getProduct);
 
