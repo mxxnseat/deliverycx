@@ -8,6 +8,7 @@ import { RootState } from "../../store";
 import Api from "../../api/Api";
 import { ICity } from "../../types/responses";
 import { useHistory } from "react-router";
+import debounce from 'lodash.debounce';
 
 const CityList: FC<{}> = () => {
     const history = useHistory();
@@ -15,6 +16,7 @@ const CityList: FC<{}> = () => {
     const [cities, setCities] = useState<ICity[]>([]);
     const dispatch = useDispatch();
     
+
     useEffect(() => {
         (async ()=>{
             const {data} = await Api.getCities<ICity[]>();
@@ -27,13 +29,19 @@ const CityList: FC<{}> = () => {
         dispatch(setCityAction(city));
         history.push("/address");
     }
+    const cityInputHandler = (e: any)=>{
+        (async()=>{
+            const {data} = await Api.getCities<ICity[]>(e.target.value)
+            setCities([...data]);
+        })();
+    }
 
     return (
         <div className="container welcome__city-list">
             <div className="welcome__search">
                 <img src={require("../../assets/i/search-sm.svg").default} alt="Поиск города" />
 
-                <input type="text" className="welcome__search__input" placeholder="Поиск" />
+                <input type="text" className="welcome__search__input" placeholder="Поиск"onChange={cityInputHandler} />
             </div>
 
             {

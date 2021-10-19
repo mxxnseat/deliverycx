@@ -17,6 +17,8 @@ const Product: FC<IProduct> = ({ id, name, price, measureUnit, weight, descripti
 
     }
 
+    console.log(measureUnit);
+
     return (
         <div ref={cardRef} className="product__item" onClick={clickHandler}>
             <div className="product__item__img-wrap">
@@ -37,7 +39,7 @@ const Product: FC<IProduct> = ({ id, name, price, measureUnit, weight, descripti
 
                 <div className="row product__item__options justify-between">
                     <div>
-                        <div className="product__item__measure">{measureUnit === "порц" ? "1 шт" : `${convertWeight(weight)} г`}</div>
+                        <div className="product__item__measure">{measureUnit === "порц" ? `${convertWeight(weight)} г` : "1 шт"}</div>
                         <div className="product__item__price">{price} ₽</div>
                     </div>
 

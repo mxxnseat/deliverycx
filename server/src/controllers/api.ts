@@ -10,7 +10,8 @@ import iiko from "../services/iiko";
 class Api {
     public async getCities(req: Request, res: Response) {
         try {
-            const cities = await model.City.find({});
+            const name = req.query.city as string;
+            const cities = await model.City.find({name: {$regex: name, $options: 'i'}});
 
             res.json(cities);
         } catch (e: unknown) {

@@ -39,9 +39,6 @@ const CartForm: FC = () => {
 
     //mocki array
     const paymentMethods: any = [{
-        id: "3",
-        value: "Картой курьеру"
-    }, {
         id: "4",
         value: "Наличными курьеру"
     }];
