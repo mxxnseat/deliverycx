@@ -8,7 +8,6 @@ import schema from "../../../helpers/validationSchema";
 import Checkbox from "../../../components/HOC/Checkbox";
 import { RootState } from "../../../store";
 import { useDispatch, useSelector } from "react-redux";
-import { Dropdown } from 'semantic-ui-react'
 import { withYMaps, YMaps } from "react-yandex-maps";
 import MapSuggestComponent from "../MapSuggest";
 import { debounce } from "lodash";
@@ -53,19 +52,6 @@ const CartForm: FC = () => {
 
     const [payment, setPayment] = useState(paymentMethods[0]);
     const [times, setTimes] = useState<object>(timesArray[0]);
-
-    /* баг с падением
-    useEffect(() => {
-        const script = document.createElement('script');
-        script.src = "https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=f5bd494f-4a11-4375-be30-1d2d48d88e93";
-        script.async = true;
-        document.body.appendChild(script);
-        return () => {
-          document.body.removeChild(script);
-        }
-    }, []);
-    */
-
 
     const SuggestComponent = useMemo(() => {
         return withYMaps(MapSuggestComponent, true, [

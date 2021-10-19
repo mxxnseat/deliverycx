@@ -18,9 +18,8 @@ const CityList: FC<{}> = () => {
     useEffect(() => {
         (async ()=>{
             const {data} = await Api.getCities<ICity[]>();
-            data.forEach(city=>{
-                setCities([...cities, city]);
-            });
+            console.log(data);
+            setCities([...data]);
         })();
     }, []);
     

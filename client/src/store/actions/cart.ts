@@ -122,7 +122,7 @@ function checkOut(sendingData: ICheckOUT): any { //ICheckOutCartAction
     return async (dispatch: AppDispatch) => {
         try {
             const { status, data } = await cart.checkOutCart<CheckoutResponseType<{orderNumber: number} | {errors: IErrors}>>(sendingData);
-
+            console.log(data);
             if (data.success) {
                 dispatch(checkoutCartSuccess(data as CheckoutSuccessResponseType))
             }else{

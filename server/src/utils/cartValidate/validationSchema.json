@@ -1,13 +1,7 @@
 [
     {
-        "product_code": "SL",
+        "product_code": "0d70f8ee-2ea3-4469-a45e-4aa15bc4324d",
         "min_amount": 3,
-        "max_amount": 100,
-        "total_amount": true
-    },
-    {
-        "product_code": "SO",
-        "min_amount": 2,
         "max_amount": 100,
         "total_amount": true
     }

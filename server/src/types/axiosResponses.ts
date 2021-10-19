@@ -48,3 +48,16 @@ export interface IOrderCheckCreationResult{
     resultState: number,
     deliveryDurationInMinute: number
 }
+
+export interface IStopListItem{
+    balance: number,
+    productId: string
+}
+export interface IStopList{
+    stopList: Array<{
+        organizationId: string,
+        deliveryTerminalId: string,
+        items: IStopListItem[]
+    }>,
+    unregisteredOrganizations: unknown
+}
