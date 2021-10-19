@@ -29,10 +29,10 @@ const getApi = ({ api }: Api) => {
       })
     },
 
-    getCities<R>(): AxiosPromise<R> {
+    getCities<R>(city:string = ''): AxiosPromise<R> {
       return request({
         method: "get",
-        url: "api/getCities"
+        url: `api/getCities?city=${city}`
       })
     },
 
