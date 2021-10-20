@@ -116,11 +116,13 @@ a{
             border-radius: 0;
         }
         .link-to-cart{
+            width: 100%;
             position: fixed;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
         }
-        .welcome button.welcome__select-adress{
+        .welcome button.welcome__select-adress,.welcome .welcome__select-adress{
             position: fixed;
+            left: 0;
         }
     }
