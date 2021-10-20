@@ -171,15 +171,18 @@ class Api {
             }
 
             const products = await model.Product.aggregate(aggregatePipeline);
-            const stopList = await iiko.iikoMethodBuilder(()=>iiko.getStopLists(organization));
+            // const stopList = await iiko.iikoMethodBuilder(()=>iiko.getStopLists(organization));
 
-            const filtterProductsByStopList = products[0] ? products[0].products.filter((product: IProduct)=>{
-              return stopList[0] ? !stopList[0].find(
-                (stopListProduct: IStopListItem)=>stopListProduct.productId === product.id && stopListProduct.balance === 0
-                ) : product;
-            }) : [];
+            // const filterProductsByStopList = products[0] ? products[0].products.filter((product: IProduct)=>{
+            //   return stopList[0] ? !stopList[0].find(
+            //     (stopListProduct: IStopListItem)=>stopListProduct.productId === product.id && stopListProduct.balance === 0
+            //     ) : product;
+            // }) : [];
 
-            res.status(200).json(filtterProductsByStopList);
+            const productsList = products[0] ? products[0].products : [];
+            setTimeout(()=>{
+              res.status(200).json(productsList);
+            }, 1500);
         } catch (e: unknown) {
             console.log(e);
             res.status(400).json("Bad request");
