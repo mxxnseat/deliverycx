@@ -106,12 +106,17 @@ a{
     }
 
     @media only screen and (max-width: 560px) and (orientation: portrait){
+        body{
+            overflow: auto;
+        }
         #root{
             border: none;
-            height: 100vh;
+            height: 100%;
+            max-height: 100%;
             border-radius: 0;
         }
         .link-to-cart{
+            position: fixed;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
         }
