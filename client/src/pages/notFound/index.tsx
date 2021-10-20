@@ -1,10 +1,11 @@
 import { FC } from "react";
 import HeaderBack from "../../components/HOC/HeaderBack";
+import {history} from "../../";
 
 const NotFound: FC = () => {
     return (
         <>
-            <HeaderBack backgroundColor="#ffffff">
+            <HeaderBack onClickCb={()=>history.push("/shop")} backgroundColor="#ffffff">
                 Страница <span className="select-red">не найдена</span>
             </HeaderBack>
 

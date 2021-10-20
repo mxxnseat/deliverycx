@@ -62,7 +62,7 @@ export interface IInitialState {
     promocode: string,
     cart_choice: keyof typeof CART_CHOICE,
     list: ICartProducts[],
-    totalPrice: number
+    totalPrice: number,
     checkout: CheckoutSuccessResponseType,
     errors: IErrors
 }

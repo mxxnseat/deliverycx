@@ -4,38 +4,47 @@ import { RootState } from "../../../store";
 import { IProduct } from "../../../types/responses";
 import Product from "./item"
 import api from "../../../api/Api";
+import Loader from "../../../mui/loader";
 
-
-interface IProps  {
-    category?: string,
+interface IProps {
+    category?: string, 
     searchQuery?: string
 }
+enum Statuses {
+    NEITRAL = "NEITRAL",
+    PENDING = "PENDING",
+    FINISHED = "FINISHED"
+}
+type Status = keyof typeof Statuses;
 
-    
-const ProductList: FC<IProps> = ({category, searchQuery}) => {
+const ProductList: FC<IProps> = ({ category, searchQuery }) => {
     const [products, setProducts] = useState<IProduct[]>([]);
-    const organization = useSelector((state: RootState)=>state.address.address._id);
-    
+    const [status, setStatus] = useState<Status>(Statuses.NEITRAL);
+    const organization = useSelector((state: RootState) => state.address.address._id);
 
-    useEffect(()=>{
-        (async ()=>{
-            const {data, status} = await api.getProducts<IProduct[]>({organization, category, searchQuery});
 
-            if(status === 200){
+    useEffect(() => {
+        setProducts([]);
+        (async () => {
+            setStatus(Statuses.PENDING);
+            const { data, status } = await api.getProducts<IProduct[]>({ organization, category, searchQuery });
+
+            if (status === 200) {
                 setProducts(data);
             }
+            setStatus(Statuses.FINISHED);
         })();
-       
+
     }, [category, searchQuery]);
 
-    
     return (
         <div className="product__list">
-
             {
-                products.length ? products.map(item=>{
-                    return <Product key={item.id} {...item}/>
-                }) : "Эта категория пуста"
+
+                status === Statuses.FINISHED ? (
+                   products.length ? products.map(item => <Product key={item.id} {...item} />) : "Эта категория пуста :("
+
+                ) : <Loader />
             }
         </div>
     )
