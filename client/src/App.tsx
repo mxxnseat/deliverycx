@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Switch, Route, useLocation, useHistory, Router } from "react-router-dom";
 import { useTransition, animated } from "react-spring";
 import ProtectedRouter from "./components/ProtectedRouter";
+import notFound from './pages/notFound';
 import protectedRoutes from "./routes/protectedRouters";
 import publicRoutes from "./routes/publicRouters";
 import { RootState } from './store';
@@ -34,6 +35,7 @@ const App: FC = () => {
     <Switch>
       {protectedRoutes.map((route, index) => <ProtectedRouter key={index} {...route} isAuth={isAuth} />)}
       {publicRoutes.map((route, index) => <Route key={index} {...route} />)}
+      <Route path="*" component={notFound} />
     </Switch>
   )
 }

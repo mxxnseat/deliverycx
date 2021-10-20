@@ -153,17 +153,39 @@ class Iiko {
             console.log(`Error with get products\n${e}`);
         }
     }
-    public async getStopLists(organizationId: string){
+    public async getStopLists(organizationId: string = ''){
         try{
-            const {data: {stopList}} = await axios.get<IStopList>(
-                `https://iiko.biz:9900/api/0/stopLists/getDeliveryStopList?access_token=${this.token}&organization=${organizationId}`
-                );
+            const organizations = await model.Organization.find({});
+            organizations.forEach((organization: IApiOrganization)=>{
+                console.log(`Starting get stopLists for organization: ${organization._id}`);
 
-            const list = stopList.map(el=>{
-                return el.items;
-            });
+                axios.get<IStopList>(
+                    `https://iiko.biz:9900/api/0/stopLists/getDeliveryStopList?access_token=${Iiko.token}&organization=${organization._id}`
+                ).then(async ({data: {stopList}})=>{
+                    const list = stopList.map(el=>{
+                        return el.items;
+                    });
 
-            return list;
+                    await model.StopList.findOneAndUpdate({organization: organization._id}, {
+                        $setOnInsert: {
+                            organization: organization._id
+                        },
+                        $set: {
+                            products: list
+                        }
+                    }, {upsert: true});
+
+                    console.log(`End get stopLists for organization: ${organization._id}`);
+                })
+                .catch(e=>{
+                    console.log(`Error in stop lists ${organization._id}\n${e}`);
+                });
+
+                
+            })
+            
+
+            
         }catch(e: unknown){
             console.log(e);
             return [];

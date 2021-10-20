@@ -171,15 +171,15 @@ class Api {
             }
 
             const products = await model.Product.aggregate(aggregatePipeline);
-            const stopList = await iiko.iikoMethodBuilder(()=>iiko.getStopLists(organization));
-
-            const filtterProductsByStopList = products[0] ? products[0].products.filter((product: IProduct)=>{
-              return stopList[0] ? !stopList[0].find(
+            const stopList = await model.StopList.findOne({organization})?.products;
+            
+            const filterProductsByStopList = products[0] ? products[0].products.filter((product: IProduct)=>{
+              return stopList ? !stopList.find(
                 (stopListProduct: IStopListItem)=>stopListProduct.productId === product.id && stopListProduct.balance === 0
                 ) : product;
             }) : [];
 
-            res.status(200).json(filtterProductsByStopList);
+            res.status(200).json(filterProductsByStopList);
         } catch (e: unknown) {
             console.log(e);
             res.status(400).json("Bad request");
@@ -197,8 +197,6 @@ class Api {
               throw Error();
             }
             const organization = user.organization;
-
-            const stopList = await iiko.iikoMethodBuilder(()=>iiko.getStopLists(organization));
             let product: any = await model.Product.aggregate([
               {
                 $match: {
@@ -282,11 +280,10 @@ class Api {
                 }
               }
             ]);
-            const isFindProduct = stopList[0].find(
-                (stopListEl:IStopListItem)=>stopListEl.productId === product[0].products.id && stopListEl.balance === 0
-              );
-            product = isFindProduct ? null : product[0].products;
-            if (!product) {
+            product = product[0].products;
+            const isInStopList = await model.StopList.findOne({organization, "products.productId": product.id});
+
+            if (!product || isInStopList) {
                 throw Error();
             }
             const group = await model.Group.findOne({_id: product.group});

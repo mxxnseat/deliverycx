@@ -1,5 +1,3 @@
-    import { ComponentType, FC } from "react";
-
 import ProductCard from "../pages/shop/product_card";
 import Shop from "../pages/shop";
 import Cart from "../pages/cart";
@@ -29,7 +27,7 @@ const routes: IRoute[] = [
         exact: true,
         path: ROUTES.ABOUT,
         component: About
-    },
+    }
 ]
 
 export default routes;

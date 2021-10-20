@@ -1,8 +1,7 @@
-import Axios, { AxiosInstance, AxiosPromise, AxiosResponse, AxiosError, AxiosRequestConfig } from "axios";
+import axios, { AxiosInstance, AxiosPromise, AxiosResponse, AxiosError, AxiosRequestConfig } from "axios";
 import {config} from "../config";
 import {createBrowserHistory} from "history";
-
-const history = createBrowserHistory();
+import {history} from "../";
 
 class Api {
     static _instanse: null | Api = null
@@ -10,15 +9,19 @@ class Api {
     api: AxiosInstance
 
     private constructor() {
-        this.api = Axios.create({
+        this.api = axios.create({
             withCredentials: true,
             baseURL: this.URL,
         })
         this.api.interceptors.response.use((response: AxiosResponse)=>{
             return response;
         }, (err)=>{
-            if(err.response.status === 401){
+            
+            if(err?.response?.status === 401){
                 history.push("/");
+            }
+            if(err?.response?.status === 404){
+                history.push("/404");
             }
 
             return Promise.reject(err);

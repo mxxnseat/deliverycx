@@ -14,10 +14,6 @@ const routes: IRoute[] = [
         exact: true,
         path: ROUTES.ADDRESS,
         component: SelectAdress
-    },
-    {
-        path: ROUTES.NOT_FOUND,
-        component: NotFound
     }
 ]
 

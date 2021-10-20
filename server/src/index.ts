@@ -47,6 +47,9 @@ App.listen(PORT, () => {
                 setInterval(()=>{
                     iiko.pooling();
                 }, 60*60*1000);
+                setInterval(()=>{
+                    iiko.iikoMethodBuilder(iiko.getStopLists);
+                }, 1000*60*10);
             })
             .catch(e => console.log(e));
     } catch (e: unknown) {
