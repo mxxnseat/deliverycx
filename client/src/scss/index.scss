@@ -29,8 +29,9 @@ body{
     overflow: hidden;
 }
 #root{
-    height: 86vh;
-    max-height: 100vh;
+    height: auto;
+    min-height: 86vh;
+    max-height: 86vh;
     width: 100%;
     max-width: 375px;
     display: flex;
@@ -111,8 +112,8 @@ a{
         }
         #root{
             border: none;
-            height: 100vh;
-            max-height: 100vh;
+            height: auto;
+            // max-height: 100vh;
             border-radius: 0;
         }
         .link-to-cart{
