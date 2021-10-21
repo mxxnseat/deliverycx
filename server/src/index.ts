@@ -46,7 +46,7 @@ App.listen(PORT, () => {
                 iiko.pooling();
                 setInterval(()=>{
                     iiko.pooling();
-                }, 60*60*1000);
+                }, 60*60*6*1000);
                 setInterval(()=>{
                     iiko.iikoMethodBuilder(iiko.getStopLists);
                 }, 1000*60*10);
