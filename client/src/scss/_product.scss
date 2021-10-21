@@ -14,7 +14,10 @@
             flex-direction: column;
             justify-content: space-between;
         }
-        
+        &__img-wrap{
+            min-width: 145px;
+            min-height: 145px;
+        }
         &__cooking-time{
             color: $gray6;
         }

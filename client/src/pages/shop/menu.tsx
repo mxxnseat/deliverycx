@@ -1,6 +1,7 @@
-import { FC } from "react";
+import { FC, memo, PropsWithChildren } from "react";
 import cn from "classnames";
 import { Link } from "react-router-dom";
+import { isEqual } from "lodash";
 
 interface IProps{
     isActive: boolean,
@@ -48,4 +49,10 @@ const Menu: FC<IProps> = ({isActive, setter})=>{
     )
 }
 
-export default Menu;
+export default memo(Menu, (prev: Readonly<PropsWithChildren<IProps>>, next: Readonly<PropsWithChildren<IProps>>)=>{
+    if(isEqual(prev, next)){
+        return true;
+    }else{
+        return false;
+    }
+});

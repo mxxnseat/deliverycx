@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, useRef } from "react";
+import { FC, useEffect, useState, useRef, memo } from "react";
 import cn from "classnames";
 import Slider from "infinite-react-carousel";
 import { useDispatch, useSelector } from "react-redux";
@@ -80,4 +80,4 @@ const Categories: FC = () => {
     ) : <></>
 }
 
-export default Categories;
+export default memo(Categories);

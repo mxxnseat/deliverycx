@@ -1,7 +1,7 @@
-import { FC, useEffect, useRef, useState, Children } from "react";
+import { FC, useEffect, useRef, useState, Children, memo, PropsWithChildren } from "react";
+import {isEqual} from "lodash";
 
-
-interface IProps {
+export interface IProps {
     count: number,
     itemSize: number,
     currentItem: number,

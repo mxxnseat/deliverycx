@@ -1,10 +1,11 @@
-import { FC, memo, useEffect, useState } from "react";
+import { FC, memo, PropsWithChildren, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { IProduct } from "../../../types/responses";
 import Product from "./item"
 import api from "../../../api/Api";
 import Loader from "../../../mui/loader";
+import { isEqual } from "lodash";
 
 interface IProps {
     category?: string, 
@@ -50,4 +51,10 @@ const ProductList: FC<IProps> = ({ category, searchQuery }) => {
     )
 }
 
-export default memo(ProductList);
+export default memo(ProductList, (prev: Readonly<PropsWithChildren<IProps>>, next: Readonly<PropsWithChildren<IProps>>)=>{
+    if(isEqual(prev, next)){
+        return true;
+    }else{
+        return false;
+    }
+});

@@ -1,11 +1,13 @@
-import { FC, useState } from "react";
+import { FC, memo, PropsWithChildren, useState } from "react";
 import StockItem from "./item";
 import cn from "classnames";
 
-import Lenta from "../../../components/lenta";
+import Lenta, {IProps as LentaProps} from "../../../components/lenta";
 
+// const MemoLenta = memo<FC<LentaProps>>(Lenta, (prev: Readonly<PropsWithChildren<LentaProps>>, next:Readonly<PropsWithChildren<LentaProps>>)=>{
+// });
 
-const Stocks: FC = () => {
+const Stocks: FC = memo(() => {
     const [currentItem, setCurrentItem] = useState<number>(1);
     const mock_arr: number[] = [1, 2, 3, 4, 5, 6];
 
@@ -44,6 +46,6 @@ const Stocks: FC = () => {
             </div>
         </div>
     )
-}
+});
 
 export default Stocks;
