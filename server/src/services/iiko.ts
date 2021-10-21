@@ -7,8 +7,7 @@ import { IOrganization as IApiOrganization } from "../db/models/api/Organization
 import { ICategory, IGroup, INomenclature, IOrganization, IProduct,IOrderCheckCreationResult, IStopList } from "../types/axiosResponses";
 import { IProductSchema } from "db/models/api/Product";
 import { createOrderType } from "helpers/createOrder";
-import imageToBase64 from "image-to-base64";
-
+import download from "../utils/saveCdnImage";
 
 class Iiko {
     private static token: string = '';
@@ -86,6 +85,7 @@ class Iiko {
     }
     private async getAndSaveNomenclature() {
         try {
+
             for (let k in this.organizations) {
                 const productsResponse = await axios.get<INomenclature>(`https://iiko.biz:9900/api/0/nomenclature/${this.organizations[k].id}?access_token=${Iiko.token}`);
                 const organization = this.organizations[k];
@@ -120,21 +120,24 @@ class Iiko {
                     }
                 }));
 
+                const productsToSave = await Promise.all(nomenclature.products.map(async (product) =>{
+                    const image = await download( product.images.length ? product.images[product.images.length - 1]?.imageUrl : '');
+
+                    return {
+                        ...product,
+                        image,
+                        category: product.productCategoryId,
+                        group: product.parentGroup
+                    }
+                }))
+
                 const products = await model.Product.findOneAndUpdate({ organization: organization.id }, {
                     $setOnInsert: {
                         organization: organization.id
                     },
                     revision: nomenclature.revision,
                     $set: {
-                        products: nomenclature.products.map((product) =>{
-
-                            return {
-                                ...product,
-                                image: product.images.length ? product.images[product.images.length - 1]?.imageUrl : '',
-                                category: product.productCategoryId,
-                                group: product.parentGroup
-                            }
-                        })
+                        products: productsToSave
                     }
                 }, { new: true, upsert: true });
 
