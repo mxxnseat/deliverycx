@@ -108,7 +108,7 @@ class Iiko {
                     }, { upsert: true });
                 }));
 
-                await model.Group.deleteMany({});
+                await model.Group.deleteMany({organization: organization.id});
                 await Promise.all(nomenclature.groups.map(async (group) => {
                     await model.Group.findOneAndUpdate({ _id: group.id }, {
                         ...group,
