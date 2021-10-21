@@ -144,10 +144,12 @@ class Iiko {
                         street: organization.address.address as string,
                         longitude: cord?.longitude,
                         latitude: cord?.latitude,
+                        products: products._id
+                    },
+                    $set: {
                         contacts: {
                             ...organization.contacts
-                        },
-                        products: products._id
+                        }
                     }
                 }, { new: true, upsert: true });
             }

@@ -63,8 +63,7 @@ const SelectAddressPopup:FC<IProps> = memo(({slideIndex,slidecoutn,address}) => 
                         <img src={require("../../assets/i/prev.svg").default} alt="Предыдущее заведенеие" />
                     </div>
                     <div className="welcome__select-adress__adress">
-                        Старик Хинкалыч <br />
-                        на Турецкой
+                        Старик Хинкалыч
                     </div>
                     <div className="next" onClick={()=> SlideHandler('next')}>
                         <img src={require("../../assets/i/next.svg").default} alt="Следующее заведенеие" />
@@ -88,7 +87,7 @@ const SelectAddressPopup:FC<IProps> = memo(({slideIndex,slidecoutn,address}) => 
                     </a>
                 </div>
 
-                <div className="welcome__select-adress__counter">
+                {/* <div className="welcome__select-adress__counter">
                     <img src={require("../../assets/i/hinkalya-red.svg").default} />
 
                     <div className="counter-frame-wrapper">
@@ -109,7 +108,7 @@ const SelectAddressPopup:FC<IProps> = memo(({slideIndex,slidecoutn,address}) => 
                         </div>
                     </div>
 
-                </div>
+                </div> */}
 
                 <div className="btn welcome__select-adress__btn" onClick={selectAdressHandler}>Выбрать</div>
             </div>
