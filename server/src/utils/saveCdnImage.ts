@@ -27,7 +27,7 @@ async function download (uri: string) {
     await image.resize(300, Jimp.AUTO);
     await image.writeAsync(`${appRootDir.get()}/static/${imageName}`)
 
-    return `/static/${imageName}`;
+    return `/static/shop/${imageName}`;
 };
 
 export default download;
