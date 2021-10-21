@@ -5,6 +5,7 @@ export interface IGroup {
     name: string,
     code: string,
     order: number,
+    description: string,
     organization: RefType,
     image: string,
     isIncludedInMenu: boolean
@@ -17,6 +18,9 @@ const GroupSchema = new Schema<IGroup>({
     },
     name: {
         required: true,
+        type: String
+    },
+    description: {
         type: String
     },
     code: {

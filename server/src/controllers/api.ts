@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import * as model from "../db/models";
-import { User } from "../db/models";
+import { Group, User } from "../db/models";
 import { ICity } from "../db/models/api/City";
 import {IProduct, IStopListItem} from "../types/axiosResponses";
 import iiko from "../services/iiko";
@@ -37,7 +37,7 @@ class Api {
         try {
             const {username} = req.body;
             const user = await User.findOne({ username});
-            const groups = await model.Group.find({organization: user.organization}).sort({ order: 1 });
+            const groups = await model.Group.find({organization: user.organization, description: {$ne: "HIDDEN"}}).sort({ order: 1 });
 
 
 
@@ -59,18 +59,25 @@ class Api {
             }
 
             const user = await User.findOne({ username });
+            const groupHidden = await Group.findOne({description: "HIDDEN", organization});
             let matchQuery = {}
             if (!category) {
                 matchQuery = {
                     'products.name': {
                         $regex: queryString ? queryString : '',
                         $options: "i"
+                    },
+                    'products.group': {
+                      $ne: groupHidden ? groupHidden._id : ''
                     }
                 }
             } else {
                 if(category !== "favorite"){
                   matchQuery = {
-                    'products.group': category ? category : ''
+                    $and: [
+                    {'products.group': category ? category : ''},
+                    {'products.group': {$ne: groupHidden ? groupHidden._id : ''}}
+                  ]
                   }
                 }
             }
