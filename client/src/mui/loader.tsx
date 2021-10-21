@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { FC } from "react";
+import { FC, memo } from "react";
 import CircularProgress from '@mui/material/CircularProgress';
 
 const theme = createTheme({
@@ -11,7 +11,8 @@ const theme = createTheme({
 });
 const divStyle = {
     width: "100%",
-    "text-align": "center",
+    "display": "flex",
+    "justifyContent": "center",
     margin: "0 auto"
 }
 
@@ -24,4 +25,4 @@ const Loader: FC<{}> = () => {
         </div>)
 }
 
-export default Loader;
+export default memo(Loader);

@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, memo, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Menu from "./menu";
 import { isSearchAction } from "../../store/actions/shop";
@@ -30,4 +30,4 @@ const Header: FC = () => {
     )
 }
 
-export default Header;
+export default memo(Header);

@@ -1,10 +1,10 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { useHistory } from "react-router";
 
 const AdressInfo: FC = () => {
-    const {address, city} = useSelector((state:RootState)=>state.address);
+    const {address} = useSelector((state:RootState)=>state.address);
     const history = useHistory();
     return (
         <div className="adress_info">
@@ -15,4 +15,4 @@ const AdressInfo: FC = () => {
     )
 }
 
-export default AdressInfo;
+export default memo(AdressInfo);

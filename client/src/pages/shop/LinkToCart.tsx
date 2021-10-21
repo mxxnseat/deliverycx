@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, memo, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { RootState } from "../../store";
@@ -53,4 +53,4 @@ const LinkToCart: FC = () => {
     )
 }
 
-export default LinkToCart;
+export default memo(LinkToCart);

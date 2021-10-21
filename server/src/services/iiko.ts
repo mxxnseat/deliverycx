@@ -7,6 +7,7 @@ import { IOrganization as IApiOrganization } from "../db/models/api/Organization
 import { ICategory, IGroup, INomenclature, IOrganization, IProduct,IOrderCheckCreationResult, IStopList } from "../types/axiosResponses";
 import { IProductSchema } from "db/models/api/Product";
 import { createOrderType } from "helpers/createOrder";
+import imageToBase64 from "image-to-base64";
 
 
 class Iiko {
@@ -107,6 +108,7 @@ class Iiko {
                     }, { upsert: true });
                 }));
 
+                await model.Group.deleteMany({});
                 await Promise.all(nomenclature.groups.map(async (group) => {
                     await model.Group.findOneAndUpdate({ _id: group.id }, {
                         ...group,
@@ -116,21 +118,21 @@ class Iiko {
                     }, { upsert: true });
                 }));
 
-
-                const products: any = await model.Product.findOneAndUpdate({ organization: organization.id }, {
+                const products = await model.Product.findOneAndUpdate({ organization: organization.id }, {
                     $setOnInsert: {
                         organization: organization.id
                     },
                     revision: nomenclature.revision,
                     $set: {
-                        products: nomenclature.products.map(product =>{
+                        products: nomenclature.products.map((product) =>{
+
                             return {
                                 ...product,
                                 image: product.images.length ? product.images[product.images.length - 1]?.imageUrl : '',
                                 category: product.productCategoryId,
                                 group: product.parentGroup
                             }
-                        })  
+                        })
                     }
                 }, { new: true, upsert: true });
 
