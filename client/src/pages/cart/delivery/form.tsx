@@ -137,7 +137,7 @@ const CartForm: FC = () => {
                                     {console.log(formik.touched) }   
                                     </FormFieldWrapper>
 
-                                    <Checkbox value={formik.values.notCall} handleChange={formik.handleChange} />
+                                    {/* <Checkbox value={formik.values.notCall} handleChange={formik.handleChange} /> */}
 
                                     <textarea value={formik.values.comment} name="comment" onChange={formik.handleChange} className="form__textarea" placeholder="Напишите сюда, если хотите добавить еще какую-то информацию о заказе..."></textarea>
 

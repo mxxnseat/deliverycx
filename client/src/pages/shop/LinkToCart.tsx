@@ -37,7 +37,7 @@ const LinkToCart: FC = () => {
                     блюда ожидают оплаты
                 </div>
 
-                <div className="link-to-cart__booking"></div>
+                {/* <div className="link-to-cart__booking"></div> */}
 
                 <div className="link-to-cart__empty" ref={ref}>
                         <h1>
