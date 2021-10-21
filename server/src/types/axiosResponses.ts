@@ -30,7 +30,8 @@ export interface IGroup{
     code: string,
     order: number,
     images: IImage[],
-    isIncludedInMenu: boolean
+    isIncludedInMenu: boolean,
+    parentGroup: string | null
 }
 export interface ICategory{
     id: string,
