@@ -110,12 +110,14 @@ class Iiko {
 
                 await model.Group.deleteMany({organization: organization.id});
                 await Promise.all(nomenclature.groups.map(async (group) => {
-                    await model.Group.findOneAndUpdate({ _id: group.id }, {
-                        ...group,
-                        image: group.images.length ? group.images[group.images.length - 1]?.imageUrl : '',
-                        organization: organization.id,
-                        _id: group.id
-                    }, { upsert: true });
+                    if(group.parentGroup){
+                        await model.Group.findOneAndUpdate({ _id: group.id }, {
+                            ...group,
+                            image: group.images.length ? group.images[group.images.length - 1]?.imageUrl : '',
+                            organization: organization.id,
+                            _id: group.id
+                        }, { upsert: true });
+                    }
                 }));
 
                 const products = await model.Product.findOneAndUpdate({ organization: organization.id }, {

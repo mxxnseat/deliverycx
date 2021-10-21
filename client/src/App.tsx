@@ -1,4 +1,4 @@
-import { FC, useEffect, } from 'react';
+import { FC, memo, useEffect, } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Switch, Route, useLocation, useHistory, Router } from "react-router-dom";
 import { useTransition, animated } from "react-spring";
