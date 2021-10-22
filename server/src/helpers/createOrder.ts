@@ -25,7 +25,7 @@ export default function createOrderBody(
     try{
         const {phone, name, comment} = customerData;
         const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
-
+        console.log(address);
         return {
             organization,
             customer: {
@@ -45,7 +45,7 @@ export default function createOrderBody(
                 })),
                 address: {
                     city: address.locality,
-                    street: address.street.split(" ")[1],
+                    street: address.street,
                     home: address.house,
                     comment
                 }
