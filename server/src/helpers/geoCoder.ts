@@ -94,8 +94,6 @@ export async function separateAddress(address: string){
         separateAddressObject[el.kind] = el.name;
     })
 
-    console.log(separateAddressObject);
-
     return {
         status: 200,
         message: "OK",

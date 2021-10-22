@@ -62,7 +62,9 @@ async function checkAddress(value: string, resolve: (value: boolean)=>void){
         .GeocoderMetaData
         .Address
         
- 
+       
+        // //!findSiti(GeoCode) пофиксить баг  
+        // if(GeoCode.Components.length < 7) throw Error();    
         if(+data.response.GeoObjectCollection.metaDataProperty.GeocoderResponseMetaData.found === 0 ) throw Error();
         
         resolve(true);

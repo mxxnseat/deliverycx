@@ -60,11 +60,9 @@ export default (state = initialState, action: CartActionsType): IInitialState =>
             }
         }
         case ACTIONS.CHECKOUT_CART_SUCCESS: {
-            console.log(action.payload);
-
             return {
                 ...initialState,
-                checkout: {...action.payload}
+                checkout: action.payload
             }
         }
         case ACTIONS.CLEAR_CART: {

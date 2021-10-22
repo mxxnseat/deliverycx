@@ -5,6 +5,7 @@ import { Formik, Form, Field } from "formik";
 import InputMask from "react-input-mask";
 import submitHandler from "../../../helpers/submitFormHandler";
 import schema from "../../../helpers/validationSchema";
+import Checkbox from "../../../components/HOC/Checkbox";
 import { RootState } from "../../../store";
 import { useDispatch, useSelector } from "react-redux";
 import { withYMaps, YMaps } from "react-yandex-maps";
@@ -27,7 +28,6 @@ export interface ISubmitData extends IInitialValues {
 
 const CartForm: FC = () => {
     const { isVerify, ...user } = useSelector((state: RootState) => state.profile);
-    const cityName = useSelector((state: RootState) => state.address.address.city.name);
     const dispatch = useDispatch()
     const initialValues: IInitialValues = {
         comment: '',
@@ -50,6 +50,14 @@ const CartForm: FC = () => {
     const [payment, setPayment] = useState(paymentMethods[0]);
     const [times, setTimes] = useState<object>(timesArray[0]);
 
+    const SuggestComponent = useMemo(() => {
+        return withYMaps(MapSuggestComponent, true, [
+            "SuggestView",
+            "geocode",
+            "coordSystem.geo"
+        ]);
+    }, []);
+
     const debounceClearHandler = debounce(() => {
         dispatch(clearCartAction())
     }, 400);
@@ -59,11 +67,8 @@ const CartForm: FC = () => {
             initialValues={initialValues}
             validationSchema={schema}
             onSubmit={(values, meta) => {
-                meta.setSubmitting(true);
-
                 submitHandler<ISubmitData>({
                     ...values,
-                    address: `${cityName} ${values.address}`,
                     payment,
                     times
                 }, meta)
@@ -86,8 +91,17 @@ const CartForm: FC = () => {
                                         isValid={!formik.values.address.length || formik.errors.address ? true : false}
                                         error={formik.errors.address ? true : false}
                                         errorValue={formik.errors.address}
+                                        
                                         >
-                                        <Field className="form__field-wrapper__input" name="address" placeholder="Укажу позже" value={formik.values.address} onChange={formik.handleChange} />
+                                            
+                                        <YMaps
+                                            enterprise
+                                            query={{ apikey: "f5bd494f-4a11-4375-be30-1d2d48d88e93" }}
+                                        >
+                                            <SuggestComponent formikHandle={formik.handleChange} />
+                                        </YMaps>
+
+
                                     </FormFieldWrapper>
                                     </div>
                                     <FormFieldWrapper
@@ -131,7 +145,7 @@ const CartForm: FC = () => {
                                         <div className="clear" onClick={debounceClearHandler}>
                                             <img src={require("../../../assets/i/clear_cart.svg").default} alt="Очистить корзину" />
                                         </div>
-                                        <button type="submit" className="cart__order-btn btn" disabled={formik.isSubmitting}>Заказать</button>
+                                        <button type="submit" className="cart__order-btn btn">Заказать</button>
 
                                     </div>
                                 </div>
