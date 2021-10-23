@@ -5,6 +5,7 @@ import { Formik, Form, Field, useFormik, FormikProvider } from "formik";
 import InputMask from "react-input-mask";
 import submitHandler from "../../../helpers/submitFormHandler";
 import schema from "../../../helpers/validationSchema";
+import Checkbox from "../../../components/HOC/Checkbox";
 import { RootState } from "../../../store";
 import { useDispatch, useSelector } from "react-redux";
 import { withYMaps, YMaps, Map, SearchControl, Placemark } from "react-yandex-maps";

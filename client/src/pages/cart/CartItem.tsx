@@ -14,6 +14,7 @@ interface IProps{
 }
 
 const CartItem: FC<IProps> = ({amount, product, _id, isError})=>{
+    console.log(isError);
     const CN = cn("cart__item", { error: isError });
     const dispatch = useDispatch();
     const [changeCount, setChangeCount] = useState<number>(amount)

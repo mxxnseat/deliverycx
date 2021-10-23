@@ -19,9 +19,7 @@ import { checkoutCartSuccess, setErrors } from "../../store/actions/cart";
 const Cart: FC = () => {
     const history = useHistory();
     const { cart_choice, list, checkout } = useSelector((state: RootState) => state.cart);
-    
     const dispatch = useDispatch()
-
     
     const [CartWrapperProps, setCartWrapperProps] = useState({
         Memo: DeliveryMemo,
@@ -60,6 +58,11 @@ const Cart: FC = () => {
             }
         }
     }, [cart_choice]);
+
+    useEffect(() => {
+        (list.length === 0 && checkout.success) &&
+            setPopCheckout(true)
+    }, [checkout.success])
     
     const handleBacktoShop = () => {
         dispatch(checkoutCartSuccess({
@@ -75,7 +78,7 @@ const Cart: FC = () => {
         <div className="cat_app" style={{ backgroundColor: "#fff" }}>
             <div className="cart">
                 {
-                    checkout.success
+                    popCheckout
                     ?
                     <>   
                         <HeaderBack onClickCb={handleBacktoShop}>
