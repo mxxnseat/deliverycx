@@ -322,6 +322,16 @@
         border-radius: 8px;
     }
 }
+.hot_box{
+    position: relative;
+}
+.hot{
+    width:26px;
+    height:26px;
+    position:relative;
+    background: url('../assets/i/hinkalya-red-cart.svg') no-repeat;
+    
+}
 @media screen and (max-width: 360px){
     .cart__order-btn{
         width: 320px;
