@@ -190,7 +190,7 @@ const CartForm: FC = () => {
                         errorValue={formik.errors.phone}
                     >
                         <Field name="phone" render={({ field }: any) => (
-                            <InputMask {...field} mask="+7 999 999 99 99" maskPlaceholder={null} className="form__field-wrapper__input" placeholder="Укажу позже" value={formik.values.phone} onChange={formik.handleChange} />
+                            <InputMask {...field} mask="+7 999 999 99 99" maskPlaceholder={null} className="form__field-wrapper__input" placeholder="Ваш телефон" value={formik.values.phone} onChange={formik.handleChange} />
                         )} />
                         {console.log(formik.touched)}
                     </FormFieldWrapper>
