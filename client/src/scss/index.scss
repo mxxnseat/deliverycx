@@ -113,11 +113,12 @@ a{
         #root{
             border: none;
             height: auto;
-            // max-height: 100vh;
+            max-height: 100vh;
             border-radius: 0;
         }
         .link-to-cart{
             width: 100%;
+            max-width: 365px;
             position: fixed;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
