@@ -4,9 +4,12 @@ import { AsyncReturnType } from "types/asyncReturnType";
 import moment from "moment";
 
 type Address = {
-    locality: string,
-    street: string,
-    house: string
+    flat: string,
+    floor: string,
+    intercom: string,
+    entarance: string,
+    address: string,
+    city: string
 }
 export type CustomerData = {
     name: string,
@@ -14,7 +17,7 @@ export type CustomerData = {
     phone: string,
     times: object, 
     date: string,
-    promocode: string,
+    promocode: string
 }
 
 export default function createOrderBody(
@@ -25,6 +28,7 @@ export default function createOrderBody(
     try{
         const {phone, name, comment} = customerData;
         const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
+        const addressSplit = address.address.split(",");
         console.log(address);
         return {
             organization,
@@ -44,9 +48,12 @@ export default function createOrderBody(
                     sum: cartEl.product.price
                 })),
                 address: {
-                    city: address.locality,
-                    street: address.street,
-                    home: address.house,
+                    city: address.city,
+                    street: addressSplit[0],
+                    home: addressSplit[1] ? addressSplit[1] : 0,
+                    apartament: address.flat ? address.flat : '0',
+                    entrance: address.entarance ? address.entarance : '0',
+                    floor: address.floor ? address.floor : '0',
                     comment
                 }
             }

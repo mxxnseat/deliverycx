@@ -13,7 +13,7 @@ import { RootState } from "../../store";
 import { CART_CHOICE } from "../../types/actions/cart";
 import { useHistory } from "react-router";
 import CheckOut from "./CheckOut";
-import { checkoutCartSuccess } from "../../store/actions/cart";
+import { checkoutCartSuccess, setErrors } from "../../store/actions/cart";
 
 
 const Cart: FC = () => {
@@ -64,8 +64,9 @@ const Cart: FC = () => {
     const handleBacktoShop = () => {
         dispatch(checkoutCartSuccess({
             success: false,
-            orderNumber: 0
+            orderNumber: 0,
         }))
+        dispatch(setErrors({}));
         history.push("/shop")
     }
 
@@ -84,7 +85,7 @@ const Cart: FC = () => {
                     </> 
                     :
                     <> 
-                        <HeaderBack onClickCb={() => history.push("/shop")}>
+                        <HeaderBack onClickCb={handleBacktoShop}>
                             Ваш заказ <span className="select-red">{list.length}</span> блюд
                         </HeaderBack>        
                         <div className="container">

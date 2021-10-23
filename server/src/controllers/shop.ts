@@ -20,6 +20,11 @@ type CreateOrderBody = {
     notCall: boolean,
     payment: object,
     cart_choice: string,
+    flat: string,
+    floor: string,
+    intercom: string,
+    entarance: string,
+    city: string
 } & CustomerData;
 
 
@@ -242,6 +247,11 @@ class Shop {
             comment,
             phone,
             date,
+            flat,
+            floor,
+            city,
+            intercom,
+            entarance,
             promocode,
             cart_choice,
             name,
@@ -257,12 +267,6 @@ class Shop {
                 throw Error();
             }
 
-            const addressData = await separateAddress(address);
-
-            if (addressData.status !== 200) {
-                return res.status(addressData.status).json(addressData.message);
-            }
-
             const cart = await Cart.findOne({ _id: user.cart });
             const cartList = await getProductsInCart(cart.products, user.organization);
 
@@ -273,9 +277,8 @@ class Shop {
                     errors
                 });
             }
-            
-            const { locality, street, house } = addressData.separateAddressObject!;
-            const orderBody = createOrder({ locality, street, house }, user.organization, {
+
+            const orderBody = createOrder({ address, flat, floor, intercom, entarance, city}, user.organization, {
                 name,
                 comment,
                 date,
@@ -288,8 +291,12 @@ class Shop {
             console.log(status);
             if (status !== 200) {
                 return res.status(status).json({
-                    status: false,
-                    message
+                    success: false,
+                    errors: {
+                        '500':{
+                            message: `Some error ${message}`
+                        }
+                    }
                 });
             }
             await Cart.updateOne({ _id: user.cart }, {
