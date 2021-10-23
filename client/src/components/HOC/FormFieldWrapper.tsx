@@ -1,5 +1,6 @@
 import cn from "classnames";
-import { FC } from "react";
+import { FC, memo, PropsWithChildren } from "react";
+import {isEqual} from "lodash";
 
 interface IProps{
     placeholderIco: string,

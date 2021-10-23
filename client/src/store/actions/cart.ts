@@ -143,6 +143,7 @@ export {
     removeOne,
     changeAmount,
     checkOut,
+    setErrors,
     checkoutCartSuccess,
     clearCartAction
 }
