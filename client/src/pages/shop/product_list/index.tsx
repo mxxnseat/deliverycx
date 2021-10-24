@@ -22,20 +22,23 @@ const ProductList: FC<IProps> = ({ category, searchQuery }) => {
     const [products, setProducts] = useState<IProduct[]>([]);
     const [status, setStatus] = useState<Status>(Statuses.NEITRAL);
     const organization = useSelector((state: RootState) => state.address.address._id);
-
+    
 
     useEffect(() => {
+        let timer: ReturnType<typeof setTimeout> | null = null
         setProducts([]);
         (async () => {
             setStatus(Statuses.PENDING);
             const { data, status } = await api.getProducts<IProduct[]>({ organization, category, searchQuery });
-
+            console.log(data);
             if (status === 200) {
                 setProducts(data);
             }
-            setStatus(Statuses.FINISHED);
+            timer = setTimeout(() => setStatus(Statuses.FINISHED), 500)
         })();
-
+        return () => {
+            typeof timer === 'number' && clearTimeout(timer)
+        }
     }, [category, searchQuery]);
 
     return (

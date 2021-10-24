@@ -18,7 +18,7 @@ const divStyle = {
 
 const Loader: FC<{}> = () => {
     return (
-        <div style={divStyle}>
+        <div className="loader_box" style={divStyle}>
             <ThemeProvider theme={theme}>
                 <CircularProgress color="primary" />
             </ThemeProvider>

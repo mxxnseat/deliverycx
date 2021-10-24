@@ -41,7 +41,7 @@ body{
     flex-direction: column;
     justify-content: flex-start;
     border: 15px solid #000;
-    border-radius: 30px;
+    border-radius: 15px;
     position: relative;
 }
 .shop__box{
@@ -55,7 +55,9 @@ body{
     }
 }
 
-
+.loader_box{
+    padding-top: 5%;
+}
 .viewport{
     display: flex;
     align-items: center;
@@ -120,11 +122,15 @@ a{
             width: 100%;
             max-width: 365px;
             position: fixed;
+            bottom: 0;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
         }
         .welcome button.welcome__select-adress,.welcome .welcome__select-adress{
             position: fixed;
             left: 0;
+        }
+        .loader_box{
+            height: auto;
         }
     }
