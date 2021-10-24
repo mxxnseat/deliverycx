@@ -19,7 +19,6 @@ const LinkToCart: FC = () => {
         itemsCount ? history.push("/cart") : setIsPopupEmpty(true);
     }
     useOutside(ref, ()=>setIsPopupEmpty(false), isPopupEmpty);
-
     useDeepCompareEffect(()=>{
         setItemsCount(cartList.reduce((acc, el)=>{
             return acc+el.amount;
