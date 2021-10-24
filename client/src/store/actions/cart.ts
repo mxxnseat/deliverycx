@@ -1,5 +1,5 @@
 import { AppDispatch, RootState } from "..";
-import { IСhangeCart, ICartChoiceAction, CART_CHOICE, ACTIONS, IChangePromocodeAction, ChangeAmountType, ICheckOutCartSuccess, ISetErrors } from "../../types/actions/cart";
+import { IСhangeCart, ICartChoiceAction, CART_CHOICE, ACTIONS, IChangePromocodeAction, ChangeAmountType, ICheckOutCartSuccess, ISetErrors} from "../../types/actions/cart";
 import { ICart, ICheckOUT, CheckoutResponseType, IErrors, CheckoutSuccessResponseType, CheckoutFailedResponseType } from "../../types/responses";
 import cart from "../../api/Cart";
 import { ISubmitData } from "../../pages/cart/delivery/form";
@@ -16,8 +16,6 @@ function cartChoiceAction(payload: CART_CHOICE): ICartChoiceAction {
         payload
     }
 }
-
-
 function loadCart(payload: ICart): IСhangeCart {
     return {
         type: ACTIONS.LOAD_CART,

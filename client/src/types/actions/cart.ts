@@ -25,7 +25,6 @@ export interface ISetErrors{
     type: ACTIONS.SET_ERRORS,
     payload: IErrors
 }
-
 export type ChangeAmountType = {
     id: string,
     type: "inc" | "dec",
@@ -36,7 +35,6 @@ export interface ICheckOutCartSuccess{
     type: ACTIONS.CHECKOUT_CART_SUCCESS,
     payload: CheckoutSuccessResponseType
 }
-
 export enum CART_CHOICE{
     PICKUP = "PICKUP",
     DELIVERY = "DELIVERY",
@@ -54,7 +52,8 @@ export enum ACTIONS{
     TOTAL_PRICE = "TOTAL_PRICE",
     CHANGE_AMOUNT = "CHANGE_AMOUNT",
     CLEAR_CART = "CLEAR_CART",
-    SET_ERRORS = "SET_ERRORS"
+    SET_ERRORS = "SET_ERRORS",
+    SET_COUNT = "SET_COUNT"
 }
 
 
@@ -64,7 +63,7 @@ export interface IInitialState {
     list: ICartProducts[],
     totalPrice: number,
     checkout: CheckoutSuccessResponseType,
-    errors: IErrors
+    errors: IErrors,
 }
 export type CartActionsType =   ICartChoiceAction |
                                 IChangePromocodeAction |

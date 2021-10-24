@@ -61,13 +61,13 @@ export default (state = initialState, action: CartActionsType): IInitialState =>
         }
         case ACTIONS.CHECKOUT_CART_SUCCESS: {
             return {
-                ...initialState,
+                ...state,
                 checkout: action.payload
             }
         }
         case ACTIONS.CLEAR_CART: {
             return {
-                ...initialState,
+                ...state,
                 list: [],
                 totalPrice: 0
             }
