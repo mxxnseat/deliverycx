@@ -65,7 +65,7 @@ class Iiko {
                 const organization = this.organizations[k];
                 const isFindByRevision = await ProductModel.findOne({organization: this.organizations[k].id});
                 
-                // if(isFindByRevision?.revision === productsResponse.data.revision) continue;
+                if(isFindByRevision?.revision === productsResponse.data.revision) continue;
 
                 const nomenclature = {
                     products: productsResponse.data.products,
