@@ -1,6 +1,6 @@
 import { FC, memo, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { RootState } from "../../store";
 import { IProduct } from "../../types/responses";
 import CartItem from "./CartItem";

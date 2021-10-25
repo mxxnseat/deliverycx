@@ -23,7 +23,7 @@ const AddToCart: FC<IProps> = ({ id,_class }) => {
 
     const AnimateHandle = () => {
         try{
-            if(springRef.current && springRef.current && queryCart && root){
+            if(springRef.current && queryCart && root){
                 animate({
                     x: - (springRef.current.offsetLeft - 20),
                     y: - (springRef.current.offsetTop - (queryCart.offsetTop + root.scrollTop)),

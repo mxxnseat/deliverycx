@@ -1,7 +1,7 @@
 import { FC, memo } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 
 const AdressInfo: FC = () => {
     const {address} = useSelector((state:RootState)=>state.address);

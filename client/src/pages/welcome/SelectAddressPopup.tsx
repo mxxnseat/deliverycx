@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { IAddress } from "../../types/responses";
 import { setAddressAction } from "../../store/actions/adress";
