@@ -210,7 +210,7 @@ const CartForm: FC = () => {
                         <div className="clear" onClick={debounceClearHandler}>
                             <img src={require("../../../assets/i/clear_cart.svg").default} alt="Очистить корзину" />
                         </div>
-                        <button type="submit" className="cart__order-btn btn">Заказать</button>
+                        <button type="submit" className="cart__order-btn btn" disabled={formik.isSubmitting}>Заказать</button>
 
                     </div>
                 </div>
