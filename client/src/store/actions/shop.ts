@@ -10,7 +10,7 @@ function isSearchAction(payload: boolean): ISetIsSearchAction {
         payload
     }
 }
-function setCategoryAction(category: ICategory) {
+function setCategoryAction(category: ICategory | null) {
     return {
         type: ACTIONS.SET_CATEGORY,
         payload: category
