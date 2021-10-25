@@ -40,6 +40,10 @@ const Categories: FC = () => {
             }]);
             setCurrentSlide(setCategory.order);
         })();
+
+        return ()=>{
+            dispatch(setCategoryAction(null));
+        }
     }, []);
     useEffect(()=>{
         dispatch(setCategoryAction(categories[currentSlide]));
