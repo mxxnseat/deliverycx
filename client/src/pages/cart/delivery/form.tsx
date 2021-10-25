@@ -145,7 +145,7 @@ const CartForm: FC = () => {
                         <FormFieldWrapper
                             placeholderIco={require("../../../assets/i/mark-red.svg").default}
                             placeholderValue="Где"
-                            isValid={!formik.values.address.length || formik.errors.address ? true : false}
+                            isValid={formik.values.address.length ? true : false}
                             error={formik.errors.address ? true : false}
                             errorValue={formik.errors.address}
                         >
