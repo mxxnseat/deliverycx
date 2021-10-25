@@ -7,7 +7,7 @@ import { setCityAction } from "../../store/actions/adress";
 import { RootState } from "../../store";
 import Api from "../../api/Api";
 import { ICity } from "../../types/responses";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import debounce from 'lodash.debounce';
 
 const CityList: FC<{}> = () => {

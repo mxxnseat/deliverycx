@@ -6,7 +6,7 @@ import { RootState } from "../../store";
 import SelectAddressPopup from "./SelectAddressPopup";
 import { IAddress } from "../../types/responses";
 import Api from "../../api/Api";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 
 const placeMarkOption = {
     iconLayout: 'default#image',
