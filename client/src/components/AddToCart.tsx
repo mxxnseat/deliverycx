@@ -16,7 +16,7 @@ const AddToCart: FC<IProps> = ({ id,_class }) => {
         x: 0,
         y: 0,
         opacity: 0,
-        config: {duration: 300, ...config.molasses},
+        config: {duration: 750, mass: 1, tension: 2000, friction: 2700 },
     }))
     const queryCart = document.querySelector('.link-to-cart') as HTMLElement       
     const root = document.querySelector("#root") as HTMLElement;

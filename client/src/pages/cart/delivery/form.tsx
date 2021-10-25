@@ -105,8 +105,7 @@ const CartForm: FC<{}> = () => {
     })
 
     useEffect(()=>{
-        getGeoLocation()
-            .then((res: any)=>{
+        getGeoLocation()?.then((res: any)=>{
                 setMyPosition(res)
             })
             .catch((e: unknown)=>{
