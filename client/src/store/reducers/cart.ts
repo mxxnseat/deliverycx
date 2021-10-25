@@ -62,6 +62,7 @@ export default (state = initialState, action: CartActionsType): IInitialState =>
         case ACTIONS.CHECKOUT_CART_SUCCESS: {
             return {
                 ...state,
+                list: [],
                 checkout: action.payload
             }
         }
