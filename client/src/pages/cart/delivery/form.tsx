@@ -150,12 +150,12 @@ const CartForm: FC = () => {
                             errorValue={formik.errors.address}
                         >
                             <div className="adress_fild__address" onClick={() => setOpenAddressSelect(true)}>
-                                {formik.values.address}
+                                {formik.values.address.length ? formik.values.address : "Выберете адресс"}
                             </div>
 
 
                         </FormFieldWrapper>
-                        <div className="row justify-around">
+                        <div className="row justify-around from__box-adress">
                             <Field className="form__field-wrapper__input gray" name="flat" placeholder="Кв./Офис" value={formik.values.flat} onChange={formik.handleChange} />
                             <Field className="form__field-wrapper__input gray" name="intercom" placeholder="Домофон" value={formik.values.intercom} onChange={formik.handleChange} />
                             <Field className="form__field-wrapper__input gray" name="entrance" placeholder="Подъезд" value={formik.values.entrance} onChange={formik.handleChange} />
