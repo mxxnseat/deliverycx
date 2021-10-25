@@ -141,6 +141,10 @@
             margin-bottom: 30px;
             font-size: 21px;
             font-family: $bold;
+
+            &[disabled]{
+                filter: grayscale(1);
+            }
         }
         &__sale{
             font-family: $bold;
