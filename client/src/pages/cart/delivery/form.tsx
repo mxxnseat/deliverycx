@@ -112,7 +112,7 @@ const CartForm: FC<{}> = () => {
             .catch((e: unknown)=>{
                 console.log(e);
             });
-    }, [ymaps]);
+    }, []);
 
     if (openAddressSelect) {
 
@@ -130,7 +130,6 @@ const CartForm: FC<{}> = () => {
 
                     }
                 }
-                onLoad={(ymaps)=>setYmaps(ymaps)}
                 >
                     <SearchControl options={{ float: 'right' }} />
 
@@ -155,7 +154,7 @@ const CartForm: FC<{}> = () => {
                         <FormFieldWrapper
                             placeholderIco={require("../../../assets/i/mark-red.svg").default}
                             placeholderValue="Где"
-                            isValid={formik.values.address.length ? true : false}
+                            isValid={!formik.values.address.length ? true : false}
                             error={formik.errors.address ? true : false}
                             errorValue={formik.errors.address}
                         >
