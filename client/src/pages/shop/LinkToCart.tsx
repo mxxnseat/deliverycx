@@ -20,6 +20,8 @@ const LinkToCart: FC = () => {
     }
     useOutside(ref, ()=>setIsPopupEmpty(false), isPopupEmpty);
     useDeepCompareEffect(()=>{
+        console.log(111);
+    
         setItemsCount(cartList.reduce((acc, el)=>{
             return acc+el.amount;
         },0));

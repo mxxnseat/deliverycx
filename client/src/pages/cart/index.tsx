@@ -87,7 +87,10 @@ const Cart: FC = () => {
                     </> 
                     :
                     <> 
-                        <HeaderBack onClickCb={handleBacktoShop}>
+                        <HeaderBack onClickCb={()=>{
+                            dispatch(setErrors({}));
+                            history.push("/shop")
+                        }}>
                             Ваш заказ <span className="select-red">{list.length}</span> блюд
                         </HeaderBack>        
                         <div className="container">
