@@ -277,10 +277,20 @@
 }
 
 .adress_fild{
-
+    .form__field-wrapper:not(:last-child){
+        border: none;
+    }
+    .from__box-adress{
+        padding-bottom: 16px;
+        border-bottom: 1px solid #CCCCCC;
+        .form__field-wrapper__input::placeholder,.form__field-wrapper__input{
+            font-size: 11px;
+        }
+    }
     &__address{
         width: 100%;
         cursor: pointer;
+        line-height: 26px;
     }
 }
 
@@ -575,11 +585,13 @@
 .address-select-map{
     position: fixed;
     width: inherit;
-    top: 0;
+    top: 15px;
     bottom: 0;
     max-width: inherit;
     background-color: $white;
     z-index: 999;
+    max-height: 86vh;
+    overflow: hidden;
 
 
     button{
@@ -597,6 +609,8 @@
         cursor: pointer;
         text-transform: uppercase;
         font-size: 18px;
+        min-width: 280px;
+        max-width: 340px;
     }
 }
 
@@ -610,4 +624,10 @@
     line-height: 120%;
     padding: 16px;
     background-color: rgba(255, 0, 0, 0.1);
+}
+@media only screen and (max-width: 560px) and (orientation: portrait){
+    .address-select-map{
+        top: 0;
+        max-height: 100%;
+    }
 }

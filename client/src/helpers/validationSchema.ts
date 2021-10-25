@@ -51,6 +51,9 @@ const schema = yup.object().shape({
     name: yup
         .string()
         .required('Поле обязательно для заполнения'),
+    address: yup
+        .string()
+        .required('Поле обязательно для заполнения'),
     phone: yup
         .string()
         .trim()
