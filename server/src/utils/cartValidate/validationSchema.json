@@ -1,8 +1,12 @@
 [
     {
-        "product_code": "0d70f8ee-2ea3-4469-a45e-4aa15bc4324d",
+        "product_code": "6caa82bc-8dd6-41c6-86de-9a1a01139652",
         "min_amount": 3,
-        "max_amount": 100,
+        "total_amount": true
+    },
+    {
+        "product_code": "5b438ae8-c0d2-498a-8761-4606fb1db886",
+        "min_amount": 3,
         "total_amount": true
     }
 ]

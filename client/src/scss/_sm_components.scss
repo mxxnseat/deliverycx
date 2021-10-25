@@ -573,11 +573,11 @@
 }
 
 .address-select-map{
-    position: absolute;
-    left: 0;
+    position: fixed;
+    width: inherit;
     top: 0;
-    right: 0;
     bottom: 0;
+    max-width: inherit;
     background-color: $white;
     z-index: 999;
 
