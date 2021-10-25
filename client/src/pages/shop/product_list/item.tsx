@@ -1,5 +1,5 @@
 import { FC, memo, MouseEvent, useCallback, useRef, useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import AddToCart from "../../../components/AddToCart";
 import AddToFavorites from "../../../components/AddToFavorites";
 import convertWeight from "../../../helpers/convertWeight";
