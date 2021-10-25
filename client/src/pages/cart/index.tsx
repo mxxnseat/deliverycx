@@ -60,8 +60,7 @@ const Cart: FC = () => {
     }, [cart_choice]);
 
     useEffect(() => {
-        (list.length === 0 && checkout.success) &&
-            setPopCheckout(true)
+        checkout.success && setPopCheckout(true)
     }, [checkout.success])
     
     const handleBacktoShop = () => {
