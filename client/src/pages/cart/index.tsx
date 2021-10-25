@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { ComponentClass, FC, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import HeaderBack from "../../components/HOC/HeaderBack";
@@ -11,7 +11,7 @@ import { PickupForm, PickupMemo } from "./pickup";
 
 import { RootState } from "../../store";
 import { CART_CHOICE } from "../../types/actions/cart";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import CheckOut from "./CheckOut";
 import { checkoutCartSuccess, setErrors } from "../../store/actions/cart";
 
@@ -21,7 +21,7 @@ const Cart: FC = () => {
     const { cart_choice, list, checkout } = useSelector((state: RootState) => state.cart);
     const dispatch = useDispatch()
     
-    const [CartWrapperProps, setCartWrapperProps] = useState({
+    const [CartWrapperProps, setCartWrapperProps] = useState<{Memo: FC, Form: FC | ComponentClass<any, any>}>({
         Memo: DeliveryMemo,
         Form: DeliveryForm
     });
@@ -31,28 +31,22 @@ const Cart: FC = () => {
         switch (cart_choice) {
             case CART_CHOICE.DELIVERY: {
                 setCartWrapperProps({
-                    ...{
-                        Memo: DeliveryMemo,
-                        Form: DeliveryForm
-                    }
+                    Memo: DeliveryMemo,
+                    Form: DeliveryForm
                 })
                 break;
             }
             case CART_CHOICE.ONSPOT: {
                 setCartWrapperProps({
-                    ...{
-                        Memo: OnSpotMemo,
-                        Form: OnSpotForm
-                    }
+                    Memo: OnSpotMemo,
+                    Form: OnSpotForm
                 })
                 break;
             }
             case CART_CHOICE.PICKUP: {
-                setCartWrapperProps({
-                    ...{
-                        Memo: PickupMemo,
-                        Form: PickupForm
-                    }
+                setCartWrapperProps({ 
+                    Memo: PickupMemo,
+                    Form: PickupForm
                 })
                 break;
             }

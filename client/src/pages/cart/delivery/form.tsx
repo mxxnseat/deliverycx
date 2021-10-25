@@ -1,19 +1,21 @@
-import { FC, useState } from "react";
-import CartSelect from "../../../components/HOC/CartSelect";
-import FormFieldWrapper from "../../../components/HOC/FormFieldWrapper";
-import { Formik, Form, Field, useFormik, FormikProvider } from "formik";
-import InputMask from "react-input-mask";
-import submitHandler from "../../../helpers/submitFormHandler";
-import schema from "../../../helpers/validationSchema";
-import Checkbox from "../../../components/HOC/Checkbox";
-import { RootState } from "../../../store";
+import { FC, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { withYMaps, YMaps, Map, SearchControl, Placemark } from "react-yandex-maps";
-import MapSuggestComponent from "../MapSuggest";
+import { Field, useFormik, FormikProvider } from "formik";
+import InputMask from "react-input-mask";
+import { YMaps, Map, SearchControl, Placemark } from "react-yandex-maps";
+
 import { debounce } from "lodash";
-import { clearCartAction } from "../../../store/actions/cart";
 import axios from "axios";
+import { geolocated, GeolocatedProps } from "react-geolocated";
+
 import { IGeoCodeResponse } from "../../../types/responses";
+import { clearCartAction } from "../../../store/actions/cart";
+import { RootState } from "../../../store";
+import schema from "../../../helpers/validationSchema";
+import submitHandler from "../../../helpers/submitFormHandler";
+import FormFieldWrapper from "../../../components/HOC/FormFieldWrapper";
+import { ComponentClass } from "react-transition-group/node_modules/@types/react";
+import { getGeoLocation } from "../../../helpers/yandexapi";
 
 
 interface IInitialValues {
@@ -40,10 +42,10 @@ const placeMarkOption = {
     iconImageOffset: [-25, -60]
 }
 
-const CartForm: FC = () => {
+const CartForm: FC<GeolocatedProps> = ({ positionError, coords, isGeolocationAvailable, isGeolocationEnabled }) => {
     const { isVerify, ...user } = useSelector((state: RootState) => state.profile);
     const { latitude, longitude, city } = useSelector((state: RootState) => state.address.address);
-    const errors = useSelector((state: RootState)=>state.cart.errors);
+    const errors = useSelector((state: RootState) => state.cart.errors);
     const dispatch = useDispatch();
     const [openAddressSelect, setOpenAddressSelect] = useState(false);
     const [cord, setCord] = useState([]);
@@ -99,7 +101,6 @@ const CartForm: FC = () => {
             }, meta)
         }
     })
-
     if (openAddressSelect) {
 
         return <div className="address-select-map">
@@ -107,15 +108,16 @@ const CartForm: FC = () => {
                 enterprise
                 query={{ apikey: "f5bd494f-4a11-4375-be30-1d2d48d88e93" }}
             >
-                <Map width="100%" height="100%" onClick={onMapClick} defaultState={
+                <Map width="100%" height="100%" modules={['geocode']} onClick={onMapClick} defaultState={
                     {
-                        center: [latitude, longitude],
+                        center: coords ? [coords.latitude, coords.longitude] : [latitude, longitude],
                         zoom: 17,
                         controls: [],
-                        scrollZoom: false
-                    }
-                }>
+                        scrollZoom: false,
 
+                    }
+                }
+                >
                     <SearchControl options={{ float: 'right' }} />
 
                     <Placemark
@@ -127,7 +129,6 @@ const CartForm: FC = () => {
 
             {
                 formik.values.address && <button className="btn" onClick={() => setOpenAddressSelect(false)}>{formik.values.address}</button>
-
             }
         </div>
     }
@@ -136,11 +137,6 @@ const CartForm: FC = () => {
         <FormikProvider value={formik}>
             <form onSubmit={formik.handleSubmit}>
                 <div className="cart__form">
-                    {/* <FormFieldWrapper
-                        placeholderIco={require("../../../assets/i/card-red.svg").default}
-                        placeholderValue="Оплата">
-                        <CartSelect options={paymentMethods} selected={payment} setter={(payment: any) => setPayment(payment)} />
-                    </FormFieldWrapper> */}
                     <div className="adress_fild">
                         <FormFieldWrapper
                             placeholderIco={require("../../../assets/i/mark-red.svg").default}
@@ -162,13 +158,6 @@ const CartForm: FC = () => {
                             <Field className="form__field-wrapper__input gray" name="floor" placeholder="Этаж" value={formik.values.floor} onChange={formik.handleChange} />
                         </div>
                     </div>
-                    {/* <FormFieldWrapper
-                        placeholderIco={require("../../../assets/i/clock.svg").default}
-                        placeholderValue="Когда"
-                    >
-                        <CartSelect options={timesArray} selected={times} setter={(time: object) => setTimes(time)} />
-
-                    </FormFieldWrapper> */}
 
                     <FormFieldWrapper
                         placeholderIco={require("../../../assets/i/profile-red.svg").default}
@@ -204,7 +193,7 @@ const CartForm: FC = () => {
                             Что-то пошло не так. Для подтверждения Вашего заказа, пожалуйста <b>нажмите кнопку «Заказать» еще раз.</b>
                         </div>
                     }
-                    
+
 
                     <div className="row align-center form__create">
                         <div className="clear" onClick={debounceClearHandler}>
@@ -221,4 +210,6 @@ const CartForm: FC = () => {
 }
 
 
-export default CartForm;
+export default geolocated({
+    geolocationProvider: navigator.geolocation
+})(CartForm);

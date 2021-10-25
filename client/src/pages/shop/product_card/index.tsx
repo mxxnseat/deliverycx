@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { RouteComponentProps, useHistory, withRouter } from "react-router";
+import { RouteComponentProps, useHistory, withRouter } from "react-router-dom";
 import convertWeight from "../../../helpers/convertWeight";
 import { IProduct, ICategory } from "../../../types/responses";
 import HeaderBack from "../../../components/HOC/HeaderBack";

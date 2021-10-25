@@ -1,10 +1,10 @@
-import { FC } from "react";
+import { FC, ComponentClass } from "react";
 import CartInfo from "./CartInfo";
 import CartList from "./CartList";
 
 interface IProps {
     Memo: FC,
-    Form: FC
+    Form: FC | ComponentClass<any, any>
 }
 const CartWrapper: FC<IProps> = ({ Memo, Form }) => {
     return (
