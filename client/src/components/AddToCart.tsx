@@ -22,19 +22,22 @@ const AddToCart: FC<IProps> = ({ id,_class }) => {
     const root = document.querySelector("#root") as HTMLElement;
 
     const AnimateHandle = () => {
-        console.log(queryCart.clientTop);
+        try{
+            animate({
+                x: - (springRef.current?.offsetLeft - 20),
+                y: - (springRef.current?.offsetTop - (queryCart?.offsetTop + root?.scrollTop)),
+                opacity: 1,
+                loop: {
+                    x: 0,
+                    y: 0,
+                    opacity: 0,
+                    immediate: true,
+                }
+            })
+        }catch(e){
 
-        animate({
-            x: - (springRef.current?.offsetLeft - 20),
-            y: - (springRef.current?.offsetTop - (queryCart?.offsetTop + root?.scrollTop)),
-            opacity: 1,
-            loop: {
-                x: 0,
-                y: 0,
-                opacity: 0,
-                immediate: true,
-            }
-        })
+        }
+        
         dispatch(addToCartAction(id));
     }
 
