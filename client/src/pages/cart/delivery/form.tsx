@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Field, useFormik, FormikProvider } from "formik";
 import InputMask from "react-input-mask";
-import { YMaps, Map, SearchControl, Placemark } from "react-yandex-maps";
+import { YMaps, Map, SearchControl, Placemark, YMapsApi} from "react-yandex-maps";
 
 import { debounce } from "lodash";
 import axios from "axios";
@@ -42,13 +42,15 @@ const placeMarkOption = {
     iconImageOffset: [-25, -60]
 }
 
-const CartForm: FC<GeolocatedProps> = ({ positionError, coords, isGeolocationAvailable, isGeolocationEnabled }) => {
+const CartForm: FC<{}> = () => {
     const { isVerify, ...user } = useSelector((state: RootState) => state.profile);
     const { latitude, longitude, city } = useSelector((state: RootState) => state.address.address);
     const errors = useSelector((state: RootState) => state.cart.errors);
     const dispatch = useDispatch();
     const [openAddressSelect, setOpenAddressSelect] = useState(false);
     const [cord, setCord] = useState([]);
+    const [ymaps, setYmaps] = useState<YMapsApi | undefined>();
+    const [myPosition, setMyPosition] = useState<[number, number]>([latitude, longitude]);
 
     const initialValues: IInitialValues = {
         comment: '',
@@ -101,6 +103,17 @@ const CartForm: FC<GeolocatedProps> = ({ positionError, coords, isGeolocationAva
             }, meta)
         }
     })
+
+    useEffect(()=>{
+        getGeoLocation()
+            .then((res: any)=>{
+                setMyPosition(res)
+            })
+            .catch((e: unknown)=>{
+                console.log(e);
+            });
+    }, []);
+
     if (openAddressSelect) {
 
         return <div className="address-select-map">
@@ -110,7 +123,7 @@ const CartForm: FC<GeolocatedProps> = ({ positionError, coords, isGeolocationAva
             >
                 <Map width="100%" height="100%" modules={['geocode']} onClick={onMapClick} defaultState={
                     {
-                        center: coords ? [coords.latitude, coords.longitude] : [latitude, longitude],
+                        center: myPosition,
                         zoom: 17,
                         controls: [],
                         scrollZoom: false,
@@ -141,7 +154,7 @@ const CartForm: FC<GeolocatedProps> = ({ positionError, coords, isGeolocationAva
                         <FormFieldWrapper
                             placeholderIco={require("../../../assets/i/mark-red.svg").default}
                             placeholderValue="Где"
-                            isValid={formik.values.address.length ? true : false}
+                            isValid={!formik.values.address.length ? true : false}
                             error={formik.errors.address ? true : false}
                             errorValue={formik.errors.address}
                         >
@@ -210,6 +223,4 @@ const CartForm: FC<GeolocatedProps> = ({ positionError, coords, isGeolocationAva
 }
 
 
-export default geolocated({
-    geolocationProvider: navigator.geolocation
-})(CartForm);
+export default CartForm;
