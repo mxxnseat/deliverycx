@@ -52,7 +52,7 @@ const CartForm: FC<{}> = () => {
     const [cord, setCord] = useState([]);
     const [myPosition, setMyPosition] = useState<[number, number]>([latitude, longitude]);
     const [stateMap, setStateMap] = useState<number[]>([])
-    const mapstate = useMemo(() => {console.log(stateMap); return ({ center: stateMap, zoom: 17 })}, [
+    const mapstate = useMemo(() => {return ({ center: stateMap, zoom: 17 })}, [
         stateMap,
     ])
 
