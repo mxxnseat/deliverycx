@@ -11,11 +11,11 @@ const MapSuggestComponent = ({formik,handl}: any) => {
   const geoCode = (request: string) => {
     return ymaps.geocode(request)
       .then((res: any) => {
-        const getObj = res.geoObjects.get(0)
-        const validAdress: string = getObj.properties.get('metaDataProperty.GeocoderMetaData.precision')
-        if (validAdress === 'exact') {
-          handl(getObj.geometry._coordinates)
-
+        const getObj = res.geoObjects.get(0);
+        const validAdress: string = getObj?.properties.get('metaDataProperty.GeocoderMetaData.precision');
+        console.log(validAdress);
+        if (validAdress) {
+          handl([...getObj.geometry._coordinates])
         }
       })
       .catch((e:unknown) => console.log(e))
@@ -26,7 +26,7 @@ const MapSuggestComponent = ({formik,handl}: any) => {
           'suggest', {
             provider: {
               suggest: (function(request:string) {
-                geoCode(request)
+                // geoCode(request)
                
                 return ymaps.suggest(name + ", " + request)
                 })
