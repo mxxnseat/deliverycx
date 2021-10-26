@@ -81,4 +81,5 @@ const ProductListSchema = new Schema({
     revision: Number
 }, { versionKey: false });
 
+export const ProductModel = model("product", ProductSchema);
 export default model("Products", ProductListSchema);
