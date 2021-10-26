@@ -1,4 +1,4 @@
-import { FC, memo, useRef } from "react";
+import { FC, memo, useMemo, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addToCartAction } from "../store/actions/cart"
 import debounce from 'lodash.debounce';
@@ -11,22 +11,27 @@ interface IProps {
 
 const AddToCart: FC<IProps> = ({ id,_class }) => {
     const dispatch = useDispatch();
-    const springRef = useRef<any>()
+    const springRef = useRef<any>();
+    let queryCartRef = useRef<any>();
     const [style, animate] = useSpring(() => ({
         x: 0,
         y: 0,
         opacity: 0,
         config: {duration: 750, mass: 1, tension: 2000, friction: 2700 },
-    }))
-    const queryCart = document.querySelector('.link-to-cart') as HTMLElement       
+    }));
+
+    useEffect(()=>{
+        queryCartRef.current = document.querySelector('.link-to-cart') as HTMLElement;
+    }, [])
+
     const root = document.querySelector("#root") as HTMLElement;
 
     const AnimateHandle = () => {
         try{
-            if(springRef.current && queryCart && root){
+            if(springRef.current && queryCartRef.current && root){
                 animate({
                     x: - (springRef.current.offsetLeft - 20),
-                    y: - (springRef.current.offsetTop - (queryCart.offsetTop + root.scrollTop)),
+                    y: - (springRef.current.offsetTop - (queryCartRef.current.offsetTop + root.scrollTop)),
                     opacity: 1,
                     loop: {
                         x: 0,
