@@ -1,0 +1,11 @@
+.mapsPopup__adress{
+    ymaps{
+        &:nth-of-type(1){
+            width: 100% !important;
+            left: 0 !important;
+        }
+    }
+    .ymaps-2-1-79-suggest-item{
+        padding: 7px;
+    }
+}
