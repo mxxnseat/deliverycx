@@ -1,12 +1,12 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Field, useFormik, FormikProvider } from "formik";
 import InputMask from "react-input-mask";
-import { YMaps, Map, SearchControl, Placemark, YMapsApi} from "react-yandex-maps";
+import { YMaps, Map, SearchControl, Placemark, YMapsApi, withYMaps} from "react-yandex-maps";
 
 import { debounce } from "lodash";
 import axios from "axios";
-import { geolocated, GeolocatedProps } from "react-geolocated";
+//import { geolocated, GeolocatedProps } from "react-geolocated";
 
 import { IGeoCodeResponse } from "../../../types/responses";
 import { clearCartAction } from "../../../store/actions/cart";
@@ -14,8 +14,9 @@ import { RootState } from "../../../store";
 import schema from "../../../helpers/validationSchema";
 import submitHandler from "../../../helpers/submitFormHandler";
 import FormFieldWrapper from "../../../components/HOC/FormFieldWrapper";
-import { ComponentClass } from "react-transition-group/node_modules/@types/react";
+//import { ComponentClass } from "react-transition-group/node_modules/@types/react";
 import { getGeoLocation } from "../../../helpers/yandexapi";
+import MapSuggestComponent from "../MapSuggest";
 
 
 interface IInitialValues {
@@ -51,6 +52,12 @@ const CartForm: FC<{}> = () => {
     const [cord, setCord] = useState([]);
     const [ymaps, setYmaps] = useState<YMapsApi | undefined>();
     const [myPosition, setMyPosition] = useState<[number, number]>([latitude, longitude]);
+    const [stateMap, setStateMap] = useState<number[]>([])
+    const mapstate = useMemo(() => ({ center: stateMap, zoom: 17 }), [
+        stateMap,
+    ])
+    
+    
 
     const initialValues: IInitialValues = {
         comment: '',
@@ -104,23 +111,55 @@ const CartForm: FC<{}> = () => {
         }
     })
 
-    useEffect(()=>{
+    const getGeoLoc = () => {
         getGeoLocation()?.then((res: any)=>{
-                setMyPosition(res)
+            setStateMap(res)
             })
             .catch((e: unknown)=>{
                 console.log(e);
             });
+    }
+
+    useEffect(()=>{
+        getGeoLoc()
     }, []);
+
+   
+
+    const SuggestComponent = useMemo(() => {
+        return withYMaps(MapSuggestComponent, true, [
+          "SuggestView",
+          "geocode",
+          "coordSystem.geo"
+        ]);
+      }, []);
 
     if (openAddressSelect) {
 
         return <div className="address-select-map">
+            <div className="welcome">  
+            <div className="welcome__header">
+                <div className="container row justify-between align-center">
+                    <div className="welcome__header__ico-wrapper" onClick={() => setOpenAddressSelect(false)} >
+                        <img src={require("../../../assets/i/back.svg").default} alt="Вернуться назад" />
+                    </div>
+
+                    <div className="welcome__header__content">
+                            <img src={require("../../../assets/img/logo.png").default} />
+                           
+                    </div>
+
+                    <div className="welcome__header__ico-wrapper" onClick={()=> getGeoLoc()}>
+                        <img src={require("../../../assets/i/aim.svg").default} alt="Цель" />
+                    </div>
+                </div>
+                </div>  
+            </div>
             <YMaps
                 enterprise
                 query={{ apikey: "f5bd494f-4a11-4375-be30-1d2d48d88e93" }}
             >
-                <Map width="100%" height="100%" modules={['geocode']} onClick={onMapClick} defaultState={
+                <Map width="100%" height="100%" modules={['geocode']} onClick={onMapClick} state={mapstate} defaultState={
                     {
                         center: myPosition,
                         zoom: 17,
@@ -130,12 +169,34 @@ const CartForm: FC<{}> = () => {
                     }
                 }
                 >
-                    <SearchControl options={{ float: 'right' }} />
+                    
 
                     <Placemark
                         options={placeMarkOption}
                         geometry={cord}
                     />
+                    {
+                        <div className="mapsPopup">
+                            <div className="container">
+                                <div className="mapsPopup__adress">
+                                    <img src={require("../../../assets/i/mark-red.svg").default} alt="Телефон заведения" />
+                                    {
+                                        formik.values.address
+                                            ? <div className="mapsPopup__value" onClick={()=> formik.setFieldValue("address", '')}>{formik.values.address}</div>
+                                            : <SuggestComponent formik={formik} handl={setStateMap} />
+                                    }
+                                    
+                                </div>
+                                {
+                                    formik.values.address 
+                                        ? <div className="mapsPopup__button btn" onClick={() => setOpenAddressSelect(false)}>Заказать доставку</div>
+                                        : <div className="mapsPopup__button noactive btn">Выберете точку</div>
+                                }
+                                
+                            </div>
+                        </div>
+                    }
+                   
                 </Map>
             </YMaps>
 
