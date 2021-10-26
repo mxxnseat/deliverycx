@@ -58,7 +58,7 @@ const SelectAddressPopup:FC<IProps> = memo(({slideIndex,slidecoutn,address}) => 
     return (
         <div className="welcome__select-adress opened">
             <div className="container">
-                <div className="welcome__select-adress__header">
+                <div className="welcome__select-adress__header ">
                     <div className="prev" onClick={()=> SlideHandler('prev')}>
                         <img src={require("../../assets/i/prev.svg").default} alt="Предыдущее заведенеие" />
                     </div>

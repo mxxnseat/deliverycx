@@ -337,6 +337,89 @@
     background-repeat: no-repeat;
     background-position: 0px 0px;
 }
+.mapsPopup{
+    position: absolute;
+    top: calc(86vh - 195px);
+    width: 100%;
+    background-color: #FFFFFF;
+    padding: 24px 0;
+    text-align: center;
+    z-index: 9999;
+    bottom: -100%;
+    color: #FFFFFF;
+    font-size: 19px;
+    border-radius: 24px 24px 0 0;
+    box-shadow: -1.45153px -30.966px 60px rgba(0, 0, 0, 0.25), -0.559108px -11.9276px 19.1111px rgba(0, 0, 0, 0.151852), -0.118273px -2.52316px 4.88889px rgba(0, 0, 0, 0.0981481);
+    transition: bottom 0.6s cubic-bezier(0, -0.02, 0.54, 1.18);
+    &__adress{
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 9px 0;
+        background-color: #EFEFEF;
+        margin-bottom: 15px;
+        color: #333333;
+        font-size: 15px;
+        border-radius: 8px;
+        position: relative;
+        height: 55px;
+        img{
+            margin-left: 15px;
+            min-width: 11px;
+            height: 16px;
+        }
+    }
+    &__value{
+        margin-left: 15px;
+    }
+    &__input{
+        width: 100%;
+        padding: 15px;
+        border: none;
+        background: transparent;
+        &:focus{
+            border: none;
+            background: none;
+            outline: none;
+        }
+    }
+    
+    &__button{
+        width: 100%;
+        color: #8D191D;
+        padding: 25px 0;
+        cursor: pointer;
+        border-radius: 15px;
+        font-size: 21px;
+        font-family: "sf-ui-bold";
+        font-weight: bold;
+        margin-top: 10px;
+        text-align: center;
+        background: url('../assets/i/delev.svg') 30px center no-repeat;
+        background-color: #FDC935;
+    }
+    .noactive{
+        background-color: #FDC935;
+        opacity: 0.3;
+        cursor: no-drop;
+    }
+}
+.address-select-map .welcome{
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+}
+.address-select-map .welcome__header{
+    padding-top: 25px;
+    background-color: transparent;
+}
+
+@media only screen and (max-width: 560px) and (orientation: portrait){
+    .mapsPopup{
+        top: calc(100vh - 190px);
+    }
+}
 @media screen and (max-width: 360px){
     .cart__order-btn{
         width: 320px;
