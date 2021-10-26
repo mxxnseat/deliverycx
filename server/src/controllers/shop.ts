@@ -272,7 +272,7 @@ class Shop {
 
             const errors = await validationCount(cartList);
             if(Object.keys(errors).length > 0){
-                return res.status(200).json({
+                return res.status(400).json({
                     success: false,
                     errors
                 });
@@ -287,8 +287,8 @@ class Shop {
                 promocode
             }, cartList);
 
-            const { status, message } = await iiko.iikoMethodBuilder(() => iiko.createOrder(orderBody));
-            console.log(status);
+            let { status, message } = await iiko.iikoMethodBuilder(() => iiko.createOrder(orderBody));
+            console.log(message);
             if (status !== 200) {
                 return res.status(status).json({
                     success: false,

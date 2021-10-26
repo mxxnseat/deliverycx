@@ -123,12 +123,10 @@ function checkOut(sendingData: ICheckOUT): any { //ICheckOutCartAction
             console.log(data);
             if (data.success) {
                 dispatch(checkoutCartSuccess(data as CheckoutSuccessResponseType))
-            }else{
-                dispatch(setErrors((data as CheckoutFailedResponseType).errors))
             }
             
         } catch (error: any) {
-            console.log(error);
+            dispatch(setErrors((error.response.data as CheckoutFailedResponseType).errors))
         }
     }
 }
