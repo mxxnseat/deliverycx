@@ -68,7 +68,7 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
                             </div>
                             <span className="select-red">{product.price} ₽</span>
                         </div>
-                        <AddToCart id={productId} _class={"product-card__add"} />
+                        <AddToCart id={productId} groupImage={group.image} _class={"product-card__add"} />
                     </div>
                 </div>
             </div>

@@ -5,11 +5,12 @@ import debounce from 'lodash.debounce';
 import { useSpring, animated, config } from 'react-spring'
 
 interface IProps {
-    id: string
-    _class:string
+    id: string,
+    _class:string,
+    groupImage?: string
 }
 
-const AddToCart: FC<IProps> = ({ id,_class }) => {
+const AddToCart: FC<IProps> = ({ id,_class, groupImage }) => {
     const dispatch = useDispatch();
     const springRef = useRef<any>();
     let queryCartRef = useRef<any>();
@@ -20,17 +21,12 @@ const AddToCart: FC<IProps> = ({ id,_class }) => {
         config: {duration: 750, mass: 1, tension: 2000, friction: 2700 },
     }));
 
-    useEffect(()=>{
-        queryCartRef.current = document.querySelector('.link-to-cart') as HTMLElement;
-    }, [])
-
     const root = document.querySelector("#root") as HTMLElement;
-
     const AnimateHandle = () => {
         try{
             if(springRef.current && queryCartRef.current && root){
                 animate({
-                    x: - (springRef.current.offsetLeft - 20),
+                    x: - (springRef.current.offsetLeft - 70),
                     y: - (springRef.current.offsetTop - (queryCartRef.current.offsetTop + root.scrollTop)),
                     opacity: 1,
                     loop: {
@@ -50,13 +46,15 @@ const AddToCart: FC<IProps> = ({ id,_class }) => {
         
         dispatch(addToCartAction(id));
     }
+    const debouncedChangeHandler = debounce(AnimateHandle, 400)
 
-    const debouncedChangeHandler = debounce(AnimateHandle, 400)  //dispatch(addToCartAction(id))
-
+    useEffect(()=>{
+        queryCartRef.current = document.querySelector('.link-to-cart') as HTMLElement;
+    }, [])
     return (
         <>
-        <div className="hot_box" ref={springRef} onClick={debouncedChangeHandler}>    
-            <animated.div className="hot" style={style}  />
+        <div className="hot_box" ref={springRef} onClick={debouncedChangeHandler}>  
+            <animated.div className="hot" style={{...style, backgroundImage: `url(${groupImage})`}} />
             <button className={_class}></button>
         </div>    
         </>

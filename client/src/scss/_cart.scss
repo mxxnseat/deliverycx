@@ -330,11 +330,12 @@
     position: relative;
 }
 .hot{
-    width:26px;
-    height:26px;
-    position:relative;
-    background: url('../assets/i/hinkalya-red-cart.svg') no-repeat;
-    
+    width: 72px;
+    height: 70px;
+    position: absolute;
+    left: -70px;
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
 }
 @media screen and (max-width: 360px){
     .cart__order-btn{

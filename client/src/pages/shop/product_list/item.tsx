@@ -5,7 +5,7 @@ import AddToFavorites from "../../../components/AddToFavorites";
 import convertWeight from "../../../helpers/convertWeight";
 import { IProduct } from "../../../types/responses";
 
-const Product: FC<IProduct> = ({ id, name, price, measureUnit, weight, description, image, isFav }) => {
+const Product: FC<IProduct<{image: string}>> = ({ id, name, price, group, measureUnit, weight, description, image, isFav }) => {
     const history = useHistory();
     const cardRef = useRef<HTMLDivElement>(null);
 
@@ -38,11 +38,11 @@ const Product: FC<IProduct> = ({ id, name, price, measureUnit, weight, descripti
                         <div className="product__item__measure">{measureUnit === "порц" ? `${convertWeight(weight)} г` : "1 шт"}</div>
                         <div className="product__item__price">{price} ₽</div>
                     </div>
-
-                    <AddToCart id={id} _class={"add-to-cart"} />
+ 
+                    <AddToCart id={id} _class={"add-to-cart"} groupImage={group.image} />
                 </div>
             </div>
-        </div>
+        </div>   
     )
 };
 
