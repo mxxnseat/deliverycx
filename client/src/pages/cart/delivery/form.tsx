@@ -2,7 +2,7 @@ import { FC, useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Field, useFormik, FormikProvider } from "formik";
 import InputMask from "react-input-mask";
-import { YMaps, Map, SearchControl, Placemark, YMapsApi, withYMaps} from "react-yandex-maps";
+import { YMaps, Map, SearchControl, Placemark, YMapsApi, withYMaps } from "react-yandex-maps";
 
 import { debounce } from "lodash";
 import axios from "axios";
@@ -50,14 +50,13 @@ const CartForm: FC<{}> = () => {
     const dispatch = useDispatch();
     const [openAddressSelect, setOpenAddressSelect] = useState(false);
     const [cord, setCord] = useState([]);
-    const [ymaps, setYmaps] = useState<YMapsApi | undefined>();
     const [myPosition, setMyPosition] = useState<[number, number]>([latitude, longitude]);
     const [stateMap, setStateMap] = useState<number[]>([])
-    const mapstate = useMemo(() => ({ center: stateMap, zoom: 17 }), [
+    const mapstate = useMemo(() => {console.log(stateMap); return ({ center: stateMap, zoom: 17 })}, [
         stateMap,
     ])
-    
-    
+
+
 
     const initialValues: IInitialValues = {
         comment: '',
@@ -112,48 +111,49 @@ const CartForm: FC<{}> = () => {
     })
 
     const getGeoLoc = () => {
-        getGeoLocation()?.then((res: any)=>{
-            setStateMap(res)
-            })
-            .catch((e: unknown)=>{
+        getGeoLocation()?.then((res: any) => {
+            setStateMap([...res]);
+            setMyPosition(res);
+        })
+            .catch((e: unknown) => {
                 console.log(e);
             });
     }
 
-    useEffect(()=>{
-        getGeoLoc()
-    }, []);
+    useEffect(() => {
+        if(openAddressSelect) getGeoLoc();
+    }, [openAddressSelect]);
 
-   
+
 
     const SuggestComponent = useMemo(() => {
         return withYMaps(MapSuggestComponent, true, [
-          "SuggestView",
-          "geocode",
-          "coordSystem.geo"
+            "SuggestView",
+            "geocode",
+            "coordSystem.geo"
         ]);
-      }, []);
+    }, []);
 
     if (openAddressSelect) {
 
         return <div className="address-select-map">
-            <div className="welcome">  
-            <div className="welcome__header">
-                <div className="container row justify-between align-center">
-                    <div className="welcome__header__ico-wrapper" onClick={() => setOpenAddressSelect(false)} >
-                        <img src={require("../../../assets/i/back.svg").default} alt="Вернуться назад" />
-                    </div>
+            <div className="welcome">
+                <div className="welcome__header">
+                    <div className="container row justify-between align-center">
+                        <div className="welcome__header__ico-wrapper" onClick={() => setOpenAddressSelect(false)} >
+                            <img src={require("../../../assets/i/back.svg").default} alt="Вернуться назад" />
+                        </div>
 
-                    <div className="welcome__header__content">
+                        <div className="welcome__header__content">
                             <img src={require("../../../assets/img/logo.png").default} />
-                           
-                    </div>
 
-                    <div className="welcome__header__ico-wrapper" onClick={()=> getGeoLoc()}>
-                        <img src={require("../../../assets/i/aim.svg").default} alt="Цель" />
+                        </div>
+
+                        <div className="welcome__header__ico-wrapper" onClick={getGeoLoc}>
+                            <img src={require("../../../assets/i/aim.svg").default} alt="Цель" />
+                        </div>
                     </div>
                 </div>
-                </div>  
             </div>
             <YMaps
                 enterprise
@@ -169,40 +169,31 @@ const CartForm: FC<{}> = () => {
                     }
                 }
                 >
-                    
-
                     <Placemark
                         options={placeMarkOption}
                         geometry={cord}
                     />
-                    {
                         <div className="mapsPopup">
                             <div className="container">
                                 <div className="mapsPopup__adress">
                                     <img src={require("../../../assets/i/mark-red.svg").default} alt="Телефон заведения" />
                                     {
                                         formik.values.address
-                                            ? <div className="mapsPopup__value" onClick={()=> formik.setFieldValue("address", '')}>{formik.values.address}</div>
+                                            ? <div className="mapsPopup__value" onClick={() => formik.setFieldValue("address", '')}>{formik.values.address}</div>
                                             : <SuggestComponent formik={formik} handl={setStateMap} />
                                     }
-                                    
+
                                 </div>
                                 {
-                                    formik.values.address 
+                                    formik.values.address
                                         ? <div className="mapsPopup__button btn" onClick={() => setOpenAddressSelect(false)}>Заказать доставку</div>
                                         : <div className="mapsPopup__button noactive btn">Выберете точку</div>
                                 }
-                                
+
                             </div>
                         </div>
-                    }
-                   
                 </Map>
             </YMaps>
-
-            {
-                formik.values.address && <button className="btn" onClick={() => setOpenAddressSelect(false)}>{formik.values.address}</button>
-            }
         </div>
     }
 
