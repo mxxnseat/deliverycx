@@ -50,13 +50,13 @@ const CartForm: FC<{}> = () => {
     const dispatch = useDispatch();
     const [openAddressSelect, setOpenAddressSelect] = useState(false);
     const [cord, setCord] = useState([]);
-    const [myPosition, setMyPosition] = useState<[number, number]>([latitude, longitude]);
+    const [myPosition, setMyPosition] = useState<number[]>([]);
     const [stateMap, setStateMap] = useState<number[]>([])
     const mapstate = useMemo(() => {return ({ center: stateMap, zoom: 17 })}, [
         stateMap,
     ])
 
-
+    console.log(`coord ${latitude} ${longitude}`);
 
     const initialValues: IInitialValues = {
         comment: '',
@@ -113,16 +113,18 @@ const CartForm: FC<{}> = () => {
     const getGeoLoc = () => {
         getGeoLocation()?.then((res: any) => {
             setStateMap([...res]);
-            setMyPosition(res);
+            setMyPosition([...res]);
         })
             .catch((e: unknown) => {
-                console.log(e);
+                setStateMap([latitude, longitude]);
+                setMyPosition([latitude, longitude]);
             });
     }
 
     useEffect(() => {
-        if(openAddressSelect) getGeoLoc();
-    }, [openAddressSelect]);
+        console.log(mapstate);
+        getGeoLoc();
+    }, []);
 
 
 
