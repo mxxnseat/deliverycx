@@ -184,11 +184,11 @@ class Api {
             products = products[0] && products[0].products?.map((pr:any)=>new ProductModel(pr));
             products = products && await model.Product.populate(products, {path: "group", select: {image: 1, _id: 0}});
 
-            const filterProductsByStopList = products.filter((product: IProduct)=>{
+            const filterProductsByStopList = products ? products.filter((product: IProduct)=>{
               return stopList ? !stopList.find(
                 (stopListProduct: IStopListItem)=>stopListProduct.productId === product.id && stopListProduct.balance === 0
                 ) : product;
-            });
+            }) : [];
 
             res.status(200).json(filterProductsByStopList);
         } catch (e: unknown) {
