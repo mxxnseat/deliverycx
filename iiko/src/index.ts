@@ -88,14 +88,12 @@ class Iiko {
 
                 await GroupModel.deleteMany({organization: organization.id});
                 await Promise.all(nomenclature.groups.map(async (group) => {
-                    if(group.parentGroup){
                         await GroupModel.findOneAndUpdate({ _id: group.id }, {
                             ...group,
                             image: group.images.length ? group.images[group.images.length - 1]?.imageUrl : '',
                             organization: organization.id,
                             _id: group.id
                         }, { upsert: true });
-                    }
                 }));
 
                 const productsToSave = await Promise.all(nomenclature.products.map(async (product) =>{
