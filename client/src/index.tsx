@@ -9,7 +9,7 @@ import {createBrowserHistory} from "history";
 import Store from "./store";
 
 export const history = createBrowserHistory();
-console.log(process.env.test);
+
 ReactDOM.render(
   <Provider store={Store}>
     <Router history={history}>
