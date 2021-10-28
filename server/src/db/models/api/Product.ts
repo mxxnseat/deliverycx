@@ -9,6 +9,7 @@ export interface IProduct {
     isIncludedInMenu: boolean,
     price: number,
     group: RefType,
+    isFav?: boolean,
     category: RefType,
     weight: number,
     measureUnit: "порц" | "шт",
@@ -69,6 +70,10 @@ export const ProductSchema = new Schema({
     additionalInfo: {
         required: true,
         type: String
+    },
+    isFav: {
+        required: false,
+        type: Boolean
     }
 })
 
