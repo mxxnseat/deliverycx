@@ -339,13 +339,13 @@
 }
 .mapsPopup{
     position: absolute;
-    top: calc(86vh - 195px);
+    top: calc(86vh - 133px);
     width: 100%;
+    max-width: 375px;
     background-color: #FFFFFF;
     padding: 24px 0;
     text-align: center;
     z-index: 9999;
-    bottom: -100%;
     color: #FFFFFF;
     font-size: 19px;
     border-radius: 24px 24px 0 0;
@@ -356,13 +356,14 @@
         align-items: center;
         width: 100%;
         padding: 9px 0;
-        background-color: #EFEFEF;
-        margin-bottom: 15px;
+        background-color: #fff;
+        margin-right: 10px;
         color: #333333;
         font-size: 15px;
         border-radius: 8px;
         position: relative;
         height: 55px;
+        box-shadow: 0px 0px 5px 0px rgba(34, 60, 80, 0.2);
         img{
             margin-left: 15px;
             min-width: 11px;
@@ -371,6 +372,7 @@
     }
     &__value{
         margin-left: 15px;
+        font-size: 12px;
     }
     &__input{
         width: 100%;
@@ -417,7 +419,7 @@
 
 @media only screen and (max-width: 560px) and (orientation: portrait){
     .mapsPopup{
-        top: calc(100vh - 190px);
+       top: calc(100vh - 133px);
     }
 }
 @media screen and (max-width: 360px){
