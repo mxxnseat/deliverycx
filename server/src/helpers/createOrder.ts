@@ -49,12 +49,12 @@ export default function createOrderBody(
                 })),
                 address: {
                     city: address.city,
-                    street: addressSplit[0],
+                    street: addressSplit[0].replace(/улица|пер|переулок|ул/i, '').trim(),
                     home: addressSplit[1] ? addressSplit[1] : 0,
                     apartament: address.flat ? address.flat : '0',
                     entrance: address.entarance ? address.entarance : '0',
                     floor: address.floor ? address.floor : '0',
-                    comment
+                    comment 
                 }
             }
         }
