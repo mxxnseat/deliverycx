@@ -1,7 +1,9 @@
 import { FC, memo, PropsWithChildren, useState } from "react";
 import StockItem from "./item";
 import cn from "classnames";
-
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css"; 
 import Lenta, {IProps as LentaProps} from "../../../components/lenta";
 
 // const MemoLenta = memo<FC<LentaProps>>(Lenta, (prev: Readonly<PropsWithChildren<LentaProps>>, next:Readonly<PropsWithChildren<LentaProps>>)=>{
@@ -28,11 +30,30 @@ const Stocks: FC = memo(() => {
         }
         
     }
-    
+    const settings = {
+        className: "center",
+        centerMode: true,
+        infinite: true,
+        centerPadding: "20px",
+        slidesToShow: 1,
+        speed: 500,
+        rows: 1,
+        slidesPerRow: 1,
+        dots: true,
+        dotsClass:'stocks__points'
+      };
 
     return (
         <div className="stocks">
-            <Lenta count={count} itemSize={291} conditionDelta={conditionDelta} currentItemChanger={(i)=>setCurrentItem(i)} currentItem={currentItem}>
+            <Slider {...settings}>
+                <StockItem content={'stock1.jpg'} />
+                <StockItem content={'stock2.jpg'} />
+                <StockItem content={'stock3.jpg'} />
+            </Slider>
+            {
+                /*
+                
+                <Lenta count={count} itemSize={291} conditionDelta={conditionDelta} currentItemChanger={(i)=>setCurrentItem(i)} currentItem={currentItem}>
                 {
                     sliderContent.map((item, i) => <StockItem key={i} content={item} />)
                 }
@@ -46,6 +67,9 @@ const Stocks: FC = memo(() => {
                     })
                 }
             </div>
+                
+                */
+            }
         </div>
     )
 });

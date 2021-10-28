@@ -32,16 +32,21 @@
         display: flex;
         margin-top: 15px;
         justify-content: center;
-    }
-    &__point{
-        height: 2px;
-        cursor: pointer;
-        width: 24px;
-        margin: 0 12px;
-        background-color: $grayAB;
-        border-radius: 1.5em;
-        
-        &.active{
+        text-align: center;
+        li{
+            display: inline-block;
+        }
+        button{
+            font-size: 0px;
+            height: 2px;
+            cursor: pointer;
+            width: 24px;
+            margin: 0 12px;
+            background-color: $grayAB;
+            border-radius: 1.5em;
+            border: none;
+        }
+        .slick-active button{
             background-color: $red;
         }
     }
