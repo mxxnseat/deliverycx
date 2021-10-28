@@ -139,24 +139,7 @@ const CartForm: FC<{}> = () => {
     if (openAddressSelect) {
 
         return <div className="address-select-map">
-            <div className="welcome">
-                <div className="welcome__header">
-                    <div className="container row justify-between align-center">
-                        <div className="welcome__header__ico-wrapper" onClick={() => setOpenAddressSelect(false)} >
-                            <img src={require("../../../assets/i/back.svg").default} alt="Вернуться назад" />
-                        </div>
-
-                        <div className="welcome__header__content">
-                            <img src={require("../../../assets/img/logo.png").default} />
-
-                        </div>
-
-                        <div className="welcome__header__ico-wrapper" onClick={getGeoLoc}>
-                            <img src={require("../../../assets/i/aim.svg").default} alt="Цель" />
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
             <YMaps
                 enterprise
                 query={{ apikey: "f5bd494f-4a11-4375-be30-1d2d48d88e93" }}
@@ -171,29 +154,42 @@ const CartForm: FC<{}> = () => {
                     }
                 }
                 >
-                    <Placemark
-                        options={placeMarkOption}
-                        geometry={cord}
-                    />
-                        <div className="mapsPopup">
-                            <div className="container">
+                    <div className="welcome">
+                        <div className="welcome__header">
+                            <div className="container row justify-between align-center">
                                 <div className="mapsPopup__adress">
                                     <img src={require("../../../assets/i/mark-red.svg").default} alt="Телефон заведения" />
                                     {
                                         formik.values.address
                                             ? <div className="mapsPopup__value" onClick={() => formik.setFieldValue("address", '')}>{formik.values.address}</div>
-                                            : <SuggestComponent formik={formik} handl={setStateMap} />
+                                            : <SuggestComponent formik={formik} handl={setStateMap} value={formik.values.address} />
                                     }
 
                                 </div>
-                                {
-                                    formik.values.address
-                                        ? <div className="mapsPopup__button btn" onClick={() => setOpenAddressSelect(false)}>Заказать доставку</div>
-                                        : <div className="mapsPopup__button noactive btn">Выберете точку</div>
-                                }
 
+                                
+
+                                <div className="welcome__header__ico-wrapper" onClick={getGeoLoc}>
+                                    <img src={require("../../../assets/i/aim.svg").default} alt="Цель" />
+                                </div>
                             </div>
                         </div>
+                    </div>
+
+                    <Placemark
+                        options={placeMarkOption}
+                        geometry={cord}
+                    />
+                    {
+                        formik.values.address && 
+                        <div className="mapsPopup">
+                            <div className="container">
+                                <div className="mapsPopup__button btn" onClick={() => setOpenAddressSelect(false)}>Заказать доставку</div>
+                                
+                            </div>
+                        </div>
+                    }
+                        
                 </Map>
             </YMaps>
         </div>
