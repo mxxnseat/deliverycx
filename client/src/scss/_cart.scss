@@ -417,11 +417,12 @@
     background-color: transparent;
 }
 
-// @media only screen and (max-width: 560px) and (orientation: portrait){
-//     .mapsPopup{
-//        top: calc(100vh - 133px);
-//     }
-// }
+@media only screen and (max-width: 560px) and (orientation: portrait){
+     .mapsPopup{
+        position: fixed;
+        bottom: 0;
+     }
+}
 @media screen and (max-width: 360px){
     .cart__order-btn{
         width: 320px;
