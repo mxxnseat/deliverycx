@@ -52,6 +52,7 @@ const CartForm: FC<{}> = () => {
     const [cord, setCord] = useState([]);
     const [myPosition, setMyPosition] = useState<number[]>([]);
     const [stateMap, setStateMap] = useState<number[]>([])
+    const [valueMap, setValueMap] = useState<string>('')
     const mapstate = useMemo(() => {return ({ center: stateMap, zoom: 17 })}, [
         stateMap,
     ])
@@ -92,7 +93,8 @@ const CartForm: FC<{}> = () => {
         axios.get<IGeoCodeResponse>(
             `https://geocode-maps.yandex.ru/1.x/?geocode=${cords.reverse()}&format=json&apikey=f5bd494f-4a11-4375-be30-1d2d48d88e93`
         ).then(({ data }) => {
-            formik.setFieldValue("address", data.response.GeoObjectCollection.featureMember[0].GeoObject.name);
+            //formik.setFieldValue("address", data.response.GeoObjectCollection.featureMember[0].GeoObject.name);
+            setValueMap(data.response.GeoObjectCollection.featureMember[0].GeoObject.name)
         })
     }
 
@@ -123,6 +125,17 @@ const CartForm: FC<{}> = () => {
     useEffect(() => {
         getGeoLoc();
     }, []);
+
+
+    const hendleMapPopup = () => {
+        setOpenAddressSelect(false)
+        if (valueMap) {
+            formik.setFieldValue("address", valueMap)
+            setValueMap('')
+        }
+    }
+
+    console.log(formik.values.address,valueMap)
 
 
 
@@ -157,13 +170,14 @@ const CartForm: FC<{}> = () => {
                             <div className="container row justify-between align-center">
                                 <div className="mapsPopup__adress">
                                     <img src={require("../../../assets/i/mark-red.svg").default} alt="Телефон заведения" />
+                                    
                                     {
-                                        formik.values.address
-                                            ? <div className="mapsPopup__value" onClick={() => formik.setFieldValue("address", '')}>{formik.values.address}</div>
-                                            : <SuggestComponent formik={formik} handl={setStateMap} value={formik.values.address} />
+                                        valueMap
+                                            ? <div className="mapsPopup__value" onClick={() => setValueMap('')}>{valueMap}</div>
+                                            : <SuggestComponent formik={formik} handl={setStateMap} cord={setCord}  />
                                     }
-
                                 </div>
+                                
 
                                 
 
@@ -179,10 +193,10 @@ const CartForm: FC<{}> = () => {
                         geometry={cord}
                     />
                     {
-                        formik.values.address && 
+                        (formik.values.address || valueMap) && 
                         <div className="mapsPopup">
                             <div className="container">
-                                <div className="mapsPopup__button btn" onClick={() => setOpenAddressSelect(false)}>Заказать доставку</div>
+                                <div className="mapsPopup__button btn" onClick={hendleMapPopup}>Заказать доставку</div>
                                 
                             </div>
                         </div>
