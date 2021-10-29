@@ -9,7 +9,7 @@ const StocksItem: FC<IStock> = ({content}) => {
 
     return (
         <div className="stocks__item">
-            <img src={require("../../../assets/img/stock/" + content).default} />
+            <img src={require("../../../assets/img/stock2/" + content).default} />
             {
                 /*
                 <div className="stocks__type">
