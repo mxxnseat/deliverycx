@@ -21,8 +21,8 @@ const Product: FC<IProduct<{image: string}>> = ({ id, name, price, group, measur
                 <img src={image} alt={name} />
             </div>
             <div className="product__item__content">
-                <div className="row justify-between">
-                    <div className="product__item__cooking-time">15 мин</div>
+                <div className="row justify-end">
+                    {/* <div className="product__item__cooking-time">15 мин</div> */}
                     <AddToFavorites _class="product__item__favorite" isFav={isFav} id={id} />
                 </div>
 

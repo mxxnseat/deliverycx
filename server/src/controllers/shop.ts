@@ -23,7 +23,7 @@ type CreateOrderBody = {
     flat: string,
     floor: string,
     intercom: string,
-    entarance: string,
+    entrance: string,
     city: string
 } & CustomerData;
 
@@ -251,7 +251,7 @@ class Shop {
             floor,
             city,
             intercom,
-            entarance,
+            entrance,
             promocode,
             cart_choice,
             name,
@@ -278,7 +278,7 @@ class Shop {
                 });
             }
 
-            const orderBody = createOrder({ address, flat, floor, intercom, entarance, city}, user.organization, {
+            const orderBody = createOrder({ address, flat, floor, intercom, entrance, city}, user.organization, {
                 name,
                 comment,
                 date,

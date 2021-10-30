@@ -63,7 +63,7 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
                         <div className="product-card__price">
                             <div className="product-card__measure">
                                 {
-                                    product.measureUnit === "порц" ? "1 шт" : `${convertWeight(product.weight)} г`
+                                    product.measureUnit === "порц" ? `${convertWeight(product.weight)} г` : "1 шт"
                                 }
                             </div>
                             <span className="select-red">{product.price} ₽</span>
