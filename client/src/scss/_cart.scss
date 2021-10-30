@@ -338,8 +338,8 @@
     background-position: 0px 0px;
 }
 .mapsPopup{
-    position: absolute;
-    bottom: 0;
+    position: fixed;
+    top: 30%;
     width: 100%;
     max-width: 375px;
     background-color: #FFFFFF;
@@ -418,10 +418,7 @@
 }
 
 @media only screen and (max-width: 560px) and (orientation: portrait){
-     .mapsPopup{
-        position: fixed;
-        bottom: 0;
-     }
+     
 }
 @media screen and (max-width: 360px){
     .cart__order-btn{
