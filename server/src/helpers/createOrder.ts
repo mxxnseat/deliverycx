@@ -53,6 +53,7 @@ export default function createOrderBody(
                     home: addressSplit[1] ? addressSplit[1] : 0,
                     apartment: address.flat ? address.flat : '0',
                     entrance: address.entrance ? address.entrance : '0',
+                    doorphone: address.intercom ? address.intercom : '0',
                     floor: address.floor ? address.floor : '0',
                     comment 
                 }
