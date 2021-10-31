@@ -338,8 +338,8 @@
     background-position: 0px 0px;
 }
 .mapsPopup{
-    position: fixed; 
-    bottom: 14vh;
+    position: absolute; 
+    bottom: 0;
     width: 100%;
     max-width: 375px;
     background-color: #FFFFFF;
