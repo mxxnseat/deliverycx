@@ -38,7 +38,7 @@ export interface ISubmitData extends IInitialValues {
 
 const placeMarkOption = {
     iconLayout: 'default#image',
-    iconImageHref: require("../../../assets/i/map_placemark.png").default,
+    iconImageHref: require("../../../assets/i/map_placemark2.png").default,
     iconImageSize: [50, 60],
     iconImageOffset: [-25, -60]
 }
