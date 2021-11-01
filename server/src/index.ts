@@ -14,7 +14,6 @@ import shop from "./routers/shop";
 import profile from "./routers/profile";
 import authCheck from "./middlewares/authCheck";
 
-
 const INDEXHTML = path.resolve(__dirname, "../../client/build/index.html");
 const App = express();
 const PORT = process.env.PORT || 5001;
