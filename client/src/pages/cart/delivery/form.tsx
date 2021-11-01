@@ -159,7 +159,7 @@ const CartForm: FC<{}> = () => {
                 enterprise
                 query={{ apikey: "f5bd494f-4a11-4375-be30-1d2d48d88e93" }}
             >
-                <Map width="100%" height="100%" modules={['geocode']} onClick={onMapClick} state={mapstate} defaultState={
+                <Map style={{position: "absolute", width:"100%", height: "100%"}} modules={['geocode']} onClick={onMapClick} state={mapstate} defaultState={
                     {
                         center: myPosition,
                         zoom: 17,
@@ -201,23 +201,21 @@ const CartForm: FC<{}> = () => {
                         options={placeMarkOption}
                         geometry={cord}
                     />
-                    {
-                        console.log(formik.values.address, valueMap)
-                    }
-                    {
-                            
-                            
-                        (formik.values.address || valueMap) && 
-                        <div className="mapsPopup">
-                            <div className="container">
-                                <div className="mapsPopup__button btn" onClick={hendleMapPopup}>Заказать доставку</div>
-                                
-                            </div>
-                        </div>
-                    }
+                    
                         
                 </Map>
             </YMaps>
+
+            {
+
+(formik.values.address || valueMap) && 
+<div className="mapsPopup">
+    <div className="container">
+        <div className="mapsPopup__button btn" onClick={hendleMapPopup}>Заказать доставку</div>
+        
+    </div>
+</div>
+}
         </div>
     }
 
