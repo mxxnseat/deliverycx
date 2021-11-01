@@ -187,12 +187,9 @@ class Api {
       const filterProductsByStopList = products ? products.filter((product: IProduct) => {
         const isFind = stopList ? stopList.find(
           (stopListProduct: IStopListItem) => {
-            console.log(product.id);
-
             return stopListProduct.productId === product.id && stopListProduct.balance === 0
           }
         ) : null
-        console.log(isFind);
         return !isFind && product;
       }) : [];
 
