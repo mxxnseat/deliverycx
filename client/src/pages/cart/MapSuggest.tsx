@@ -7,18 +7,20 @@ import { IGeoCodeResponse } from "../../types/responses";
 
 declare var ymaps: any;
 
-const MapSuggestComponent = ({ formik, handl, cord }: any) => {
+const MapSuggestComponent = ({ formik, handl, cord,disc }: any) => {
   const { name } = useSelector((state: RootState) => state.address.address.city);
   
   const geoCode = (request: string, set: boolean) => {
-    return ymaps.geocode(request)
+    return ymaps.geocode(`${name}, ${request}`)
       .then((res: any) => {
         const getObj = res.geoObjects.get(0);
         const validAdress: string = getObj?.properties.get('metaDataProperty.GeocoderMetaData.precision');
         const cords = [...getObj.geometry._coordinates]
+        
         if (validAdress === 'exact') {
           handl(cords)
           cord(cords)
+          disc(false)
           axios.get<IGeoCodeResponse>(
             `https://geocode-maps.yandex.ru/1.x/?geocode=${cords.reverse()}&format=json&apikey=f5bd494f-4a11-4375-be30-1d2d48d88e93`
           ).then(({ data }) => {
@@ -26,6 +28,10 @@ const MapSuggestComponent = ({ formik, handl, cord }: any) => {
               
           })
           //formik.setFieldValue("address", request);
+        }
+        if (validAdress === 'street') {
+          disc(true)
+          handl(cords)
         }
       })
       .catch((e: unknown) => console.log(e))
