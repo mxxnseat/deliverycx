@@ -49,7 +49,7 @@ export default function createOrderBody(
                 })),
                 address: {
                     city: address.city,
-                    street: addressSplit[0].replace(/улица|пер|переулок|ул/i, '').trim(),
+                    street: addressSplit[0].replace(/улица|пер|переулок|ул|проспект|пр/i, '').trim(),
                     home: addressSplit[1] ? addressSplit[1] : 0,
                     apartment: address.flat ? address.flat : '0',
                     entrance: address.entrance ? address.entrance : '0',
