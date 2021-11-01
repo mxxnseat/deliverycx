@@ -90,14 +90,14 @@ class Iiko {
                 await Promise.all(nomenclature.groups.map(async (group) => {
                         await GroupModel.findOneAndUpdate({ _id: group.id }, {
                             ...group,
-                            image: group.images.length ? group.images[group.images.length - 1]?.imageUrl : '',
+                            image: group.images && group.images.length ? group.images[group.images.length - 1]?.imageUrl : '',
                             organization: organization.id,
                             _id: group.id
                         }, { upsert: true });
                 }));
 
                 const productsToSave = await Promise.all(nomenclature.products.map(async (product) =>{
-                    const image = await download( product.images.length ? product.images[product.images.length - 1]?.imageUrl : '');
+                    const image = await download( product.images && product.images.length ? product.images[product.images.length - 1]?.imageUrl : '');
 
                     return {
                         ...product,
