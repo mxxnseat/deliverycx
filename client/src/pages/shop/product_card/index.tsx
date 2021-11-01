@@ -63,7 +63,7 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
                         <div className="product-card__price">
                             <div className="product-card__measure">
                                 {
-                                    product.measureUnit === "порц" ? "1 шт" : `${convertWeight(product.weight)} г`
+                                    product.measureUnit === "порц" ? `${convertWeight(product.weight)} г` : "1 шт"
                                 }
                             </div>
                             <span className="select-red">{product.price} ₽</span>
@@ -94,7 +94,7 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
                         product.additionalInfo
                     }
                 </div>
-                {
+                {/* {
                     sauces ? (
                         <div className="product-card__sauces">
                             <div className="product-card__sauces__heading select-red">
@@ -115,7 +115,7 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
                             
                         </div>
                     ) : ''
-                }
+                } */}
 
             </div>
 

@@ -313,7 +313,8 @@ class Api {
                     }
                 ]);
                 if (sauces.length) {
-                    sauces = sauces[0].sauces;
+                  sauces = sauces[0] && sauces[0].sauces?.map((pr:any)=>new ProductModel(pr));
+                  sauces = sauces && await model.Product.populate(sauces, {path: "group", select: {image: 1, _id: 0}});
                 }
             }
 

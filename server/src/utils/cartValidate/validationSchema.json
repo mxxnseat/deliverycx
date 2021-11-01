@@ -1,11 +1,6 @@
 [
     {
-        "product_code": "6caa82bc-8dd6-41c6-86de-9a1a01139652",
-        "min_amount": 3,
-        "total_amount": true
-    },
-    {
-        "product_code": "5b438ae8-c0d2-498a-8761-4606fb1db886",
+        "product_code": "HI",
         "min_amount": 3,
         "total_amount": true
     }

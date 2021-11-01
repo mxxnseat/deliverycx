@@ -337,32 +337,46 @@
     background-repeat: no-repeat;
     background-position: 0px 0px;
 }
+
+.disclaimer{
+    background-color: #ff000060;
+    color: #000;
+    padding: 10px 15px;
+    font-size: 11px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
 .mapsPopup{
-    position: absolute;
+    position: absolute; 
     bottom: 0;
     width: 100%;
     max-width: 375px;
-    background-color: #FFFFFF;
+    //background-color: #FFFFFF;
     padding: 24px 0;
     text-align: center;
     z-index: 9999;
     color: #FFFFFF;
     font-size: 19px;
     border-radius: 24px 24px 0 0;
-    box-shadow: -1.45153px -30.966px 60px rgba(0, 0, 0, 0.25), -0.559108px -11.9276px 19.1111px rgba(0, 0, 0, 0.151852), -0.118273px -2.52316px 4.88889px rgba(0, 0, 0, 0.0981481);
+    //box-shadow: -1.45153px -30.966px 60px rgba(0, 0, 0, 0.25), -0.559108px -11.9276px 19.1111px rgba(0, 0, 0, 0.151852), -0.118273px -2.52316px 4.88889px rgba(0, 0, 0, 0.0981481);
     transition: bottom 0.6s cubic-bezier(0, -0.02, 0.54, 1.18);
+    
+    &__adress-box{
+        margin-right: 10px;
+        width: 100%;
+    }
     &__adress{
         display: flex;
         align-items: center;
         width: 100%;
-        padding: 9px 0;
+        padding: 10px 0;
         background-color: #fff;
-        margin-right: 10px;
+        margin-right: 9px;
         color: #333333;
         font-size: 15px;
         border-radius: 8px;
         position: relative;
-        height: 55px;
+        height: 60px;
         box-shadow: 0px 0px 5px 0px rgba(34, 60, 80, 0.2);
         img{
             margin-left: 15px;
@@ -399,6 +413,7 @@
         text-align: center;
         background: url('../assets/i/delev.svg') 30px center no-repeat;
         background-color: #FDC935;
+        box-shadow: -1.45153px -30.966px 60px rgba(0, 0, 0, 0.25), -0.559108px -11.9276px 19.1111px rgba(0, 0, 0, 0.151852), -0.118273px -2.52316px 4.88889px rgba(0, 0, 0, 0.0981481);
     }
     .noactive{
         background-color: #FDC935;
@@ -419,8 +434,7 @@
 
 @media only screen and (max-width: 560px) and (orientation: portrait){
      .mapsPopup{
-        position: fixed;
-        bottom: 0;
+         bottom: 0;
      }
 }
 @media screen and (max-width: 360px){

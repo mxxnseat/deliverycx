@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({path: __dirname+"/../.env"});
 
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
@@ -13,7 +13,6 @@ import api from "./routers/api";
 import shop from "./routers/shop";
 import profile from "./routers/profile";
 import authCheck from "./middlewares/authCheck";
-
 
 const INDEXHTML = path.resolve(__dirname, "../../client/build/index.html");
 const App = express();
