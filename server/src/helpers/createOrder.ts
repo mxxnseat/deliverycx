@@ -29,7 +29,9 @@ export default function createOrderBody(
         const {phone, name, comment} = customerData;
         const currentDate = moment.tz("Europe/Moscow").format("YYYY-MM-DD HH:mm:ss")
         const addressSplit = address.address.split(",");
-        console.log(currentDate);
+        const street = addressSplit[0].match(/бульвар|проспект/) ?
+        addressSplit[0].replace(/(бульвар|проспект)\s(.*)/,"$2 $1").trim()
+        : addressSplit[0].replace(/улица|пер|переулок|ул|проспект|пр/i, '').trim();
         return {
             organization,
             customer: {
@@ -49,7 +51,7 @@ export default function createOrderBody(
                 })),
                 address: {
                     city: address.city,
-                    street: addressSplit[0].replace(/улица|пер|переулок|ул|проспект|пр/i, '').trim(),
+                    street,
                     home: addressSplit[1] ? addressSplit[1] : 0,
                     apartment: address.flat ? address.flat : '0',
                     entrance: address.entrance ? address.entrance : '0',
