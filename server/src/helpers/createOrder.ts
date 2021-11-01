@@ -1,7 +1,7 @@
 import { IProduct } from "db/models/api/Product";
 import { CartType } from "db/models/shop/Cart";
 import { AsyncReturnType } from "types/asyncReturnType";
-import moment from "moment";
+import moment from "moment-timezone";
 
 type Address = {
     flat: string,
@@ -27,9 +27,9 @@ export default function createOrderBody(
 ){
     try{
         const {phone, name, comment} = customerData;
-        const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
+        const currentDate = moment.tz("Europe/Moscow").format("YYYY-MM-DD HH:mm:ss")
         const addressSplit = address.address.split(",");
-        console.log(address);
+        console.log(currentDate);
         return {
             organization,
             customer: {
