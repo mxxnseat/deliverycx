@@ -94,7 +94,7 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
                         product.additionalInfo
                     }
                 </div>
-                {
+                {/* {
                     sauces ? (
                         <div className="product-card__sauces">
                             <div className="product-card__sauces__heading select-red">
@@ -115,7 +115,7 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
                             
                         </div>
                     ) : ''
-                }
+                } */}
 
             </div>
 
