@@ -70,7 +70,7 @@ const SelectAddressPopup:FC<IProps> = memo(({slideIndex,slidecoutn,address}) => 
                     </div>
                 </div>
 
-                <div className="welcome__select-adress__work-time">9:00 - 22:00</div>
+                <div className="welcome__select-adress__work-time">{address.workTime}</div>
 
                 <div className="welcome__select-adress__info street">
                     <img src={require("../../assets/i/mark-red.svg").default} alt="Телефон заведения" />

@@ -4,6 +4,7 @@ export interface IOrganization {
         email: string,
         phone: string
     },
+    workTime: string,
     id: string
 }
 

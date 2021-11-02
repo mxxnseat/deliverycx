@@ -4,10 +4,11 @@ import * as model from "../db/models";
 import { ICity } from "../db/models/api/City";
 import { geoCode, IPosition } from "../helpers/geoCoder";
 import { IOrganization as IApiOrganization } from "../db/models/api/Organization";
-import { ICategory, IGroup, INomenclature, IOrganization, IProduct,IOrderCheckCreationResult, IStopList } from "../types/axiosResponses";
+import { ICategory, IGroup, INomenclature, IOrganization, IProduct, IOrderCheckCreationResult, IStopList } from "../types/axiosResponses";
 import { IProductSchema } from "db/models/api/Product";
 import { createOrderType } from "helpers/createOrder";
 import download from "../utils/saveCdnImage";
+import { resolve } from "path/posix";
 
 class Iiko {
     private static token: string = '';
@@ -16,7 +17,7 @@ class Iiko {
     private organizations: Organization[] = [];
 
     private constructor() { }
-    public async iikoMethodBuilder(fn: ()=>any){
+    public async iikoMethodBuilder(fn: () => any) {
         await this.getToken();
 
         const result = await fn();
@@ -41,20 +42,20 @@ class Iiko {
             console.log(`Error with get token\n${e}`);
         }
     }
-    public async createOrder(orderBody: createOrderType){
-        try{
-            const {data: checkData} = await axios.post<IOrderCheckCreationResult>(
+    public async createOrder(orderBody: createOrderType) {
+        try {
+            const { data: checkData } = await axios.post<IOrderCheckCreationResult>(
                 `https://iiko.biz:9900/api/0/orders/checkCreate?access_token=${Iiko.token}`,
                 orderBody
             )
 
-            if(checkData.resultState !== 0){
+            if (checkData.resultState !== 0) {
                 return {
                     status: 400,
                     message: checkData.problem
                 }
             }
-            const {data: createData} = await axios.post(
+            const { data: createData } = await axios.post(
                 `https://iiko.biz:9900/api/0/orders/add?access_token=${Iiko.token}`,
                 orderBody
             )
@@ -63,14 +64,31 @@ class Iiko {
                 status: 200,
                 message: createData
             }
-            
-        }catch(e: any){
+
+        } catch (e: any) {
             return {
                 status: e.response.data.httpStatusCode,
                 message: e.response.data.description
             }
         }
-    }    
+    }
+    public async getStopList(organization: string) {
+        try {
+            const {data} = await axios.get<IStopList>(
+                `https://iiko.biz:9900/api/0/stopLists/getDeliveryStopList?access_token=${Iiko.token}&organization=${organization}`
+            );
+
+            const list = data.stopList.map(el => {
+                return el.items;
+            });
+
+            return list.flat();
+        } catch (e: unknown) {
+            console.log(e);
+            return [];
+        }
+    }
+
 }
 
 export default Iiko.getInstance();

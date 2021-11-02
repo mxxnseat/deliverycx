@@ -13,7 +13,8 @@ export interface IOrganization{
     },
     products: RefType,
     categories: RefType,
-    groups: RefType
+    groups: RefType,
+    workTime: string
 }
 
 const OrganizationSchema = new Schema<IOrganization>({
@@ -49,7 +50,8 @@ const OrganizationSchema = new Schema<IOrganization>({
         required: true,
         type: mongoose.Types.ObjectId,
         ref: "product"
-    }
+    },
+    workTime: String
 }, { versionKey: false })
 
 export default model("Organization", OrganizationSchema);
