@@ -118,6 +118,7 @@ class Iiko {
                 }, { new: true, upsert: true });
 
                 const cord = await geoCode(organization.address.fulladdress);
+                const workTime = organization.workTime ? organization.workTime.split(";")[0] : '';
                 await OrganizationModel.findOneAndUpdate({ _id: organization.id }, {
                     $setOnInsert: {
                         _id: organization.id,
@@ -130,7 +131,8 @@ class Iiko {
                     $set: {
                         contacts: {
                             ...organization.contacts
-                        }
+                        },
+                        workTime
                     }
                 }, { new: true, upsert: true });
             }

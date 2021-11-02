@@ -4,6 +4,7 @@ function parseOrganization(obj: IOrganization) {
     const addressGroup = obj.address.match(/^(?<city>[а-я]+),\s?(?<address>.+)$/i)?.groups;
 
     const parseObj = {
+        ...obj,
         id: obj.id,
         address: {
             fulladdress: obj.address,
@@ -13,7 +14,7 @@ function parseOrganization(obj: IOrganization) {
         contacts: {
             phone: obj.contact.phone,
             email: obj.contact.email
-        }
+        },
     };
 
     return parseObj;
