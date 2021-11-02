@@ -1,4 +1,4 @@
-import { FC, memo, MouseEvent, useCallback, useRef, useState } from "react";
+import { FC, memo, MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import AddToCart from "../../../components/AddToCart";
 import AddToFavorites from "../../../components/AddToFavorites";
@@ -8,15 +8,31 @@ import { IProduct } from "../../../types/responses";
 const Product: FC<IProduct<{image: string}>> = ({ id, name, price, group, measureUnit, weight, description, image, isFav }) => {
     const history = useHistory();
     const cardRef = useRef<HTMLDivElement>(null);
-
+    
     const clickHandler = (e: MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
         if ((e.target as HTMLButtonElement).type !== 'submit') {
             history.push(`/shop/product/${id}`)
+            
+            localStorage.setItem("prod", cardRef.current?.dataset.id as string)
         }
     }
 
+    useEffect(() => {
+        const id = localStorage.getItem('prod')
+        new Promise((resolve, reject) => {
+            if (cardRef.current?.dataset.id == id) {
+                resolve(cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }))
+            } else {
+                id && reject()
+            }
+        })
+            .then(() => localStorage.removeItem('prod'))
+            .catch(() => localStorage.removeItem('prod'))
+        
+    },[])
+
     return (
-        <div ref={cardRef} className="product__item" onClick={clickHandler}>
+        <div ref={cardRef} className="product__item" data-id={id} onClick={clickHandler}>
             <div className="product__item__img-wrap">
                 <img src={image} alt={name} />
             </div>
