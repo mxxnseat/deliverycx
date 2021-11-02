@@ -17,6 +17,7 @@ export interface IAddress {
     city: ICity,
     latitude: number,
     longitude: number,
+    workTime: string,
     street: string
 }
 

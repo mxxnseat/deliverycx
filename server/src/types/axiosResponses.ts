@@ -4,7 +4,8 @@ export interface IOrganization {
         email: string,
         phone: string
     },
-    id: string
+    id: string,
+    workTime: string
 }
 
 export interface IImage{

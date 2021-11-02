@@ -27,7 +27,7 @@ class Api {
     }
     try {
       const organizations = await model.Organization.find({ city: city as object }).populate("city");
-
+      
       res.json(organizations);
     } catch (e: unknown) {
       console.log(e);
