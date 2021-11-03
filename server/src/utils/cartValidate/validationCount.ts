@@ -10,8 +10,8 @@ async function validationCount(cart: Array<{ product: IProduct, amount: number }
     cart.forEach(cartEl => {
         const productCode = cartEl.product.group as string;
         const isValidate = validationSchema.find(validateField => {
-            
-            return cartEl.product.code.includes(validateField.product_code);
+
+            return cartEl.product.code.toString().toUpperCase().includes(validateField.product_code);
         });
 
         if (isValidate) {
@@ -38,7 +38,7 @@ async function validationCount(cart: Array<{ product: IProduct, amount: number }
             }
         }
     })
-    
+
     return errors;
 }
 
