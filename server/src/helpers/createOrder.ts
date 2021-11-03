@@ -15,7 +15,7 @@ export type CustomerData = {
     name: string,
     comment: string,
     phone: string,
-    times: object, 
+    times: object,
     date: string,
     promocode: string
 }
@@ -24,14 +24,14 @@ export default function createOrderBody(
     address: Address,
     organization: string,
     customerData: CustomerData, cart: CartType<IProduct>[]
-){
-    try{
-        const {phone, name, comment} = customerData;
+) {
+    try {
+        const { phone, name, comment } = customerData;
         const currentDate = moment.tz("Europe/Moscow").format("YYYY-MM-DD HH:mm:ss")
         const addressSplit = address.address.split(",");
         const street = addressSplit[0].match(/бульвар|проспект/) ?
-        addressSplit[0].replace(/(бульвар|проспект)\s(.*)/,"$2 $1").trim()
-        : addressSplit[0].replace(/улица|пер|переулок|ул|проспект|пр/i, '').trim();
+            addressSplit[0].replace(/(бульвар|проспект)\s(.*)/, "$2 $1").trim()
+            : addressSplit[0].replace(/улица|пер|переулок|ул|проспект|пр|имени/i, '').trim();
         return {
             organization,
             customer: {
@@ -42,7 +42,7 @@ export default function createOrderBody(
                 date: currentDate,
                 phone,
                 isSelfService: "false",
-                items: cart.map(cartEl=>({
+                items: cart.map(cartEl => ({
                     id: cartEl.product.id,
                     name: cartEl.product.name,
                     amount: cartEl.amount,
@@ -57,17 +57,17 @@ export default function createOrderBody(
                     entrance: address.entrance ? address.entrance : '0',
                     doorphone: address.intercom ? address.intercom : '0',
                     floor: address.floor ? address.floor : '0',
-                    comment 
+                    comment
                 }
             }
         }
 
-    }catch(e){
+    } catch (e) {
         console.log(e);
         return {};
     }
 
-    
+
 }
 
 
