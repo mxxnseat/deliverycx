@@ -570,7 +570,7 @@
 
 .about{
     height: 100%;
-    min-height: 570px;
+    min-height: 86vh;
     background-image: url("../assets/img/menu-background_tile.png");
     background-repeat: repeat no-repeat;
     background-position: bottom;
@@ -658,5 +658,8 @@
         top: 0;
         max-height: 100%;
         overflow: initial
+    }
+    .about{
+        min-height: 100vh;
     }
 }
