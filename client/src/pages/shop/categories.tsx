@@ -14,40 +14,55 @@ const Categories: FC = () => {
     const slider = useRef<typeof Slider>(null);
     const category = useSelector((state: RootState)=>state.shop.category);
     const [categories, setCategories] = useState<ICategory[]>([]);
-    const [currentSlide, setCurrentSlide] = useState<number>(0);
+    const [currentSlide, setCurrentSlide] = useState<number>(0);    
     const handleSliderClick = (index: number) => {
         slider.current?.slickGoTo(index);
         setCurrentSlide(index);
+        dispatch(setCategoryAction(categories[index]))
+        
+    }
+
+    const staticCat = {
+        image: require("../../assets/i/favorite.png").default,
+        _id: "favorite",
+        code:null,
+        isIncludedInMenu: false,
+        name: "Избранное",
+        order: 9
     }
 
     useEffect(() => {
         (async()=>{
-            let setCategory = null;
-            const {data} = await Api.getCategories<ICategory[]>();
-            if(!category){
-                setCategory = data[0];
-            }else{
-                setCategory = category;
+            try {
+                const { data } = await Api.getCategories<ICategory[]>();
+                const cate:ICategory[] = [...data, staticCat]
+                setCategories(prev => cate)
+                
+                if (category) {
+                    const catIndex = cate.findIndex((cat) => cat.order === category.order)
+                    dispatch(setCategoryAction(cate[catIndex]))
+                    setCurrentSlide(catIndex);
+                    
+                } else {
+                    dispatch(setCategoryAction(data[0]));
+                }
+
+            } catch (error) {
+                console.log(error)
             }
-            dispatch(setCategoryAction(setCategory));
-            setCategories(prev => [...data,{
-                image: require("../../assets/i/favorite.png").default,
-                _id: "favorite",
-                code:null,
-                isIncludedInMenu: false,
-                name: "Избранное",
-                order: 9
-            }]);
-            setCurrentSlide(setCategory.order);
         })();
 
-        return ()=>{
-            dispatch(setCategoryAction(null));
-        }
+        
     }, []);
-    useEffect(()=>{
-        dispatch(setCategoryAction(categories[currentSlide]));
+
+    /*
+    useEffect(() => {
+        console.log('w',currentSlide)
+        //dispatch(setCategoryAction(categories[currentSlide]));
     }, [currentSlide]);
+    */
+
+    
 
     return categories.length ? (<Slider
             className="categories"
@@ -62,7 +77,7 @@ const Categories: FC = () => {
             {
                 categories.map((category, i) => {
                     const CN = cn("categories__item", {active: currentSlide === i});
-
+                    
                     return (
                         <div key={i}
                             className={CN}

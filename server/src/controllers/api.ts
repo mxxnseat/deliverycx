@@ -27,7 +27,7 @@ class Api {
     }
     try {
       const organizations = await model.Organization.find({ city: city as object }).populate("city");
-      
+
       res.json(organizations);
     } catch (e: unknown) {
       console.log(e);
@@ -183,7 +183,6 @@ class Api {
 
       products = products[0] && products[0].products?.map((pr: any) => new ProductModel(pr));
       products = products && await model.Product.populate(products, { path: "group", select: { image: 1, _id: 0 } });
-      console.log(stopList)
       const filterProductsByStopList = products ? products.filter((product: IProduct) => {
         const isFind = stopList ? stopList.find(
           (stopListProduct: IStopListItem) => {
