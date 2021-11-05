@@ -6,6 +6,7 @@ import Product from "./item"
 import api from "../../../api/Api";
 import Loader from "../../../mui/loader";
 import { isEqual } from "lodash";
+import FavoriteEmpty from "../../../components/FavoriteEmpty";
 
 interface IProps {
     category?: string, 
@@ -50,7 +51,9 @@ const ProductList: FC<IProps> = ({ category, searchQuery }) => {
             {
 
                 status === Statuses.FINISHED ? (
-                   products.length ? products.map(item => <Product key={item.id} {...item} />) : "Эта категория пуста :("
+                    products.length
+                        ? products.map(item => <Product key={item.id} {...item} />)
+                        : category === 'favorite' ? <FavoriteEmpty /> : "Эта категория пуста :("
 
                 ) : <Loader />
             }
