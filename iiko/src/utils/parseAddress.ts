@@ -1,7 +1,7 @@
 import { IOrganization } from "../types/axiosResponses";
 
 function parseOrganization(obj: IOrganization) {
-    const addressGroup = obj.address.match(/^(?<city>[а-я]+),\s?(?<address>.+)$/i)?.groups;
+    const addressGroup = obj.address.match(/^(?<city>.+),\s?(?<address>.+)$/i)?.groups;
 
     const parseObj = {
         ...obj,

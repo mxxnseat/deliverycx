@@ -1,21 +1,21 @@
 import dotenv from "dotenv";
-dotenv.config({path: __dirname+"/../.env"});
+dotenv.config({ path: __dirname + "/../.env" });
 process.chdir(`${__dirname}/../..`);
 
 
 import axios from "axios";
 import { INomenclature, IOrganization as IOrganizationResponse, IStopList as IStopListResponse } from "./types/axiosResponses";
-import {Organization, parseOrganization} from "./utils/parseAddress";
+import { Organization, parseOrganization } from "./utils/parseAddress";
 import { geoCode } from "./utils/geoCoder";
 import download from "./utils/saveCdnImage";
 import connection from "./connect";
 
-import CategoryModel, {ICategory} from "./models/Category";
-import CityModel, {ICity} from "./models/City";
-import GroupModel, {IGroup} from "./models/Group";
-import OrganizationModel, {IOrganization} from "./models/Organization";
-import ProductModel, {IProduct, IProductSchema} from "./models/Product";
-import StopListModel, {IStopList} from "./models/StopList";
+import CategoryModel, { ICategory } from "./models/Category";
+import CityModel, { ICity } from "./models/City";
+import GroupModel, { IGroup } from "./models/Group";
+import OrganizationModel, { IOrganization } from "./models/Organization";
+import ProductModel, { IProduct, IProductSchema } from "./models/Product";
+import StopListModel, { IStopList } from "./models/StopList";
 
 
 
@@ -63,9 +63,9 @@ class Iiko {
             for (let k in this.organizations) {
                 const productsResponse = await axios.get<INomenclature>(`https://iiko.biz:9900/api/0/nomenclature/${this.organizations[k].id}?access_token=${Iiko.token}`);
                 const organization = this.organizations[k];
-                const isFindByRevision = await ProductModel.findOne({organization: this.organizations[k].id});
-                
-                if(isFindByRevision?.revision === productsResponse.data.revision) continue;
+                const isFindByRevision = await ProductModel.findOne({ organization: this.organizations[k].id });
+
+                if (isFindByRevision?.revision === productsResponse.data.revision) continue;
 
                 const nomenclature = {
                     products: productsResponse.data.products,
@@ -73,6 +73,7 @@ class Iiko {
                     categories: productsResponse.data.productCategories,
                     revision: productsResponse.data.revision
                 }
+                console.log(organization.address);
                 const city = await CityModel.findOneAndUpdate({ name: organization.address.city as string }, {
                     $setOnInsert: {
                         name: organization.address.city as string
@@ -86,18 +87,18 @@ class Iiko {
                     }, { upsert: true });
                 }));
 
-                await GroupModel.deleteMany({organization: organization.id});
+                await GroupModel.deleteMany({ organization: organization.id });
                 await Promise.all(nomenclature.groups.map(async (group) => {
-                        await GroupModel.findOneAndUpdate({ _id: group.id }, {
-                            ...group,
-                            image: group.images && group.images.length ? group.images[group.images.length - 1]?.imageUrl : '',
-                            organization: organization.id,
-                            _id: group.id
-                        }, { upsert: true });
+                    await GroupModel.findOneAndUpdate({ _id: group.id }, {
+                        ...group,
+                        image: group.images && group.images.length ? group.images[group.images.length - 1]?.imageUrl : '',
+                        organization: organization.id,
+                        _id: group.id
+                    }, { upsert: true });
                 }));
 
-                const productsToSave = await Promise.all(nomenclature.products.map(async (product) =>{
-                    const image = await download( product.images && product.images.length ? product.images[product.images.length - 1]?.imageUrl : '');
+                const productsToSave = await Promise.all(nomenclature.products.map(async (product) => {
+                    const image = await download(product.images && product.images.length ? product.images[product.images.length - 1]?.imageUrl : '');
 
                     return {
                         ...product,
@@ -140,35 +141,35 @@ class Iiko {
             console.log(`Error with get products\n${e}`);
         }
     }
-    public async getStopLists(organizationId: string = ''){
-        try{
+    public async getStopLists(organizationId: string = '') {
+        try {
             const organizations = await OrganizationModel.find({});
-            organizations.forEach((organization: IOrganization)=>{
+            organizations.forEach((organization: IOrganization) => {
                 console.log(`Starting get stopLists for organization: ${organization._id}`);
 
                 axios.get<IStopListResponse>(
                     `https://iiko.biz:9900/api/0/stopLists/getDeliveryStopList?access_token=${Iiko.token}&organization=${organization._id}`
-                ).then(async ({data: {stopList}})=>{
-                    const list = stopList.map(el=>{
+                ).then(async ({ data: { stopList } }) => {
+                    const list = stopList.map(el => {
                         return el.items;
                     });
 
-                    await StopListModel.findOneAndUpdate({organization: organization._id}, {
+                    await StopListModel.findOneAndUpdate({ organization: organization._id }, {
                         $setOnInsert: {
                             organization: organization._id
                         },
                         $set: {
                             products: list
                         }
-                    }, {upsert: true});
+                    }, { upsert: true });
 
                     console.log(`End get stopLists for organization: ${organization._id}`);
                 })
-                .catch(e=>{
-                    console.log(`Error in stop lists ${organization._id}\n${e}`);
-                });
+                    .catch(e => {
+                        console.log(`Error in stop lists ${organization._id}\n${e}`);
+                    });
             })
-        }catch(e: unknown){
+        } catch (e: unknown) {
             console.log(e);
             return [];
         }
@@ -189,12 +190,12 @@ class Iiko {
 const iiko = Iiko.getInstance();
 
 connection()
-    .then(async ()=>{
+    .then(async () => {
         await iiko.pooling();
 
         process.exit(1);
     })
-    .catch(e=>{
+    .catch(e => {
         console.log(e);
         process.exit(0);
     })
