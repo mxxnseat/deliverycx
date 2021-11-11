@@ -8,6 +8,7 @@ import profile from "../../api/Profile";
 import { number } from "yup";
 
 interface IProps {
+
    slideHandler: any;
    address: IAddress;
 }
@@ -87,73 +88,6 @@ const SelectAddressPopup: FC<IProps> = memo(({ slideHandler, address }) => {
                   {address.contacts.phone}
                </a>
             </div>
-
-            {/* return (
-         <div className="welcome__select-adress opened">
-            <div className="container">
-               <div className="welcome__select-adress__header ">
-                  <div className="prev" onClick={() => SlideHandler("prev")}>
-                     <img
-                        src={require("../../assets/i/prev.svg").default}
-                        alt="Предыдущее заведенеие"
-                     />
-                  </div>
-                  <div className="welcome__select-adress__adress">
-                     Старик Хинкалыч
-                  </div>
-                  <div className="next" onClick={() => SlideHandler("next")}>
-                     <img
-                        src={require("../../assets/i/next.svg").default}
-                        alt="Следующее заведенеие"
-                     />
-                  </div>
-               </div>
-
-               <div className="welcome__select-adress__work-time">
-                  {address.workTime}
-               </div>
-
-               <div className="welcome__select-adress__info street">
-                  <img
-                     src={require("../../assets/i/mark-red.svg").default}
-                     alt="Телефон заведения"
-                  />
-
-                  {address.street}
-               </div>
-               <div className="welcome__select-adress__info phone">
-                  <img
-                     src={require("../../assets/i/phone-green.svg").default}
-                     alt="Телефон заведения"
-                  />
-
-                  <a href={`tel: ${address.contacts.phone}`}>
-                     {address.contacts.phone}
-                  </a>
-               </div>
-
-               {/* <div className="welcome__select-adress__counter">
-                    <img src={require("../../assets/i/hinkalya-red.svg").default} />
-
-                    <div className="counter-frame-wrapper">
-                        <div className="counter-frame">
-                            <div className="counter-frame__digit">9</div>
-                            <div className="counter-frame__digit">9</div>
-                            <div className="counter-frame__digit">9</div>
-                        </div>
-                        <div className="counter-frame">
-                            <div className="counter-frame__digit">9</div>
-                            <div className="counter-frame__digit">9</div>
-                            <div className="counter-frame__digit">9</div>
-                        </div>
-                        <div className="counter-frame">
-                            <div className="counter-frame__digit">9</div>
-                            <div className="counter-frame__digit">9</div>
-                            <div className="counter-frame__digit">9</div>
-                        </div>
-                    </div>
-
-                </div> */}
 
             <div
                className="btn welcome__select-adress__btn"
