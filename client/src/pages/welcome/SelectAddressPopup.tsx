@@ -8,12 +8,11 @@ import profile from "../../api/Profile";
 import { number } from "yup";
 
 interface IProps{
-    slideIndex: any
-    slidecoutn:number | unknown
+    slideHandler:any
     address:IAddress
 }
 
-const SelectAddressPopup:FC<IProps> = memo(({slideIndex,slidecoutn,address}) => {
+const SelectAddressPopup:FC<IProps> = memo(({slideHandler,address}) => {
     const history = useHistory();
     const dispatch = useDispatch();
 
@@ -40,32 +39,18 @@ const SelectAddressPopup:FC<IProps> = memo(({slideIndex,slidecoutn,address}) => 
         
     }
 
-    const SlideHandler = (triger: string) => {
-        
-        if (triger === 'prev') {
-            slideIndex((prev: number) => {
-               return prev <= 0 ? 0 : prev - 1 
-            })
-        } else if (triger === 'next') {
-           if (typeof slidecoutn === 'number') {
-                slideIndex((prev: number) => {
-                    return prev <= slidecoutn -1 ? slidecoutn -1 : prev + 1 
-            }) 
-           } 
-        }
-    }
 
     return (
         <div className="welcome__select-adress opened">
             <div className="container">
                 <div className="welcome__select-adress__header ">
-                    <div className="prev" onClick={()=> SlideHandler('prev')}>
+                    <div className="prev" onClick={()=> slideHandler('prev')}>
                         <img src={require("../../assets/i/prev.svg").default} alt="Предыдущее заведенеие" />
                     </div>
                     <div className="welcome__select-adress__adress">
                         Старик Хинкалыч
                     </div>
-                    <div className="next" onClick={()=> SlideHandler('next')}>
+                    <div className="next" onClick={()=> slideHandler('next')}>
                         <img src={require("../../assets/i/next.svg").default} alt="Следующее заведенеие" />
                     </div>
                 </div>
