@@ -8,22 +8,7 @@ const StocksItem: FC<IStock> = ({content}) => {
 
 
     return (
-        <div className="stocks__item">
-            <img src={require("../../../assets/img/stock2/" + content).default} />
-            {
-                /*
-                <div className="stocks__type">
-                <img src={require("../../../assets/img/stock_type.png").default} />
-                </div>
-                <div className="stocks__title">{content}Меняй «пятерки»</div>
-                <div className="stocks__text">
-                    Получи пять «пятерок» за неделю
-                    и приходи за хачапури по-аджарски!
-                </div>
-                
-                */
-            }
-        </div>
+        <img className="stocks__item" src={require("../../../assets/img/stock2/" + content).default} />
     )
 }
 

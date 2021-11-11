@@ -44,7 +44,7 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
 
     return (
         product ? <div className="product-card">
-            <HeaderBack backgroundColor="#fff" onClickCb={() => history.goBack()}>
+            <HeaderBack backgroundColor="#fff" onClickCb={() => history.push('/shop/')}>
                 <div className="product-card__category">
                     <div className="category-image-wrap">
                         <img src={group.image} />

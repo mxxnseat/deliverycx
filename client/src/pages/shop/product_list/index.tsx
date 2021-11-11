@@ -6,6 +6,7 @@ import Product from "./item"
 import api from "../../../api/Api";
 import Loader from "../../../mui/loader";
 import { isEqual } from "lodash";
+import FavoriteEmpty from "../../../components/FavoriteEmpty";
 
 interface IProps {
     category?: string, 
@@ -28,13 +29,17 @@ const ProductList: FC<IProps> = ({ category, searchQuery }) => {
         let timer: ReturnType<typeof setTimeout> | null = null
         setProducts([]);
         (async () => {
-            setStatus(Statuses.PENDING);
-            const { data, status } = await api.getProducts<IProduct[]>({ organization, category, searchQuery });
-            console.log(data);
-            if (status === 200) {
-                setProducts(data);
+            try {
+                setStatus(Statuses.PENDING);
+                const { data, status } = await api.getProducts<IProduct[]>({ organization, category, searchQuery });
+               
+                if (status === 200) {
+                    setProducts(data);
+                }
+                timer = setTimeout(() => setStatus(Statuses.FINISHED), 500) 
+            } catch (error) {
+                console.log(error)
             }
-            timer = setTimeout(() => setStatus(Statuses.FINISHED), 500)
         })();
         return () => {
             typeof timer === 'number' && clearTimeout(timer)
@@ -46,7 +51,9 @@ const ProductList: FC<IProps> = ({ category, searchQuery }) => {
             {
 
                 status === Statuses.FINISHED ? (
-                   products.length ? products.map(item => <Product key={item.id} {...item} />) : "Эта категория пуста :("
+                    products.length
+                        ? products.map(item => <Product key={item.id} {...item} />)
+                        : category === 'favorite' ? <FavoriteEmpty /> : "Эта категория пуста :("
 
                 ) : <Loader />
             }

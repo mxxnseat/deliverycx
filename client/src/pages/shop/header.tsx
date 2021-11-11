@@ -23,7 +23,7 @@ const Header: FC = () => {
 
             <div className="header__burger-menu" onClick={() => setIsActiveMenu(true)}></div>
             <div className="header__logo">
-                <img src={require("../../assets/img/logo.png").default} alt="Логотип" />
+                <img src={require("../../assets/img/logo2.png").default} alt="Логотип" />
             </div>
             <div className="header__search" onClick={() => dispatch(isSearchAction(true))}></div>
         </header>
