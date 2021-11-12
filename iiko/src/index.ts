@@ -52,6 +52,8 @@ class Iiko {
 
             this.organizations = organizationsResponse.data.map(organization => {
                 return parseOrganization(organization);
+            }).filter(organization => {
+                return !organization.description.match(/HIDDEN/i);
             });
         } catch (e) {
             console.log(`Error with get organizations\n${e}`);

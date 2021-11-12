@@ -4,16 +4,17 @@ export interface IOrganization {
         email: string,
         phone: string
     },
+    description: string,
     workTime: string,
     id: string
 }
 
-export interface IImage{
+export interface IImage {
     uploadDate: string,
     imageUrl: string
 }
 
-export interface IProduct{
+export interface IProduct {
     id: string,
     code: string,
     parentGroup: string,
@@ -25,7 +26,7 @@ export interface IProduct{
     additionalInfo: string,
     isIncludedInMenu: boolean,
 }
-export interface IGroup{
+export interface IGroup {
     id: string,
     name: string,
     code: string,
@@ -34,28 +35,28 @@ export interface IGroup{
     isIncludedInMenu: boolean,
     parentGroup: string | null
 }
-export interface ICategory{
+export interface ICategory {
     id: string,
     name: string
 }
-export interface INomenclature{
+export interface INomenclature {
     products: IProduct[],
     groups: IGroup[],
     productCategories: ICategory[]
     revision: number
 }
 
-export interface IOrderCheckCreationResult{
+export interface IOrderCheckCreationResult {
     problem: string,
     resultState: number,
     deliveryDurationInMinute: number
 }
 
-export interface IStopListItem{
+export interface IStopListItem {
     balance: number,
     productId: string
 }
-export interface IStopList{
+export interface IStopList {
     stopList: Array<{
         organizationId: string,
         deliveryTerminalId: string,
