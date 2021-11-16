@@ -101,14 +101,16 @@ class Iiko {
 
                 const productsToSave = await Promise.all(nomenclature.products.map(async (product) => {
                     const image = await download(product.images && product.images.length ? product.images[product.images.length - 1]?.imageUrl : '');
-
-                    return {
-                        ...product,
-                        image,
-                        category: product.productCategoryId,
-                        group: product.parentGroup
+                    if(product.tags[0] !== "HIDDEN"){
+                        return {
+                            ...product,
+                            image,
+                            category: product.productCategoryId,
+                            group: product.parentGroup
+                        }
                     }
-                }))
+                    
+                }).filter((prod:any)=>prod !== undefined))
 
                 const products = await ProductModel.findOneAndUpdate({ organization: organization.id }, {
                     $setOnInsert: {
