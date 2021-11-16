@@ -101,7 +101,7 @@ class Iiko {
 
                 const productsToSave = await Promise.all(nomenclature.products.map(async (product: any) => {
                     const image = await download(product.images && product.images.length ? product.images[product.images.length - 1]?.imageUrl : '');
-                    if(product.tags != null && product.tags[0] !== "HIDDEN"){
+                    if(product.tags === null){
                         return {
                             ...product,
                             image,
