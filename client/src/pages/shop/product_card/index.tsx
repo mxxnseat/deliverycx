@@ -88,12 +88,12 @@ const ProductCard: FC<RouteProps> = ({ match }) => {
                         product.description
                     }
                 </div>
-                <div className="product-card__ingredients">
+                {/* <div className="product-card__ingredients">
                     <div className="product-card__ingredients__heading">Ингридиенты: </div>
                     {
                         product.additionalInfo
                     }
-                </div>
+                </div> */}
                 {/* {
                     sauces ? (
                         <div className="product-card__sauces">
