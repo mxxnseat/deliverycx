@@ -188,12 +188,13 @@
             font-size: $fsprice;
             color: $gray3;
             margin: 30px 0;
+            margin-bottom: 102px;
         }
         &__ingredients{
             font-size: $fsprice;
             color: $gray6;
             line-height: 100%;
-            margin-bottom: 102px;
+            
 
             &__heading{
                 font-family: $bold;
