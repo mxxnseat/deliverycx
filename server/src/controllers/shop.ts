@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { User, Cart, Product, Order } from "../db/models";
-import createOrder, { createOrderType, CustomerData } from "../helpers/createOrder";
+import createOrder, {
+  createOrderType,
+  CustomerData,
+} from "../helpers/createOrder";
 import getProductsInCart from "../helpers/getProductsInCart";
 import calcTotalPrice from "../utils/calcTotalPrice";
 import iiko from "../services/iiko";
@@ -10,337 +13,392 @@ import Favorite from "../db/models/shop/Favorites";
 import validationCount from "../utils/cartValidate/validationCount";
 
 type AddToCartBody = {
-    username: string,
-    product: string,
-    organization: string
-}
+  username: string;
+  product: string;
+  organization: string;
+};
 type CreateOrderBody = {
-    username: string,
-    address: string,
-    notCall: boolean,
-    payment: object,
-    cart_choice: string,
-    flat: string,
-    floor: string,
-    intercom: string,
-    entrance: string,
-    city: string
+  username: string;
+  address: string;
+  notCall: boolean;
+  payment: object;
+  cart_choice: string;
+  flat: string;
+  floor: string;
+  intercom: string;
+  entrance: string;
+  city: string;
 } & CustomerData;
 
-
 class Shop {
-    public async addToCart(req: Request<{}, {}, AddToCartBody>, res: Response) {
-        const { product, username } = req.body;
-        try {
-            const user = await User.findOne({ username: username })
+  public async addToCart(req: Request<{}, {}, AddToCartBody>, res: Response) {
+    const { product, username } = req.body;
+    try {
+      const user = await User.findOne({ username: username });
 
-            if (!user) {
-                throw Error("Bad request");
-            }
+      if (!user) {
+        throw Error("Bad request");
+      }
 
-            const productOne = await Product.findOne({ organization: user.organization, "products.id": product });
-            if (!productOne) {
-                throw Error("Bad request");
-            }
+      const productOne = await Product.findOne({
+        organization: user.organization,
+        "products.id": product,
+      });
+      if (!productOne) {
+        throw Error("Bad request");
+      }
 
-            let cart = await Cart.findOne({ _id: user.cart });
+      let cart = await Cart.findOne({ _id: user.cart });
 
-            const isFind = cart.products.find((el: any) => el.product === product);
+      const isFind = cart.products.find((el: any) => el.product === product);
 
-            if (isFind) {
-                cart = await Cart.findOneAndUpdate({ _id: user.cart, "products.product": product }, {
-                    $inc: {
-                        "products.$.amount": 1
-                    }
-                }, { new: true });
-            } else {
-                cart = await Cart.findOneAndUpdate({ _id: user.cart }, {
-                    $push: {
-                        products: {
-                            product
-                        }
-                    }
-                }, { new: true });
-            }
+      if (isFind) {
+        cart = await Cart.findOneAndUpdate(
+          { _id: user.cart, "products.product": product },
+          {
+            $inc: {
+              "products.$.amount": 1,
+            },
+          },
+          { new: true }
+        );
+      } else {
+        cart = await Cart.findOneAndUpdate(
+          { _id: user.cart },
+          {
+            $push: {
+              products: {
+                product,
+              },
+            },
+          },
+          { new: true }
+        );
+      }
 
+      const products = await getProductsInCart(
+        cart.products,
+        user.organization
+      );
 
-            const products = await getProductsInCart(cart.products, user.organization);
-
-
-
-            const totalPrice = await calcTotalPrice(products, cart._id);
-            res.status(200).json({
-                products,
-                totalPrice
-            });
-        } catch (e: unknown) {
-            console.log(e);
-            res.status(400).json("Bad request");
-        }
+      const totalPrice = await calcTotalPrice(products, cart._id);
+      res.status(200).json({
+        products,
+        totalPrice,
+      });
+    } catch (e: unknown) {
+      console.log(e);
+      res.status(400).json("Bad request");
     }
-    public async addToFavorite(req: Request, res: Response) {
-        try {
-            const { username, productId: id } = req.body;
+  }
+  public async addToFavorite(req: Request, res: Response) {
+    try {
+      const { username, productId: id } = req.body;
 
-            const user = await User.findOne({ username });
-            
-            const product = await Product.aggregate([
-                { $unwind: "$products" },
-                {
-                    $match: {
-                        organization: user.organization, "products.id": id
-                    }
-                },
-                {
-                    $project: {
-                        products: 1
-                    }
-                }
-            ]);
-            if (!product.length) throw Error('Product not found');
-            console.log(product[0]);
-            const isFindFavorite = await Favorite.findOne({ user: user._id, "products.id":id });
+      const user = await User.findOne({ username });
 
-            let updateOption = {};
-            const returnData = {
-                isActive: false
-            }
-            if(isFindFavorite){
-                updateOption = {
-                    $pull: {
-                        "products":{ id }
-                    }
-                }
-                returnData.isActive = false;
-            }else{
-                updateOption = {
-                    $push: {
-                        products: product[0].products
-                    }
-                }
-                returnData.isActive = true;
-            }
+      const product = await Product.aggregate([
+        { $unwind: "$products" },
+        {
+          $match: {
+            organization: user.organization,
+            "products.id": id,
+          },
+        },
+        {
+          $project: {
+            products: 1,
+          },
+        },
+      ]);
+      if (!product.length) throw Error("Product not found");
+      console.log(product[0]);
+      const isFindFavorite = await Favorite.findOne({
+        user: user._id,
+        "products.id": id,
+      });
 
-            await Favorite.updateOne({user: user._id}, updateOption);
+      let updateOption = {};
+      const returnData = {
+        isActive: false,
+      };
+      if (isFindFavorite) {
+        updateOption = {
+          $pull: {
+            products: { id },
+          },
+        };
+        returnData.isActive = false;
+      } else {
+        updateOption = {
+          $push: {
+            products: product[0].products,
+          },
+        };
+        returnData.isActive = true;
+      }
 
-            res.status(200).json({
-                message: "success",
-                ...returnData
-            });
-        } catch (e: unknown) {
-            console.log(e);
-            res.status(400).json("Bad request");
-        }
+      await Favorite.updateOne({ user: user._id }, updateOption);
+
+      res.status(200).json({
+        message: "success",
+        ...returnData,
+      });
+    } catch (e: unknown) {
+      console.log(e);
+      res.status(400).json("Bad request");
     }
-    public async removeOne(req: Request, res: Response) {
-        const { username, cart } = req.body;
+  }
+  public async removeOne(req: Request, res: Response) {
+    const { username, cart } = req.body;
 
-        try {
-            const user = await User.findOne({ username });
+    try {
+      const user = await User.findOne({ username });
 
-            const carts = await Cart.findOneAndUpdate({ _id: user.cart, "products._id": cart }, {
-                $pull: {
-                    "products": {
-                        _id: cart
-                    }
-                }
-            }, { new: true });
+      const carts = await Cart.findOneAndUpdate(
+        { _id: user.cart, "products._id": cart },
+        {
+          $pull: {
+            products: {
+              _id: cart,
+            },
+          },
+        },
+        { new: true }
+      );
 
-            const products = await getProductsInCart(carts.products, user.organization);
+      const products = await getProductsInCart(
+        carts.products,
+        user.organization
+      );
 
-            const totalPrice = await calcTotalPrice(products, cart._id);
-            res.status(200).json({
-                products,
-                totalPrice
-            });
-        } catch (e: unknown) {
-            console.log(e);
-            res.status(400).json("Bad request");
-        }
+      const totalPrice = await calcTotalPrice(products, cart._id);
+      res.status(200).json({
+        products,
+        totalPrice,
+      });
+    } catch (e: unknown) {
+      console.log(e);
+      res.status(400).json("Bad request");
     }
-    public async clear(req: Request, res: Response) {
-        const username = req.body.username;
+  }
+  public async clear(req: Request, res: Response) {
+    const username = req.body.username;
 
-        try {
-            const user = await User.findOne({ username });
-            const cart = await Cart.findOneAndUpdate({ _id: user.cart }, {
-                $set: {
-                    products: []
-                }
-            }, { new: true })
-            if (!user) {
-                throw Error();
-            }
-            res.status(200).json({
-                products: [],
-                totalPrice: 0
-            });
-        } catch (e: unknown) {
-            console.log(e);
-            res.status(400).json("Bad request");
-        }
+    try {
+      const user = await User.findOne({ username });
+      const cart = await Cart.findOneAndUpdate(
+        { _id: user.cart },
+        {
+          $set: {
+            products: [],
+          },
+        },
+        { new: true }
+      );
+      if (!user) {
+        throw Error();
+      }
+      res.status(200).json({
+        products: [],
+        totalPrice: 0,
+      });
+    } catch (e: unknown) {
+      console.log(e);
+      res.status(400).json("Bad request");
     }
-    public async changeAmount(req: Request, res: Response) {
-        try {
-            const type: "inc" | "dec" = req.body.type;
-            const { cart, username, count } = req.body;
-            let update = {};
+  }
+  public async changeAmount(req: Request, res: Response) {
+    try {
+      const type: "inc" | "dec" = req.body.type;
+      const { cart, username, count } = req.body;
+      let update = {};
 
-            const user = await User.findOne({ username });
+      const user = await User.findOne({ username });
 
-            switch (type) {
-                case "inc": {
-                    update = 1
-                    break;
-                }
-                case "dec": {
-                    update = -1
-                    break;
-                }
-                default: throw Error("Bad request");
-            }
-
-            let carts = await Cart.findOne({ _id: user.cart, "products._id": cart });
-
-            const updateAmount = count;
-            console.log(count)
-
-            carts = await Cart.findOneAndUpdate({ _id: user.cart, "products._id": cart }, {
-                $set: {
-                    "products.$.amount": updateAmount
-                }
-            }, { new: true });
-
-            const products = await getProductsInCart(carts.products, user.organization);
-            const totalPrice = await calcTotalPrice(products, cart._id);
-            res.status(200).json({
-                products,
-                totalPrice
-            });
-        } catch (e: unknown) {
-            console.log(e);
-            res.status(400).json("Bad request");
+      switch (type) {
+        case "inc": {
+          update = 1;
+          break;
         }
-    }
-    public async getCart(req: Request, res: Response) {
-        const username = req.body.username;
-
-        try {
-            const user = await User.findOne({ username });
-            const cart = await Cart.findOne({ _id: user.cart });
-
-            const products = await getProductsInCart(cart.products, user.organization);
-            const totalPrice = await calcTotalPrice(products, cart._id);
-            res.status(200).json({
-                products,
-                totalPrice
-            });
-        } catch (e) {
-            console.log(e);
-            res.status(400).json("Bad request");
+        case "dec": {
+          update = -1;
+          break;
         }
+        default:
+          throw Error("Bad request");
+      }
+
+      let carts = await Cart.findOne({ _id: user.cart, "products._id": cart });
+
+      const updateAmount = count;
+      console.log(count);
+
+      carts = await Cart.findOneAndUpdate(
+        { _id: user.cart, "products._id": cart },
+        {
+          $set: {
+            "products.$.amount": updateAmount,
+          },
+        },
+        { new: true }
+      );
+
+      const products = await getProductsInCart(
+        carts.products,
+        user.organization
+      );
+      const totalPrice = await calcTotalPrice(products, cart._id);
+      res.status(200).json({
+        products,
+        totalPrice,
+      });
+    } catch (e: unknown) {
+      console.log(e);
+      res.status(400).json("Bad request");
     }
-    public async createOrder(req: Request<{}, {}, CreateOrderBody>, res: Response) {
-        const {
-            username,
-            address,
-            comment,
-            phone,
-            date,
-            flat,
-            floor,
-            city,
-            intercom,
-            entrance,
-            promocode,
-            cart_choice,
-            name,
-            payment,
-            times,
-            notCall
-        } = req.body;
+  }
+  public async getCart(req: Request, res: Response) {
+    const username = req.body.username;
 
-        try {
-            const user = await User.findOne({ username: username });
+    try {
+      const user = await User.findOne({ username });
+      const cart = await Cart.findOne({ _id: user.cart });
 
-            if (!user) {
-                throw Error();
-            }
+      const products = await getProductsInCart(
+        cart.products,
+        user.organization
+      );
+      const totalPrice = await calcTotalPrice(products, cart._id);
+      res.status(200).json({
+        products,
+        totalPrice,
+      });
+    } catch (e) {
+      console.log(e);
+      res.status(400).json("Bad request");
+    }
+  }
+  public async createOrder(
+    req: Request<{}, {}, CreateOrderBody>,
+    res: Response
+  ) {
+    const {
+      username,
+      address,
+      comment,
+      phone,
+      date,
+      flat,
+      floor,
+      city,
+      intercom,
+      entrance,
+      promocode,
+      cart_choice,
+      name,
+      payment,
+      times,
+      notCall,
+    } = req.body;
 
-            const cart = await Cart.findOne({ _id: user.cart });
-            const cartList = await getProductsInCart(cart.products, user.organization);
+    try {
+      const user = await User.findOne({ username: username });
 
-            const errors = await validationCount(cartList);
-            if(Object.keys(errors).length > 0){
-                return res.status(400).json({
-                    success: false,
-                    errors
-                });
-            }
+      if (!user) {
+        throw Error();
+      }
 
-            const orderBody = createOrder({ address, flat, floor, intercom, entrance, city}, user.organization, {
-                name,
-                comment,
-                date,
-                phone,
-                times,
-                promocode
-            }, cartList);
+      const cart = await Cart.findOne({ _id: user.cart });
+      const cartList = await getProductsInCart(
+        cart.products,
+        user.organization
+      );
 
-            let { status, message } = await iiko.iikoMethodBuilder(() => iiko.createOrder(orderBody));
-            console.log(message);
-            if (status !== 200) {
-                return res.status(status).json({
-                    success: false,
-                    errors: {
-                        '500':{
-                            message: `Some error ${message}`
-                        }
-                    }
-                });
-            }
-            await Cart.updateOne({ _id: user.cart }, {
-                $set: {
-                    products: [],
-                    totalPrice: 0
-                }
-            }, { new: false })
-            const order = await Order.findOneAndUpdate(
-                { user: user._id },
-                {
-                    $push: {
-                        orders: {
-                            products: cart.products,
-                            totalPrice: cart.totalPrice,
-                        }
-                    }
-                });
+      const errors = await validationCount(cartList);
+      if (Object.keys(errors).length > 0) {
+        return res.status(400).json({
+          success: false,
+          errors,
+        });
+      }
 
+      const orderBody = createOrder(
+        { address, flat, floor, intercom, entrance, city },
+        user.organization,
+        {
+          name,
+          comment,
+          date,
+          phone,
+          times,
+          promocode,
+        },
+        cartList
+      );
 
-            const orderNum = await Order.aggregate([
-                { $project: { orders: 1 } },
-                { $unwind: "$orders" },
-                { $group: { _id: null, count: { $sum: 1 } } }
-            ]);
-
-
-            await User.updateOne({ username }, {
-                isVerify: true,
-                phone,
-                name
-            });
-            res.status(200).json({
-                success: true,
-                orderNumber: orderNum[0].count
-            });
-        } catch (e: unknown) {
-            console.log(e);
-            res.status(404).json({
-                success: false,
-                messsage: e
-            })
+      let { status, message, number } = await iiko.iikoMethodBuilder(() =>
+        iiko.createOrder(orderBody)
+      );
+      console.log(message);
+      if (status !== 200) {
+        return res.status(status).json({
+          success: false,
+          errors: {
+            "500": {
+              message: `Some error ${message}`,
+            },
+          },
+        });
+      }
+      await Cart.updateOne(
+        { _id: user.cart },
+        {
+          $set: {
+            products: [],
+            totalPrice: 0,
+          },
+        },
+        { new: false }
+      );
+      const order = await Order.findOneAndUpdate(
+        { user: user._id },
+        {
+          $push: {
+            orders: {
+              products: cart.products,
+              totalPrice: cart.totalPrice,
+            },
+          },
         }
+      );
+
+      // const orderNum = await Order.aggregate([
+      //     { $project: { orders: 1 } },
+      //     { $unwind: "$orders" },
+      //     { $group: { _id: null, count: { $sum: 1 } } }
+      // ]);
+
+      await User.updateOne(
+        { username },
+        {
+          isVerify: true,
+          phone,
+          name,
+        }
+      );
+      res.status(200).json({
+        success: true,
+        orderNumber: number,
+      });
+    } catch (e: unknown) {
+      console.log(e);
+      res.status(404).json({
+        success: false,
+        messsage: e,
+      });
     }
+  }
 }
 
 export default Shop;
