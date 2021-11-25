@@ -184,7 +184,7 @@ const CartForm: FC<{}> = () => {
                                     
                                     </div>
                                     {
-                                        disclaimer && <div className="disclaimer">Не точный адресс, в ведите дом</div>
+                                        disclaimer && <div className="disclaimer">Не точный адрес, в ведите дом</div>
                                     }
                                 </div>
 
@@ -232,7 +232,7 @@ const CartForm: FC<{}> = () => {
                             errorValue={formik.errors.address}
                         >
                             <div className="adress_fild__address" onClick={() => setOpenAddressSelect(true)}>
-                                {formik.values.address.length ? formik.values.address : "Выберете адресс"}
+                                {formik.values.address.length ? formik.values.address : "Выберете адрес"}
                             </div>
 
 
