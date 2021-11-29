@@ -65,7 +65,7 @@ const MapSuggestComponent = ({ formik, handl, cord,disc }: any) => {
       type="text" id="suggest"    
       name="address"
       defaultValue={formik.values.address}
-      placeholder="Введите адресс доставки"
+      placeholder="Введите адрес доставки"
       
     />;
 }
