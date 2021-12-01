@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config({path: __dirname+"/../.env"});
+dotenv.config({ path: __dirname + "/../.env" });
 
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
@@ -18,14 +18,15 @@ const INDEXHTML = path.resolve(__dirname, "../../client/build/index.html");
 const App = express();
 const PORT = process.env.PORT || 5001;
 
-App.use(express.static(path.resolve(__dirname, "../../client/build")))
-App.use(cors({
+App.use(express.static(path.resolve(__dirname, "../../client/build")));
+App.use(
+  cors({
     credentials: true,
-    origin: process.env.CLIENT_URL
-}))
-App.use(bodyParser())
+    origin: process.env.CLIENT_URL,
+  })
+);
+App.use(bodyParser());
 App.use(cookieParser());
-
 
 App.use("/api", api);
 
@@ -33,19 +34,17 @@ App.use("/profile", profile);
 App.use("/shop", authCheck, shop);
 
 App.get("/*", (req: Request, res: Response) => {
-    res.sendFile(INDEXHTML);
+  res.sendFile(INDEXHTML);
 });
 
 mongoConnect()
-    .then(() => {
-        App.listen(PORT, () => {
-            try {
-                console.log(`starting on ${PORT}`);
-
-            } catch (e: unknown) {
-                console.log(e);
-            }
-        });
-
-    })
-    .catch(e => console.log(e));
+  .then(() => {
+    App.listen(PORT, () => {
+      try {
+        console.log(`starting on ${PORT}`);
+      } catch (e: unknown) {
+        console.log(e);
+      }
+    });
+  })
+  .catch((e) => console.log(e));
